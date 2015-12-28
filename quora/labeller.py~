@@ -1,0 +1,5 @@
+# Stop word Removal
+# Lemmatize
+# Consider unigrams or bigrams (Probably no)
+# Reduce to 25 dimension space (Using NMF)
+# Use random forest to get the probabilities of the classes
