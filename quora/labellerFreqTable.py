@@ -10,6 +10,7 @@ import re
 import numpy as np
 from random import shuffle
 from math import log
+from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
 wordnet_lem = WordNetLemmatizer()
@@ -72,7 +73,10 @@ for i in range(0,numTrain):
 	tmpLabel = [int(x) for x in line.split() if (len(x)>0)]
 	labels.append(tmpLabel)
 	line = raw_input()
-	words = []
+	line = line.lower()
+	words = word_tokenize(line)  
+	words = [wordnet_lem.lemmatize(word) for word in words]
+	"""
 	for word in re.split('\W+', line.lower()):
 		word = wordnet_lem.lemmatize(word)
 		if (len(word)>1):
@@ -81,15 +85,25 @@ for i in range(0,numTrain):
 			else:
 				vocab[word.lower()] = 1
 			words.append(word.lower())
+	"""
+	for word in words:
+		if word in vocab:
+			vocab[word] += 1
+		else:
+			vocab[word] = 1
 	docs.append(words)
 
 for i in range(0,numQuery):
 	line = raw_input()
-	words = []
+	line = line.lower()
+	words = word_tokenize(line)
+	words = [wordnet_lem.lemmatize(word) for word in words]
+	"""
 	for word in re.split('\W+', line.lower()):
 		word = wordnet_lem.lemmatize(word)
 		if (len(word)>1):
 			words.append(word.lower())
+	"""
 	testDocs.append(words)
 
 #Get the idf's for each word
@@ -105,7 +119,7 @@ for i in docs:
 			idf[j] = 1
 
 for x in idf.keys():
-	idf[x] = log(numTrain*(1.0)/idf[x])
+	idf[x] = log(numTrain*(1.0)/(idf[x]+1))
 
 #print idf
 
@@ -151,7 +165,7 @@ for i in range(0,len(testDocs)):					#Predict the labels of the test set
 	probs = np.zeros(numLabels+1)
 	for j in testDocs[i]:
 		if j in wordList:
-			probs = probs + wordLabel[j]*(1.0)
+			probs = probs + wordLabel[j]*(1.0)*idf[j]
 	#print probs
 	ids = (probs.argsort())[::-1]
 	#print ids
