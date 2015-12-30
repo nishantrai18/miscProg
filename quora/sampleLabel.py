@@ -1,18 +1,3 @@
-Skip to content
-Sign up Sign in
-This repository  
-Search
-Explore
-Features
-Enterprise
-Pricing
- Watch 1  Star 0  Fork 0 Nithanaroy/QuoraChallenges-Labeler
- Code  Issues 0  Pull requests 0  Pulse  Graphs
-Branch: master Find file Copy pathQuoraChallenges-Labeler/Labeler.py
-7f1a505  24 days ago
-@Nithanaroy Nithanaroy Word Context Matrix as 2D Array
-1 contributor
-RawBlameHistory    268 lines (237 sloc)  10.5 KB
 import math
 import heapq
 from nltk.tokenize import word_tokenize
@@ -255,16 +240,16 @@ def main():
         question_string = raw_input()
         l.save(category_string, question_string)
     l.create_context_matrix()
-    print(l.word_context_matrix)
-    # l.compute_word_weights()
-    # for i in range(0, e):
-    #     print " ".join(l.find_k_categories(l.prepare_question(raw_input()), 10, Labeler.cosine_similarity))
+    #print(l.word_context_matrix)
+    l.compute_word_weights()
+    for i in range(0, e):
+        print " ".join(l.find_k_categories(l.prepare_question(raw_input()), 10, Labeler.cosine_similarity))
 
 
 if __name__ == '__main__':
     start_time = time.time()
     main()
-    # test()
+    #test()
     if DEBUG:
         print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -280,5 +265,3 @@ if __name__ == '__main__':
 # 1) Lemmatization
 
 # 4) After finding K similar questions, choose topics which are most frequent in all these K
-Status API Training Shop Blog About Pricing
-© 2015 GitHub, Inc. Terms Privacy Security Contact Help
