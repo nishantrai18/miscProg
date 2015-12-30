@@ -10,10 +10,10 @@ import re
 import numpy as np
 from random import shuffle
 from math import log
-from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
+#from nltk.tokenize import word_tokenize
+#from nltk.stem import WordNetLemmatizer
 
-wordnet_lem = WordNetLemmatizer()
+#wordnet_lem = WordNetLemmatizer()
 
 stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now']
 
@@ -22,6 +22,7 @@ np.set_printoptions(threshold=np.nan)
 
 vocab = {}					#Initial vocabulary with word frequencies
 idf = {}					#Contains the idf of the words with each sentence considered as a document
+varWeight = {}				#Contains the variance of the probability
 numTrain = 0
 numQuery = 0
 numLabels = 250
@@ -70,22 +71,21 @@ numTrain, numQuery = int(line.split()[0]), int(line.split()[1])
 
 for i in range(0,numTrain):
 	line = raw_input()
-	tmpLabel = [int(x) for x in line.split() if (len(x)>0)]
+	tmpLabel = [int(x) for x in line.split()[1:] if (len(x)>0)]
 	labels.append(tmpLabel)
 	line = raw_input()
 	line = line.lower()
-	words = word_tokenize(line)  
-	words = [wordnet_lem.lemmatize(word) for word in words]
-	"""
+	words = []
+	#words = word_tokenize(line)  
+	#words = [wordnet_lem.lemmatize(word) for word in words]
 	for word in re.split('\W+', line.lower()):
-		word = wordnet_lem.lemmatize(word)
+		#word = wordnet_lem.lemmatize(word)
 		if (len(word)>1):
 			if word.lower() in vocab:
 				vocab[word.lower()] += 1
 			else:
 				vocab[word.lower()] = 1
 			words.append(word.lower())
-	"""
 	for word in words:
 		if word in vocab:
 			vocab[word] += 1
@@ -96,14 +96,13 @@ for i in range(0,numTrain):
 for i in range(0,numQuery):
 	line = raw_input()
 	line = line.lower()
-	words = word_tokenize(line)
-	words = [wordnet_lem.lemmatize(word) for word in words]
-	"""
+	words = []
+	#words = word_tokenize(line)
+	#words = [wordnet_lem.lemmatize(word) for word in words]
 	for word in re.split('\W+', line.lower()):
-		word = wordnet_lem.lemmatize(word)
+		#word = wordnet_lem.lemmatize(word)
 		if (len(word)>1):
 			words.append(word.lower())
-	"""
 	testDocs.append(words)
 
 #Get the idf's for each word
@@ -158,6 +157,7 @@ for i in range(0, len(docs)):					#Create the matrix
 for j in wordLabel:										#Normalize to get probabilities
 	tmpSum = np.sum(wordLabel[j])
 	wordLabel[j] = wordLabel[j]/tmpSum
+	varWeight[j] = wordLabel[j].var()**0.6
 
 docTerm = np.array(docTerm)							#Equivalent to our data matrix X
 
@@ -165,7 +165,7 @@ for i in range(0,len(testDocs)):					#Predict the labels of the test set
 	probs = np.zeros(numLabels+1)
 	for j in testDocs[i]:
 		if j in wordList:
-			probs = probs + wordLabel[j]*(1.0)*idf[j]
+			probs = probs + wordLabel[j]*(1.0)*varWeight[j]
 	#print probs
 	ids = (probs.argsort())[::-1]
 	#print ids

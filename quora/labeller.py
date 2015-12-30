@@ -8,7 +8,7 @@
 import operator
 import re
 import numpy as np
-from sklearn.decomposition import TruncatedSVD
+from sklearn.decomposition import TruncatedSVD, PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KDTree
 
@@ -17,6 +17,7 @@ np.set_printoptions(threshold=np.nan)
 
 def normalize(v):
 	tmpSum = np.sum(v**2)
+	tmpSum = np.sqrt(tmpSum)
 	if (tmpSum == 0):
 		return v
 	return v/tmpSum
@@ -53,7 +54,7 @@ with open('labeler_sample.in','r') as f:
 				#print "DOC VEC ", words
 			else:
 				#print line.split()
-				tmpLabel = [int(x) for x in line.split() if (len(x)>0)]
+				tmpLabel = [int(x) for x in line.split()[1:] if (len(x)>0)]
 				labels.append(tmpLabel)
 				#print tmpLabel
 		else:
@@ -96,11 +97,12 @@ docTerm = np.array(docTerm)
 
 #print "HERE"
 
-numDim = 250
-#xn = PCA(n_components=25).fit_transform(docTerm)
+numDim = 50
+#reducer = PCA(n_components=numFeat).fit(docTerm)
 reducer = TruncatedSVD(n_components=numDim).fit(docTerm)
 #reducer = NMF(n_components=numDim, max_iter=100).fit(docTerm)
 lowSp = reducer.transform(docTerm)
+#lowSp = docTerm
 
 X = []
 Y = []
@@ -133,11 +135,12 @@ for i in range(0, len(testDocs)):
 tdocTerm = np.array(tdocTerm)
 
 lowTsp = reducer.transform(tdocTerm)
+#lowTsp = tdocTerm
 
 for r in lowTsp:
 	r = normalize(r)
 
-numNeigh = 20
+numNeigh = 7
 
 for i in range(0,len(lowTsp)):
 	probs = {}
