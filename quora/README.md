@@ -1,5 +1,5 @@
 Quora Task:
-----------------------------------------------
+-----------
 
 The files and their uses are as follows,
 - labeler_checker.py : Checks and scores the solution on the provided test cases
