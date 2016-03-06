@@ -1,0 +1,30 @@
+Column	Name			Description
+1	Chromosome		Chromosome on which the mutation is present.
+2	Location		Start location of the mutation in the chromosome.
+3	Reference		Reference present in the genome at the location of the mutation.
+4	VariantAllele		Variant allele present at the location of the mutation(reference is replaced by the variant allele).
+5	Reference Length	Length of the reference.
+6	VariantAllele Length	Length of the variant allele.
+7	Gene			Name of the gene overlapping with the mutation.
+8	DBSNP			Fraction of samples having this mutation in DBSNP.
+9	1000Genome		Fraction of samples having this mutation in 1000 genome project.
+10	Exome server		Fraction of samples having this mutation in exome variant server.
+11	Exome consortium	Fraction of samples having this mutation in exome consortium server.
+12-24	Label assigned from various sources	These columns captures label assigned from various sources to this mutation.
+25	SPLICING Type		Type of missplicing caused by this variant.
+26	Primates Conservation	Conservation of this mutation location in primate group.
+27	Mammal Conservation	Conservation of this mutation location in mammal group.
+28	Vertebrate Conservation	Conservation of this mutation location in vertebrate group.
+29	Protein shortening	Protein shortening caused by this mutation.
+30	isTruncating		true if this mutation is truncating for some overlapping protein.
+31	isMissense		true if this mutation is missense for some overlapping protein
+32	isMissenseType		true if this mutation is of missense type for some overlapping protein.
+33-53	Various mutation types	these columns captures various types of mutation with respect to the various overlapping proteins.
+54-60	Damaging predictions	Damaging predictions from various damaging prediction tools.
+61	Damaging prediction count	Number of damaging predictions for this mutation.
+62	Impacts gene expression	true if this variant can effect gene expression.	
+63	functionally validated	true if this variant is functionally validated.
+64	pathogenic variant 	true if there is a pathogenic variant present in the region deleted due to this variant.
+65	is novel		true if this variant is a novel variant.
+66	label			Label assigned to this variant.
+
