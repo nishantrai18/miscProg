@@ -195,6 +195,14 @@ print len(X[0])
 
 #pickle.dump([X, Y, idDict], open("data.p", "wb"))
 
+'''
+Possible improvements:
+Consider different chunks of same value as different vectors i.e. 12-24, 33-54, 54-60
+Consdier one hot encodings for a few attributes with small ranges
+Consider 3-grams and less for 3 and 4 
+Ignore effect of 5 and 6 (Or refine its use)
+'''
+
 from sklearn.feature_selection import VarianceThreshold
 from sklearn import svm
 from sklearn import tree
