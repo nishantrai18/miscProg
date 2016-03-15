@@ -59,6 +59,18 @@
 	The Prisoner's Dilemma is a classic problem in game theory, discovered in 1950 by Melvin Dresher and Merrill Flood, whose purpose is, among other things, to describe a situation in which rational behavior (defined as that behavior which will maximize one's expected benefit) can be, in a sense, self-undermining. It has become a popular problem because it is seen as fundamentally similar to real-world problems in sociology and politics. \\
 	The Prisoner's Dilemma can be described as follows: suppose that two individuals, A and B, have been arrested in connection with a crime. Each is put in a separate interview room and told that a deal may be available to them depending on whether each provides testimony against the other (defects) or keeps silent (cooperates). Each individual is assumed to want to do as well as possible for themselves without regard to the welfare of the other player.\\
 
+	\tabcolsep=0.51cm
+	\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|c|}
+	\hline
+						& B co-operates            & B defects 					\\ \hline
+	A co-operates  		& (3,3) 		 			& (0,5)         			\\ \hline
+	A defects 			& (5,0)           			& (1,1)            			\\ \hline
+	\end{tabular}
+	\caption{Payoff matrix for the Prisoner's Dilemma}
+	\end{table}
+		
 	\begin{table}[H]
 	\centering
 	\begin{tabular}{|c|c|c|}
@@ -67,9 +79,9 @@
 	A co-operates  		& (R,R) 		 			& (S,T)         			\\ \hline
 	A defects 			& (T,S)           			& (P,P)            			\\ \hline
 	\end{tabular}
-	\caption{Payoff matrix for the Prisoner's Dilemma}
+	\caption{State definitions for the Prisoner's Dilemma}
 	\end{table}
-		
+
 	This situation is formally specified by the matrix in Figure 1, subject to the following definitions and restrictions:
 	\begin{itemize}
 		\item T : \textbf{Temptation} for unilateral defection
@@ -142,18 +154,44 @@ Axelrod adopted a simple but elegant way for encoding strategies, and then used 
 	
 	\section{Motivation}
 	
+	As discussed in the previous section, Axelrod's encoding can be used to define a strategy. We decide to use Evolutionary Algorithms to compute the optimal (Axelrod) strategy because the total number of all possible strategies very high (i.e. $2^{70}$). If we perform exhaustive search, it will take a huge amount of time (A couple billion years or more!). We do not seek help from standard optimization procedure since the fitness function required is not continuous or differentiable, thus classical methods will not work. Hence, genetic (evolutionary) algorithms are a good choice.
+	
 	\section{Proposed Algorithms}
 	
 	\subsection{Axelrod Strategies using Evolutionary Algorithms}
+
+	As mentioned earlier, Axelrod's approach involved maximizing the self score using a Single Objective Genetic Algorithm. We study Axelrod's model along with optimizing multiple objectives (i.e. Self Score and Opponent score) simultaneously using NSGA-II algorithm. We later compare the computed strategies.\\
+	The intuition for using another objective (i.e. Opponent score) is that the Prisoner's dilemma game is similar to a constant sum game (If we exclude the case when both confess), thus minimizing the opponent score might indirectly help us in maximizing our own score.
 
 	\subsection{Reinforcement Learning for Adaptive Strategies}
 	
 	\section{Experiments}
 	
+	Both Single Objective Evolutionary Algorithm and Multi Objective Evolutionary Algorithm (MEA) are used for getting optimal strategies. The proposed strategies are evaluated in the later sections as discussed below.\\
+	We describe the rough structure of the evolutionary algorithms. In each generation, a certain number (referred to as population size) of strategies are generated, and each strategy was made to play against \textbf{n} other players. Each game consisted of \textbf{p} moves. Then the next generation is created using a recombination operator involving the best strategies from the earlier one. The payoff matrix is the same as shown in Table 1. The details of the \textbf{n} other players have been given in the section: \textit{Baseline Strategies}.
+
+	\subsection{Baseline Strategies}
+	
+	The baseline strategies used in the experiments are as follows,
+	\begin{enumerate}
+	
+	\item \textbf{Always Cooperate:} Cooperates on every move
+	\item \textbf{Always Defect:} Defects on every move3) Tit for Tat : Cooperates on the first move, then simply copies the opponent's last move.
+	\item \textbf{Suspicious Tit for Tat:} Same as Tit for Tat, except that it defects on the first move
+	\item \textbf{Spiteful:} Cooperates, until the opponent defects, and thereafter always defects.
+	\item \textbf{Random:} Makes a random move.
+	\item \textbf{Cyclic CD:} Plays C, D periodically.
+	\item \textbf{Cyclic CCD:} Plays C, C, D periodically.
+	\item \textbf{Tit for Two Tats:} Cooperates on the first move, and defects only when the opponent defects two times.
+	\item \textbf{Soft Majority:} Begins by cooperating, and cooperates as long as the number of times the opponent has
+cooperated is greater than or equal to the number of times it has defected, else it defects.
+	\item \textbf{Hard Majority:} Defects on the first move, and defects if the number of defections of the opponent is greater than or equal to the number of times it has cooperated, else cooperates.
+	\item \textbf{Hard Tit for Tat:} Cooperates on the first move, and defects if the opponent has defects on any of the previous three moves, else cooperates.
+	\item \textbf{Prober:} Plays D, C, C initially. Defects forever if opponent cooperated in moves 2 and 3. Otherwise plays Tit for Tat.	
+	\end{enumerate}
+	
 	\subsection{Tournament Setup}
 	
-	\subsection{Baseline Strategies}
-
 	\section{Results}
 	
 	\section{Observations}
