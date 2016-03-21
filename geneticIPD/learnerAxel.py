@@ -109,8 +109,6 @@ class Learner(Player):
         if (randomPlay):    
             return random_choice()
 
-        self.turns[self.prevState][self.prevAction] += 1
-
         # print (self.prevState, self.prevAction, opponent.history[-1], self.payoff[decodeMove(self.prevAction)][opponent.history[-1]])
 
         # Update the q table when results of the previous turn are available
@@ -137,9 +135,10 @@ class Learner(Player):
         """
         Performs the update of the Q Table
         """
-        print self.qTab
+        self.turns[state][action] += 1
+        # print self.qTab
         # print state, action, reward
-        self.qTab[state][action] += (1/self.turns[state][action])*(reward - self.qTab[state][action])
+        self.qTab[state][action] += (1.0/self.turns[state][action])*(reward - self.qTab[state][action])
 
     def __repr__(self):
         """The string method for the strategy."""
@@ -148,15 +147,16 @@ class Learner(Player):
 
 
 def main():
-    ply = Learner(memory_depth = 1)
+    ply = Learner(memory_depth = 2)
     print ply
-    p1, p2 = axelrod.Cooperator(), axelrod.Defector()
+    p1, p2 = axelrod.CyclerCCCD(), axelrod.Defector()
     # for turn in range(10):
     #     p1.play(p2)
     # print p1.history, p2.history
-    for turn in range(100):
+    for turn in range(100000):
         ply.play(p1)
-    print ply.history
-    print p1.history
+    print ply.qTab
+    # print ply.history
+    # print p1.history
 
 main()
