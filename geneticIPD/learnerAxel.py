@@ -1,0 +1,141 @@
+import axelrod
+from axelrod import Actions, Player, init_args, random_choice
+
+C, D = Actions.C, Actions.D
+
+def encode(moveA, moveB):
+    choice = moveA + moveB
+    if (choice == 'DD'):
+        return 'P'
+    elif (choice == 'DC'):
+        return 'T'
+    elif (choice == 'CD'):
+        return 'S'
+    elif (choice == 'CC'):
+        return 'R'
+    else:
+        return '0'
+
+def decode(moveList, memLength):
+    val = 0
+    for m in moveList:
+        val *= 4
+        if (m == 'P'):
+            val += 0
+        elif (m == 'T'):
+            val += 1
+        elif (m == 'S'):
+            val += 2
+        elif (m == 'R'):
+            val += 3
+        else:
+            raw_input("ERROR DURING DECODE. WHAT TO DO NEXT?")
+    return val
+
+def decodeMove(choice):
+    if (choice):
+        return C
+    else:
+        return D
+
+class Learner(Player):
+    """A player uses a predefined array of choices. It considers the k previous
+    moves and decides which move to make based on the provided list.
+
+    An optional memory attribute (Default = 3) will limit the number of turns remembered.
+    """
+
+    classifier = {
+        'stochastic': True,
+        'inspects_source': False,
+        'makes_use_of': set(),
+        'manipulates_source': False,
+        'manipulates_state': False,
+        'memory_depth': 3  # memory_depth may be altered by __init__
+    }
+
+    @init_args
+    def __init__(self, memory_depth = 3):
+        """
+        Parameters
+        ----------
+        memory_depth, int >= 0
+            The number of rounds to use for the calculation of the cooperation
+            and defection probabilities of the opponent.
+        """
+
+        Player.__init__(self)
+        self.turns = 0
+        self.qTabSize = (4**memory_depth)
+        # qTabSize : It refers to the size of the qTable. It consists of all possible states in the game
+        self.qTab = [dict({True: 0, False: 0}) for i in range(0, self.qTabSize)]
+        # qTab : The QTable which stores the Q values. It's updated during gameplay
+        self.classifier['memory_depth'] = memory_depth
+        # The memory depth to consider while playing the game
+        self.memory = self.classifier['memory_depth']
+        # Initialize the payoff matrix for the game
+        (R, P, S, T) = self.tournament_attributes["game"].RPST()
+        self.payoff = {C: {C: R, D: S}, D: {C: T, D: P}}
+        self.prevState = 0
+        self.prevAction = False
+
+    def strategy(self, opponent):
+        """
+        A player chooses the best action based on qTab a predefined array
+        of choices. It considers the k previous moves and decides which move 
+        to make based on the computed Q Table.
+        The length of the state list is 4^mem
+        """
+        
+        self.turns += 1
+        mem = self.memory
+        randomPlay = False
+        opHistory = opponent.history[-mem:]
+        myHistory = self.history[-mem:]
+        
+        if ((len(opHistory) < mem) or (len(myHistory) < mem)):
+            randomPlay = True
+
+        # In case the memory isn't enough, play a random move
+        if (randomPlay):    
+            return random_choice()
+
+        # Update the q table when results of the previous turn are available
+        self.qTabUpdate(self.prevState, self.prevAction, self.payoff[self.prevAction][opponent.history[-1]])
+
+        choice = []
+        for i in range(0,mem):
+            choice.append(encode(myHistory[i], opHistory[i]))
+            # Get the encoding for the state
+        ids = decode(choice, mem)
+
+        self.prevState = ids
+        self.prevAction = max(self.qTab[ids].iteritems(), key=operator.itemgetter(1))[0]
+
+        return decodeMove(self.prevAction)
+
+    def qTabUpdate(self, state, action, reward):
+        """
+        Performs the update of the Q Table
+        """
+        self.qTab[state][action] += (1/self.turns)*(reward - self.qTab[state][action])
+
+    def __repr__(self):
+        """The string method for the strategy."""
+        name = 'LearnMem' + (self.memory > 0) * (": %i" % self.memory)
+        return name
+
+
+def main():
+    ply = Learner()
+    print ply
+    p1, p2 = axelrod.Cooperator(), axelrod.Defector()
+    # for turn in range(10):
+    #     p1.play(p2)
+    # print p1.history, p2.history
+    for turn in range(10):
+        ply.play(p2)
+    print ply.history
+    print p2.history
+
+main()
