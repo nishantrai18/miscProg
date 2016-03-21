@@ -1,5 +1,7 @@
 import axelrod
 from axelrod import Actions, Player, init_args, random_choice
+import operator
+import random
 
 C, D = Actions.C, Actions.D
 
@@ -38,6 +40,12 @@ def decodeMove(choice):
     else:
         return D
 
+def encodeMove(choice):
+    if (choice == C):
+        return True
+    else:
+        return False
+
 class Learner(Player):
     """A player uses a predefined array of choices. It considers the k previous
     moves and decides which move to make based on the provided list.
@@ -55,7 +63,7 @@ class Learner(Player):
     }
 
     @init_args
-    def __init__(self, memory_depth = 3):
+    def __init__(self, memory_depth = 3, exploreProb = 0.1):
         """
         Parameters
         ----------
@@ -65,19 +73,21 @@ class Learner(Player):
         """
 
         Player.__init__(self)
-        self.turns = 0
         self.qTabSize = (4**memory_depth)
         # qTabSize : It refers to the size of the qTable. It consists of all possible states in the game
         self.qTab = [dict({True: 0, False: 0}) for i in range(0, self.qTabSize)]
         # qTab : The QTable which stores the Q values. It's updated during gameplay
+        self.turns = [dict({True: 0, False: 0}) for i in range(0, self.qTabSize)]
         self.classifier['memory_depth'] = memory_depth
         # The memory depth to consider while playing the game
         self.memory = self.classifier['memory_depth']
+        self.explore = exploreProb
         # Initialize the payoff matrix for the game
         (R, P, S, T) = self.tournament_attributes["game"].RPST()
         self.payoff = {C: {C: R, D: S}, D: {C: T, D: P}}
         self.prevState = 0
         self.prevAction = False
+        print self.payoff
 
     def strategy(self, opponent):
         """
@@ -87,7 +97,6 @@ class Learner(Player):
         The length of the state list is 4^mem
         """
         
-        self.turns += 1
         mem = self.memory
         randomPlay = False
         opHistory = opponent.history[-mem:]
@@ -100,8 +109,12 @@ class Learner(Player):
         if (randomPlay):    
             return random_choice()
 
+        self.turns[self.prevState][self.prevAction] += 1
+
+        # print (self.prevState, self.prevAction, opponent.history[-1], self.payoff[decodeMove(self.prevAction)][opponent.history[-1]])
+
         # Update the q table when results of the previous turn are available
-        self.qTabUpdate(self.prevState, self.prevAction, self.payoff[self.prevAction][opponent.history[-1]])
+        self.qTabUpdate(self.prevState, self.prevAction, self.payoff[decodeMove(self.prevAction)][opponent.history[-1]])
 
         choice = []
         for i in range(0,mem):
@@ -109,8 +122,14 @@ class Learner(Player):
             # Get the encoding for the state
         ids = decode(choice, mem)
 
+        # print ids
+
         self.prevState = ids
-        self.prevAction = max(self.qTab[ids].iteritems(), key=operator.itemgetter(1))[0]
+        if (random.random() < self.explore):
+            self.prevAction = encodeMove(random_choice())
+            # print self.prevAction
+        else:
+            self.prevAction = max(self.qTab[ids].iteritems(), key=operator.itemgetter(1))[0]
 
         return decodeMove(self.prevAction)
 
@@ -118,7 +137,9 @@ class Learner(Player):
         """
         Performs the update of the Q Table
         """
-        self.qTab[state][action] += (1/self.turns)*(reward - self.qTab[state][action])
+        print self.qTab
+        # print state, action, reward
+        self.qTab[state][action] += (1/self.turns[state][action])*(reward - self.qTab[state][action])
 
     def __repr__(self):
         """The string method for the strategy."""
@@ -127,15 +148,15 @@ class Learner(Player):
 
 
 def main():
-    ply = Learner()
+    ply = Learner(memory_depth = 1)
     print ply
     p1, p2 = axelrod.Cooperator(), axelrod.Defector()
     # for turn in range(10):
     #     p1.play(p2)
     # print p1.history, p2.history
-    for turn in range(10):
-        ply.play(p2)
+    for turn in range(100):
+        ply.play(p1)
     print ply.history
-    print p2.history
+    print p1.history
 
 main()
