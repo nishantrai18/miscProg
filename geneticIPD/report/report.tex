@@ -39,7 +39,7 @@
 	        \textbf{Abstract\\}
         	\vspace{4mm}
         	\noindent
-{\justifying{The project deals with the problem of computing successful strategies for Iterated Prisoner's dilemma. We propose multiple algorithms to compute good strategies which perform well against a set of baseline algorithms (Including the extremely simple yet effective 'Tit for Tat'). We discuss Axelrod's Tournament and use a similar setup to decide the effectiveness of the computed strategies. The result section shows the superiority of the strategies computed using them.} \par}
+{\justifying{The project deals with the problem of computing successful strategies for Iterated Prisoner's dilemma. We propose multiple algorithms to compute good strategies which perform well against a set of baseline algorithms (Including the extremely simple yet effective 'Tit for Tat'). The proposed algorithms include Evolutionary Strategies and Reinforcement Learning to compute optimal and also adaptive strategies which perform well against multiple opponents. We discuss Axelrod's Tournament and use a similar setup to decide the effectiveness of the computed strategies. The result section shows the superiority of the strategies computed using them.} \par}
 			\vfill
 			\includegraphics[width=0.25\textwidth]{iitklogo.png}\\[0.1in]
             \vspace{3mm}
@@ -192,14 +192,40 @@ cooperated is greater than or equal to the number of times it has defected, else
 	
 	\subsection{Tournament Setup}
 	
+	The tournament setup is inspired by Axelrod'd initial study. It consists of a round robin tournament amongst all the strategies where each game is played for 200 turns. The whole tournament is repeated a few times (10 times in our experiments) to lessen the effect of randomness.
+
 	\section{Results}
 	
+	\subsection{Plots for the Evolutionary Algorithm}
+
+	\subsubsection{Single Objective Genetic Algorithm (Max-Avg Fitness)}	
+
+	\textbf{Maximum Fitness (Generation wise)}\\
+	\textbf{Average Fitness (Generation wise)}
+
+	\subsubsection{Multi Objective Genetic Algorithm (Max-Avg Fitness)}
+		
+	\textbf{Maximum Fitness (Generation wise)}\\
+	\textbf{Average Fitness (Generation wise)}\\
+	\textbf{Plots for final population}
+
+	\subsection{Plotting Optimal strategies}
+
+	\subsection{Effect of Memory on Strategies}
+	
+	\textbf{Fitness vs Memory Used}
+	\textbf{Computation Time vs Memory Used}
+	
 	\section{Observations}
+
+	\subsection{Similarities between Optimal strategies}
 	
 	\subsection{Effect of Memory on Strategies}	
 		
 	\section{Future Work}
 			
+	\section{References}
+
 \end{document}
 
 
