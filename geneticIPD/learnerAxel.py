@@ -46,6 +46,10 @@ def encodeMove(choice):
     else:
         return False
 
+def correction(num):
+    ans = 0.1*(1 + 10*((2.0)**(-0.02*(num**(0.5)))))
+    return ans
+
 class Learner(Player):
     """A player uses a predefined array of choices. It considers the k previous
     moves and decides which move to make based on the provided list.
@@ -121,8 +125,12 @@ class Learner(Player):
         ids = decode(choice, mem)
         # print ids
 
+        self.totTurns += 1
+        # if (self.totTurns%1000 == 0):
+        #     print self.totTurns, self.explore*correction(self.totTurns)
+
         self.prevState = ids
-        if (random.random() < self.explore):
+        if (random.random() < self.explore*correction(self.totTurns)):
             self.prevAction = encodeMove(random_choice())
             # print self.prevAction
         else:
@@ -135,15 +143,26 @@ class Learner(Player):
         Performs the update of the Q Table
         """
         self.turns[state][action] += 1.0
-        print self.qTab
-        print state, action, reward
+        # print self.qTab
+        # print state, action, reward
         self.qTab[state][action] += (1.0/self.turns[state][action])*(reward - self.qTab[state][action])
 
     def __repr__(self):
         """The string method for the strategy."""
         name = 'LearnMem' + (self.memory > 0) * (": %i" % self.memory)
         return name
+        
+    def reset(self):
+        """
+        Resets scores, QTable and history
+        """
+        Player.reset(self)
 
+        self.qTab = [dict({True: 0, False: 0}) for i in range(0, self.qTabSize)]
+        self.turns = [dict({True: 0, False: 0}) for i in range(0, self.qTabSize)]
+        self.totTurns = 0
+        self.prevState = 0
+        self.prevAction = False
 
 def main():
     ply = Learner(memory_depth = 1)
