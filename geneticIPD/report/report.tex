@@ -176,11 +176,10 @@ Axelrod adopted a simple but elegant way for encoding strategies, and then used 
 	\begin{enumerate}
 	
 	\item \textbf{Always Cooperate:} Cooperates on every move
-	\item \textbf{Always Defect:} Defects on every move3) Tit for Tat : Cooperates on the first move, then simply copies the opponent's last move.
+	\item \textbf{Always Defect:} Defects on every move
+	\item \textbf{Tit for Tat:} Cooperates on the first move, then simply copies the opponent's last move.
 	\item \textbf{Suspicious Tit for Tat:} Same as Tit for Tat, except that it defects on the first move
-	\item \textbf{Spiteful:} Cooperates, until the opponent defects, and thereafter always defects.
 	\item \textbf{Random:} Makes a random move.
-	\item \textbf{Cyclic CD:} Plays C, D periodically.
 	\item \textbf{Cyclic CCD:} Plays C, C, D periodically.
 	\item \textbf{Tit for Two Tats:} Cooperates on the first move, and defects only when the opponent defects two times.
 	\item \textbf{Soft Majority:} Begins by cooperating, and cooperates as long as the number of times the opponent has
@@ -192,11 +191,11 @@ cooperated is greater than or equal to the number of times it has defected, else
 	
 	\subsection{Tournament Setup}
 	
-	The tournament setup is inspired by Axelrod'd initial study. It consists of a round robin tournament amongst all the strategies where each game is played for 200 turns. The whole tournament is repeated a few times (10 times in our experiments) to lessen the effect of randomness.
+	The tournament setup is inspired by Axelrod's initial study. It consists of a round robin tournament amongst all the strategies where each game is played for 200 turns. The whole tournament is repeated a few times (10 times in our experiments) to lessen the effect of randomness.
 
-	\section{Results}
-	
-	\subsection{Plots for the Evolutionary Algorithm}
+	\section{Results for Evolutionary Algorithm}
+
+	\subsection{Evolution Statistics}
 
 	\subsubsection{Single Objective Genetic Algorithm (Max-Avg Fitness)}	
 
@@ -213,15 +212,36 @@ cooperated is greater than or equal to the number of times it has defected, else
 
 	\subsection{Effect of Memory on Strategies}
 	
-	\textbf{Fitness vs Memory Used}
+	\textbf{Fitness vs Memory Used}\\
 	\textbf{Computation Time vs Memory Used}
 	
-	\section{Observations}
-
-	\subsection{Similarities between Optimal strategies}
+	\subsection{Tournament amongst strategies}
 	
-	\subsection{Effect of Memory on Strategies}	
+	\subsection{Observations}
+
+	\subsubsection{Similarities between Optimal strategies}
+	
+	\subsubsection{Effect of Memory on Strategies}	
+
+	\section{Results for Adaptive Strategies}
+
+	\subsection{Learning Performance}
 		
+	\subsubsection{Performance Against Other Strategies}
+	\subsubsection{Initial Behavior (Payoff)}
+	\subsubsection{Behavior in the Long-run}
+
+	\subsection{Observations}
+	
+	\subsubsection{Effect of Parameters on Learning}
+	\subsubsection{Effect of Memory}
+	\subsubsection{Special Cases: Cooperator and Defector}
+
+	\section{Showdown: Evolved Strategy Vs Adaptive Strategy}
+
+	\subsection{Performance Against Each Other}
+	\subsection{Performance Against Other Strategies}
+
 	\section{Future Work}
 			
 	\section{References}
