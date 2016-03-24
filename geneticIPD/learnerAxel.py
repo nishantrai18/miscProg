@@ -119,7 +119,6 @@ class Learner(Player):
             choice.append(encode(myHistory[i], opHistory[i]))
             # Get the encoding for the state
         ids = decode(choice, mem)
-
         # print ids
 
         self.prevState = ids
@@ -135,9 +134,9 @@ class Learner(Player):
         """
         Performs the update of the Q Table
         """
-        self.turns[state][action] += 1
-        # print self.qTab
-        # print state, action, reward
+        self.turns[state][action] += 1.0
+        print self.qTab
+        print state, action, reward
         self.qTab[state][action] += (1.0/self.turns[state][action])*(reward - self.qTab[state][action])
 
     def __repr__(self):
@@ -147,13 +146,13 @@ class Learner(Player):
 
 
 def main():
-    ply = Learner(memory_depth = 2)
+    ply = Learner(memory_depth = 1)
     print ply
-    p1, p2 = axelrod.CyclerCCCD(), axelrod.Defector()
+    p1 = axelrod.Random()
     # for turn in range(10):
     #     p1.play(p2)
     # print p1.history, p2.history
-    for turn in range(100000):
+    for turn in range(1000):
         ply.play(p1)
     print ply.qTab
     # print ply.history
