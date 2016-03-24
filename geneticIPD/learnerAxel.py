@@ -2,6 +2,7 @@ import axelrod
 from axelrod import Actions, Player, init_args, random_choice
 import operator
 import random
+import numpy
 
 C, D = Actions.C, Actions.D
 
@@ -50,6 +51,13 @@ def correction(num):
     ans = 0.1*(1 + 10*((2.0)**(-0.02*(num**(0.5)))))
     return ans
 
+def sigmoid(pList):
+    pList = numpy.array(pList)
+    totSum = sum((2.0)**pList)
+    print pList
+    print ((2.0)**pList/totSum)
+    return ((2.0)**pList/totSum)
+
 class Learner(Player):
     """A player uses a predefined array of choices. It considers the k previous
     moves and decides which move to make based on the provided list.
@@ -67,21 +75,25 @@ class Learner(Player):
     }
 
     @init_args
-    def __init__(self, memory_depth = 3, exploreProb = 0.1):
+    def __init__(self, memory_depth = 3, exploreProb = 0.2, learnerType = 1):
         """
         Parameters
         ----------
         memory_depth, int >= 0
             The number of rounds to use for the calculation of the cooperation
             and defection probabilities of the opponent.
+        exploreProb, float >= 0
+            The probability of exploration while ignoring the best option
         """
 
         Player.__init__(self)
+        self.type = learnerType
         self.qTabSize = (4**memory_depth)
         # qTabSize : It refers to the size of the qTable. It consists of all possible states in the game
-        self.qTab = [dict({True: 0, False: 0}) for i in range(0, self.qTabSize)]
+        self.qTab = [dict({True: 2, False: 2}) for i in range(0, self.qTabSize)]
         # qTab : The QTable which stores the Q values. It's updated during gameplay
-        self.turns = [dict({True: 0, False: 0}) for i in range(0, self.qTabSize)]
+        self.turns = [dict({True: 1, False: 1}) for i in range(0, self.qTabSize)]
+        self.totTurns = 0
         self.classifier['memory_depth'] = memory_depth
         # The memory depth to consider while playing the game
         self.memory = self.classifier['memory_depth']
@@ -91,7 +103,7 @@ class Learner(Player):
         self.payoff = {C: {C: R, D: S}, D: {C: T, D: P}}
         self.prevState = 0
         self.prevAction = False
-        print self.payoff
+
 
     def strategy(self, opponent):
         """
@@ -125,7 +137,8 @@ class Learner(Player):
         ids = decode(choice, mem)
         # print ids
 
-        self.totTurns += 1
+        if (self.type > 0):
+            self.totTurns += 1
         # if (self.totTurns%1000 == 0):
         #     print self.totTurns, self.explore*correction(self.totTurns)
 
@@ -133,8 +146,10 @@ class Learner(Player):
         if (random.random() < self.explore*correction(self.totTurns)):
             self.prevAction = encodeMove(random_choice())
             # print self.prevAction
-        else:
+        elif (self.type == 1):
             self.prevAction = max(self.qTab[ids].iteritems(), key=operator.itemgetter(1))[0]
+        else:
+            self.prevAction = numpy.random.choice(self.qTab[ids].keys(), p = sigmoid(self.qTab[ids].values()))
 
         return decodeMove(self.prevAction)
 
