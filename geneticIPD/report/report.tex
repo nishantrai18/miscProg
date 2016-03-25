@@ -461,8 +461,44 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 
 	\section{Showdown: Evolved Strategy Vs Adaptive Strategy}
 
+	We perform matches between the Evolved strategies and the adaptive strategies to study their performance. We conduct matches of different length, to study both the initial and far-off behavior.
+	
 	\subsection{Performance Against Each Other}
+
+	When the adaptive strategy is played against the evolved ones, the results are as follows,
+	
+	\begin{table}[H]
+	  \begin{center}
+	    \begin{tabular}{|c|c|c|}
+	      \toprule
+	 	  \textsc{Turns} & \textsc{Single Objective Strategy} & \textsc{Multi Objective Strategy}\\
+	      \midrule
+		  20    & \textbf{2.150} (1.400) & \textbf{2.400} (1.400)\\		  
+		  200	& \textbf{2.190} (1.915) & \textbf{2.025} (1.725)\\
+		  2000  & 1.827 \textbf{(2.017)} & 1.858 \textbf{(1.998)}\\
+		  20000 & 1.781 \textbf{(1.95)} & 1.780 \textbf{(1.945)}\\
+		  200000 & 1.743 \textbf{(1.962)} & 1.752 \textbf{(1.951)}\\
+		\bottomrule
+	    \end{tabular}
+	  \end{center}
+	\end{table}  		
+	
+	As we can see above, the adaptive strategy slowly adapts to the evolved strategy and starts outperforming them as the number of turns played increases. Note that the payoffs shown for turns = 20, 200 have extremely high variance and thus are not reliable (and should not be taken at face value).
+	
 	\subsection{Performance Against Other Strategies}
+	
+	% Learner
+	%Cooperator & Defector & Cycler CCD & Hard Tit For Tat & Tit For 2 Tats & Suspicious Tit For Tat & Random: 0.5 & Tit For Tat & Prober &
+%4.9318 ( 0.1023 ) & 0.8714 ( 1.5144 ) & 3.5766 ( 0.58085 ) & 0.87985 ( 1.5236 ) &
+%1.70955 ( 1.2053 ) & 1.34975 ( 1.34975 ) & 2.9038 ( 0.7323 ) & 1.35985 ( 1.3596 ) & 1.34015 ( 1.33965 ) &
+
+% SingObj
+%4.0 ( 1.5 ) & 0.9999 ( 1.0004 ) & 3.6664 ( 0.33415 ) & 2.99965 ( 3.00015 ) &
+%4.0 ( 1.5 ) & 2.9998 ( 3.00005 ) & 2.48695 ( 1.70695 ) & 2.99995 ( 2.99995 ) & 2.9998 ( 3.00005 ) &
+
+%MultObj
+%4.0 ( 1.5 ) & 0.9999 ( 1.0004 ) & 3.6664 ( 0.33415 ) & 2.99965 ( 3.00015 ) &
+%4.0 ( 1.5 ) & 2.9998 ( 3.00005 ) & 2.48845 ( 1.7122 ) & 2.99995 ( 2.99995 ) & 2.9998 ( 3.00005 ) &
 
 	\section{Future Work}
 			
