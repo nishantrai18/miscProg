@@ -199,7 +199,7 @@ cooperated is greater than or equal to the number of times it has defected, else
 
 	\subsection{Evolution Statistics}
 
-	\subsubsection{Single Objective Genetic Algorithm (Max-Avg Fitness)}	
+	\subsubsection{Single Objective Genetic Algorithm}	
 
 	\begin{wrapfigure}{R}{0.55\textwidth}
 	\centering
@@ -210,7 +210,7 @@ cooperated is greater than or equal to the number of times it has defected, else
 	We show the maximum and average fitness of the population. As we can see the population achieves the final value extremely quickly (Under 50 iterations). The fluctuations caused in between are a result of the mutations introduced in the population (Something inherent in Evolutionary Algorithms).\\
 	After 500 generations the maximum fitness amongst all the samples in the population is around 312, which is even higher than the benchmark score (300) \textbf{(Dawkins)}. This shows the superiority of the Evolutionary strategy and is also in line with the results obtained by Axelrod. When this strategy is pitted against other strategy in an Axelrod-like tournament, the evolved strategy emerges as a clear winner (By a huge margin). The results are discussed in later sections.	
 
-	\subsubsection{Multi Objective Genetic Algorithm (Max-Avg Fitness)}
+	\subsubsection{Multi Objective Genetic Algorithm}
 		
 	\begin{wrapfigure}{R}{0.55\textwidth}
 	\centering
@@ -423,7 +423,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	  \begin{center}
 	    \begin{tabular}{|c|c|c|c|c|}
 	      \toprule
-		  {Memory Used} & {Cooperator} & {Defector} & {CyclerCCD} & {Hard TfT}\\
+		  \textsc{Memory Used} & \textsc{Cooperator} & \textsc{Defector} & {\footnotesize{\textsc{CyclerCCD}}} & \textsc{Hard TfT}\\
 	      \midrule
 		   1 & 	4.593 & 0.666 & 3.264 & 0.793\\
 		   2 & 4.592 & 0.664 & \textbf{3.280} & 0.786\\
@@ -437,7 +437,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	  \begin{center}
 	    \begin{tabular}{|c|c|c|c|c|c|}
 	      \toprule
-	 	  {Memory Used} & {Tf2T} & {Suspicious TfT} & {Random} & {TfT} & {Prober}\\
+	 	  \textsc{Memory Used} & \textsc{Tf2T} & {\footnotesize{\textsc{Suspicious TfT}}} & \textsc{Random} & \textsc{TfT} & \textsc{Prober}\\
 	      \midrule
 		  1	& 2.552 & 1.832 & 2.603 & 1.834 & 1.836\\
 		  2 & \textbf{2.592} & 1.829 & 2.597 & 1.829 & 1.831\\
@@ -447,9 +447,17 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	  \end{center}
 	\end{table}  		
 	 
-	As we can see from the above table, increasing memory has little or almost no effect on the performance of the strategy. This can be due to the fact that almost all the above strategies are extremely local in nature (i.e. Do not look more than 1-2 steps back). Thus, only one look up is enough to explain the strategies well enough.	 
+	As we can see from the above table, increasing memory has little or almost no effect on the performance of the strategy. This can be due to the fact that almost all the above strategies are extremely local in nature (i.e. Do not look more than 1-2 steps back). Thus, only one look up is enough to explain the opposing strategies well enough. This reasoning is supported by the fact that there is a slight improvement in the payoffs of the strategies  \textsc{CyclerCCD} and \textsc{Tit for 2 Tats}, both of which require at least 2-3 memory length to tackle efficiently.
 	 
 	\subsubsection{Special Cases: Cooperator and Defector}
+
+	This section discusses the performance of our proposed adaptive strategy in detail by considering selective opponents i.e. Cooperator and Defector. We select these strategies for ease of discussion.\\
+	
+	\noindent
+	\textbf{Cooperator: } As the name suggests, this is a simple strategy which always cooperates. Our algorithm starts off in a pure state, having no knowledge of what would be a better strategy. It interacts with the opponent and slowly learns which strategy give better returns. As can be seen in earlier figures, the strategy performs poorly initially (Due to no knowledge at the moment). Initially, it tries exploring all possible moves and infer which moves should be better. Thus, as observed in the plots, the payoffs slowly start to rise and approach 5 (The optimal value). In the end, the payoff is still slightly less than 5 due to a small amount of exploration being performed (To check whether another better strategy can be found).\\
+	
+	\noindent
+	\textbf{Defector: } As the name suggests, this is a simple strategy which always defects. Note that against such a strategy, the maximum payoff is 1. 	Similar to the previous case, our algorithm starts off by having no previous knowledge. It interacts with the opponent and slowly learns which strategy give better returns. As can be seen in earlier figures, the strategy performs poorly initially (Due to exploration being performed). Thus, as observed in the plots and noted in the previous case, the payoffs slowly start to rise and approach 1 (The optimal value). Note that a defector will always win (In any case, against any strategy other then Defector itself) and consequently will always have higher (>=) payoff than the opponent. So, in effect our strategy has managed to learn the (nearly) best possible action in this case.
 
 	\section{Showdown: Evolved Strategy Vs Adaptive Strategy}
 
