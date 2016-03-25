@@ -199,14 +199,32 @@ cooperated is greater than or equal to the number of times it has defected, else
 
 	\subsubsection{Single Objective Genetic Algorithm (Max-Avg Fitness)}	
 
-	\textbf{Maximum Fitness (Generation wise)}\\
-	\textbf{Average Fitness (Generation wise)}
+	\begin{wrapfigure}{R}{0.55\textwidth}
+	\centering
+	\includegraphics[width=0.53\textwidth]{singFitPlot.eps}
+	\caption{\footnotesize{Fitness of Population during Evolution}}
+	\end{wrapfigure}
+	The single-objective Evolutionary Algorithm used is the same as used by Axelrod in his initial study. As done earlier, the fitness i.e. self-score of the player is maximized during evolution. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure.\\
+	We show the maximum and average fitness of the population. As we can see the population achieves the final value extremely quickly (Under 50 iterations). The fluctuations caused in between are a result of the mutations introduced in the population (Something inherent in Evolutionary Algorithms).\\
+	After 500 generations the maximum fitness amongst all the samples in the population is around 312, which is even higher than the benchmark score (300) \textbf{(Dawkins)}. This shows the superiority of the Evolutionary strategy and is also in line with the results obtained by Axelrod. When this strategy is pitted against other strategy in an Axelrod-like tournament, the evolved strategy emerges as a clear winner (By a huge margin). The results are discussed in later sections.	
 
 	\subsubsection{Multi Objective Genetic Algorithm (Max-Avg Fitness)}
 		
-	\textbf{Maximum Fitness (Generation wise)}\\
-	\textbf{Average Fitness (Generation wise)}\\
-	\textbf{Plots for final population}
+	\begin{wrapfigure}{R}{0.55\textwidth}
+	\centering
+	\includegraphics[width=0.53\textwidth]{multFitPlot.eps}
+	\caption{\footnotesize{Fitness of Population during Evolution}}
+	\end{wrapfigure}
+	Instead of just maximizing our own score as proposed by Axelrod, we perform another experiment in which along with maximizing our self score we also try to reduce the opponents score. The intuition for this can be seen from the payoff matrix of the game. Assume that the opponent has selected his move and it's our turn to choose. Notice that for all moves of the opponent, the one in which we get higher payoff is the one in which our rival gets a lower payoff.\\
+	We used a Multi-Objective Evolutionary Algorithm (NSGA-II) to compute the strategy. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure. We show the maximum and average fitness of the population. The behavior of evolution mostly remains similar to the previous case. But we can see that the final value obtained \textit{(321)} in this case is higher than the Single Objective counterpart \textit{(312)}, which further motivates the benefit of using a multi-objective optimization algorithm.\\
+
+	To further demonstrate the evolution, we plot the initial and final strategies obtained in Figure 3. The blue crosses represent the initial randomly initialized strategies. The red pluses represent the final evolved strategies, it can be easily seen that the initially random population slowly approaches the 'optimal' region. The out of place red members in the final evolved population are the mutated individuals.
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{evolvePlot.eps}
+	\caption{{Distribution of Final Evolved Strategies and the Initial Randomly initialized Strategies}}
+	\end{figure}
 
 	\subsection{Plotting Optimal strategies}
 
