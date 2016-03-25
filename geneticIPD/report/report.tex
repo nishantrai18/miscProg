@@ -230,14 +230,120 @@ cooperated is greater than or equal to the number of times it has defected, else
 
 	\subsection{Effect of Memory on Strategies}
 	
-	\textbf{Fitness vs Memory Used}\\
-	\textbf{Computation Time vs Memory Used}
+	Axelrod performed his experiments assuming a memory length of 3. We perform our experiments with multiple memory lengths to gain insight whether it is in fact optimal. The results are shown in the following table,
+	
+	\begin{table}[H]
+	  \begin{center}
+	    \begin{tabular}{c|c|c}
+	      \toprule
+	      \textsc{Memory Length} & \textsc{Self Score} & \textsc{Encoding Size}\\
+	      \midrule
+	      1 & 280.18 & 6\\
+		  2 & 291.36 & 20\\
+		  \textbf{3} & \textbf{314.27} & \textbf{70}\\
+		  4 & 281.72 & 264\\
+		  5 & 284.09 & 1034\\
+		  6 & 296.18 & 4108\\		  
+		  \bottomrule
+	    \end{tabular}
+	    \caption{\textsc{Effect of Memory}}
+	  \end{center}
+	\end{table}  
 	
 	\subsection{Tournament amongst strategies}
+
+	We conduct an Axelrod-like tournament amongst the mentioned strategies to compare and evaluate them. The baseline strategies used are mentioned in the earlier sections.
+
+	\subsubsection{Multi Objective Strategy Vs Others}
+
+	In this setup we conduct a tournament between the strategy computed using the Multi Objective GA and the baseline strategies. The best performer has been highlighted in bold text. The average score refers to the average payoff per turn.
+
+	\begin{table}[H]
+	  \begin{center}
+	    \begin{tabular}{c|c}
+	      \toprule
+	      \textsc{Player} & \textsc{Average Score}\\
+	      \midrule
+			Cooperator & 2.091\\
+			Defector & 1.799\\
+			Cycler CCD & 2.339\\
+			Hard Go By Majority & 2.023\\
+			\textbf{Multi Objective Strategy} & \textbf{3.183}\\
+			Soft Go By Majority & 2.418\\
+			Hard Tit For Tat & 2.317\\
+			Tit For 2 Tats & 2.304\\
+			Suspicious Tit For Tat & 2.269\\
+			Random: 0.5 & 2.244\\
+			Tit For Tat & 2.627\\
+			Prober & 2.510\\
+		  \bottomrule
+	    \end{tabular}
+	    \caption{\textsc{Tournament Results}}
+	  \end{center}
+	\end{table}  
+
+	\subsubsection{Single Objective Strategy Vs Others}
+
+In this setup we conduct a tournament between the strategy computed using the Single Objective GA and the baseline strategies. The best performer has been highlighted in bold text. The average score refers to the average payoff per turn.
+	
+	\begin{table}[H]
+	  \begin{center}
+	    \begin{tabular}{c|c}
+	      \toprule
+	      \textsc{Player} & \textsc{Average Score}\\
+	      \midrule
+			Cooperator & 2.089\\
+			Defector & 1.807\\
+			Cycler CCD & 2.333\\
+			Hard Go By Majority & 2.037\\
+			\textbf{Single Objective Strategy} & \textbf{3.159}\\
+			Soft Go By Majority & 2.426\\
+			Hard Tit For Tat & 2.319\\
+			Tit For 2 Tats & 2.304\\
+			Suspicious Tit For Tat & 2.273\\
+			Random: 0.5 & 2.273\\
+			Tit For Tat & 2.630\\
+			Prober & 2.500\\
+		  \bottomrule
+	    \end{tabular}
+	    \caption{\textsc{Tournament Results}}
+	  \end{center}
+	\end{table}  
+
+	\subsubsection{Tournament with all strategies}
+	
+In this setup we conduct a tournament consisting of both the evolutionary strategy and the baseline strategies. The best performer has been highlighted in bold text. The average score refers to the average payoff per turn.	
+	
+	\begin{table}[H]
+	  \begin{center}
+	    \begin{tabular}{c|c}
+	      \toprule
+	      \textsc{Player} & \textsc{Average Score}\\
+	      \midrule
+			Cooperator & 2.043\\
+			Defector & 1.737\\
+			Cycler CCD & 2.179\\
+			Hard Go By Majority & 1.977\\
+			\textbf{Multi Objective Strategy} & \textbf{3.051}\\
+			Soft Go By Majority & 2.356\\
+			Hard Tit For Tat & 2.375\\
+			Tit For 2 Tats & 2.235\\
+			{Single Objective Strategy} & {3.045}\\
+			Suspicious Tit For Tat & 2.331\\
+			Random: 0.5 & 2.201\\
+			Tit For Tat & 2.661\\
+			Prober & 2.551\\
+		  \bottomrule
+	    \end{tabular}
+	    \caption{\textsc{Tournament Results}}
+	  \end{center}
+	\end{table}  
+
+	It can be seen that the Multi Objective Strategy performs slightly better than the Single counterpart. This reaffirms the superiority of the Multi Objective strategy over the Single Objective one.
 	
 	\subsection{Observations}
-
-	\subsubsection{Similarities between Optimal strategies}
+	
+	\subsubsection{Inferring from the Optimal strategies}
 	
 	\subsubsection{Effect of Memory on Strategies}	
 
