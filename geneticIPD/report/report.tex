@@ -228,8 +228,6 @@ cooperated is greater than or equal to the number of times it has defected, else
 	\caption{{Distribution of Final Evolved Strategies and the Initial Randomly initialized Strategies}}
 	\end{figure}
 
-	\subsection{Plotting Optimal strategies}
-
 	\subsection{Effect of Memory on Strategies}
 	
 	Axelrod performed his experiments assuming a memory length of 3. We perform our experiments with multiple memory lengths to gain insight whether it is in fact optimal. The results are shown in the following table,
@@ -345,7 +343,23 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	
 	\subsection{Observations}
 	
-	\subsubsection{Inferring from the Optimal strategies}
+	\subsubsection{Behavior of the Evolved strategies}
+
+	We choose a few individuals out of the evolved population randomly and compare the strategies obtained. We mention some of the interesting traits found common in all the strategies. We also try to relate the trends observed in these strategies to the desirable qualities required for successful strategies (Mentioned in previous sections). Some of the trends noted are as follows,
+	\begin{itemize}
+	\item \textbf{PPP (0) :} In this situation both the players have been defecting over the previous three moves. Since both players were defecting previously, defecting again would be a good choice to minimize the damage and prevent the opponent's score to increase.
+	\item \textbf{PPT (1) :} In this case, the opponent defected on the first two moves, but cooperated in the third move, while player 1 defected in all the three moves. Thus, we should continue to exploit the 'foolishness' of the opponent and defect in the next move too (Expecting the opponent to cooperate).
+	\item \textbf{PTP, PTT (4, 5) :} Here, all of the given cases are similar to the previous case, which means defecting would be the best choice (To exploit the 'foolish' opponent).
+	\item \textbf{PRR (15) :} Here, the opponent has cooperated for the last few moves, so in order to gain more points defecting will be a good choice. But, note that this may make the opponent distrustful.
+	\item \textbf{TPT, TTT (17, 21) :} All the given cases are similar to the previous case, which means defecting would be the best choice (To exploit the 'foolish' opponent).
+	\item \textbf{TTP (20) :} Here, the opponent was cooperating with us initially. But it didn't in the last move, which shows that trust has been lost and the best move would be to defect again.
+	\item \textbf{TRR (31) :} After being betrayed, we and the opponent both start cooperating. Thus, to exploit this relationship it would be best to defect next.
+	\item \textbf{STT (37) :} This case is quite similar to the 'foolish' opponent cases discussed above. So, the best choice is to defect.
+	\item \textbf{SRR (47) :} After being betrayed, we and the opponent both start cooperating. Thus, we should continue cooperating. Note the difference between 31 and 47. Even though the last two turns (histories) are the same, the next action is completely different. It can be speculated that this is due to the fact that in 31, the opponent trusts us easily (Since it cooperated after being betrayed). So, we can betray it again, hoping that it won't mind. But in this case, we are not aware of the opponent's behavior (Since we were betrayed here).
+	\item \textbf{RTR (55) :} This case is again similar to the 'foolish' opponent case. In this case, the opponent trusts us easily. So, exploiting this behavior would be the best.
+	\item \textbf{RRT (61) :} Here, both players have cooperated in the initial two moves and we've exploited it in the last turn. So, now that trust has been lost it would be better to defect.
+	\item \textbf{RRR (63) :} In this case, both players have cooperated in the last few moves. So, the best move would be to continue cooperating (So that we don't lose trust).
+	\end{itemize}
 	
 	\subsubsection{Effect of Memory on Strategies}	
 
@@ -487,18 +501,38 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	
 	\subsection{Performance Against Other Strategies}
 	
-	% Learner
-	%Cooperator & Defector & Cycler CCD & Hard Tit For Tat & Tit For 2 Tats & Suspicious Tit For Tat & Random: 0.5 & Tit For Tat & Prober &
-%4.9318 ( 0.1023 ) & 0.8714 ( 1.5144 ) & 3.5766 ( 0.58085 ) & 0.87985 ( 1.5236 ) &
-%1.70955 ( 1.2053 ) & 1.34975 ( 1.34975 ) & 2.9038 ( 0.7323 ) & 1.35985 ( 1.3596 ) & 1.34015 ( 1.33965 ) &
+	\renewcommand{\tabcolsep}{8pt}
 
-% SingObj
-%4.0 ( 1.5 ) & 0.9999 ( 1.0004 ) & 3.6664 ( 0.33415 ) & 2.99965 ( 3.00015 ) &
-%4.0 ( 1.5 ) & 2.9998 ( 3.00005 ) & 2.48695 ( 1.70695 ) & 2.99995 ( 2.99995 ) & 2.9998 ( 3.00005 ) &
+	\begin{table}[H]
+	  \begin{center}
+	    \begin{tabular}{|c|c|c|c|c|}
+	      \toprule
+	 	  \textsc{Strategy} & \textsc{Cooperator} & \textsc{Defector} & \textsc{CyclerCCD} & \textsc{Hard TfT}\\
+		  \midrule
+		  Adaptive Strategy & \textbf{4.932} \textbf{(0.102)} & 0.871 (1.514) & 3.577 (0.581) & 0.880 (1.524)\\
+		  Single Obj & 4.000 (1.500) & \textbf{1.000 (1.000)} & \textbf{3.666 (0.334)} & \textbf{3.000 (3.000)}\\
+		  Multi Obj & 4.000 (1.500) & \textbf{1.000 (1.000)} &  \textbf{3.666 (0.334)} & \textbf{3.000 (3.000)}\\
+		\bottomrule
+	    \end{tabular}
+	  \end{center}
+	\end{table}  		
 
-%MultObj
-%4.0 ( 1.5 ) & 0.9999 ( 1.0004 ) & 3.6664 ( 0.33415 ) & 2.99965 ( 3.00015 ) &
-%4.0 ( 1.5 ) & 2.9998 ( 3.00005 ) & 2.48845 ( 1.7122 ) & 2.99995 ( 2.99995 ) & 2.9998 ( 3.00005 ) &
+	\renewcommand{\tabcolsep}{6pt}
+
+	\begin{table}[H]
+	  \begin{center}
+	  	\footnotesize
+	    \begin{tabular}{|c|c|c|c|c|c|}
+	      \toprule
+	 	  \textsc{Strategy} & \textsc{Tf2T} & {\footnotesize{\textsc{Suspicious TfT}}} & \textsc{Random} & \textsc{TfT} & \textsc{Prober}\\
+		  \midrule
+		  Adaptive Strategy & 1.710 {(1.205)} & 1.350 (1.350) & \textbf{2.904 (0.732)} & 1.360 (1.360) & 1.340 (1.340)\\
+		  Single Obj & \textbf{4.000} \textbf{(1.500)} & \textbf{3.000 (3.000)} & 2.487 (1.710) & \textbf{3.000 (3.000)} & \textbf{3.000 (3.000)}\\
+		  Mult Obj & \textbf{4.000} \textbf{(1.500)} & \textbf{3.000 (3.000)} & 2.488 (1.712) & \textbf{3.000 (3.000)} & \textbf{3.000 (3.000)}\\
+		  \bottomrule
+	    \end{tabular}
+	  \end{center}
+	\end{table}  		
 
 	\section{Future Work}
 			
