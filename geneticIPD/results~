@@ -1,0 +1,56 @@
+Memory Length : 			Score
+1		    :			(280.1818181818182, 251.0909090909091)
+2             :			(291.3636363636364, 176.36363636363637)
+3		    : 			(314.27272727272725, 220.63636363636363)
+4		    :			(281.72727272727275, 214.0)
+5             :			(284.09090909090907, 185.0)
+6 		    :			(296.1818181818182, 208.0)
+
+Memory Length 3, Final Strategy:
+0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,1,0,1,0,1,0,1,0,0,1,1,1,0,1,0,0,0,0,1,1,1,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,0,1,1,0,0,1,1,0,0,1,1,1
+
+Tournament (Against Each Other):
+
+Cooperator 2.043375
+Defector 1.73716666667
+Cycler CCD 2.17891666667
+Hard Go By Majority 1.97716666667
+Soft Go By Majority 2.35604166667
+Hard Tit For Tat 2.37570833333
+Tit For 2 Tats 2.23504166667
+Suspicious Tit For Tat 2.33070833333
+Random: 0.5 2.201375
+Tit For Tat 2.661875
+Prober 2.550875
+EvolveMemMULT: 3 3.05116666667
+EvolveMemSING: 3 3.045
+
+Tournament (Only MultObj):
+
+Cooperator 2.09072727273
+Defector 1.79890909091
+Cycler CCD 2.33945454545
+Hard Go By Majority 2.02336363636
+Soft Go By Majority 2.41827272727
+Hard Tit For Tat 2.31740909091
+Tit For 2 Tats 2.30440909091
+Suspicious Tit For Tat 2.26881818182
+Random: 0.5 2.24445454545
+Tit For Tat 2.62704545455
+Prober 2.51027272727
+EvolveMemMULT: 3 3.18304545455
+
+Tournament (Only SingObj):
+
+Cooperator 2.08922727273
+Defector 1.80672727273
+Cycler CCD 2.33322727273
+Hard Go By Majority 2.03790909091
+Soft Go By Majority 2.42663636364
+Hard Tit For Tat 2.31890909091
+Tit For 2 Tats 2.30368181818
+Suspicious Tit For Tat 2.2705
+Random: 0.5 2.27286363636
+Tit For Tat 2.62963636364
+Prober 2.49977272727
+EvolveMemSING: 3 3.15936363636

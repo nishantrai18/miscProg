@@ -1,4 +1,3 @@
-import axelrod
 from axelrod import Actions, Player, init_args
 
 C, D = Actions.C, Actions.D
@@ -23,7 +22,7 @@ def decode(moveList, memLength):
         if (m == 'P'):
             val += 0
         elif (m == 'T'):
-            val += 1
+            val += 10
         elif (m == 'S'):
             val += 2
         elif (m == 'R'):
@@ -32,27 +31,13 @@ def decode(moveList, memLength):
             raw_input("ERROR DURING DECODE. WHAT TO DO NEXT?")
     return val
 
-def decodeVal(num, memLength):
-    move = ['P', 'T', 'S', 'R']
-    ans = []
-    for i in range(memLength):
-        m = num%4
-        ans.append(move[m])
-        num /= 4
-    # print ans
-    # if (len(ans) > memLength):
-    #     print "Value passed to decodeVal :", num, ", For memLength :", memLength
-    #     raw_input("What to do next? Waiting")
-    ans.reverse()
-    return ans
-
 def decodeMove(choice):
     if (choice):
         return C
     else:
         return D
 
-class EvolutionaryAxel(Player):
+class EvolveAxel(Player):
     """A player uses a predefined array of choices. It considers the k previous
     moves and decides which move to make based on the provided list.
 
@@ -111,7 +96,7 @@ class EvolutionaryAxel(Player):
             tmpList = []
             deficit = mem - len(myHistory)
             for i in range(deficit, 0, -1):
-                tmpList.append(decodeMove(self.actions[-i - mem]))
+                tmpList.append(decodeMove(self.actions[-i]))
             tmpList.extend(myHistory)
             myHistory = list(tmpList)
 
@@ -126,36 +111,3 @@ class EvolutionaryAxel(Player):
         """The string method for the strategy."""
         name = 'EvolveMem' + (self.memory > 0) * (": %i" % self.memory)
         return name
-
-def Join(strList):
-    ans = ''
-    for w in strList:
-        ans += w
-    return ans
-
-def main():
-    # ply = EvolutionaryAxel()
-    # print ply
-    # p1, p2 = axelrod.Cooperator(), axelrod.Defector()
-    # # for turn in range(10):
-    # #     p1.play(p2)
-    # # print p1.history, p2.history
-    # for turn in range(10):
-    #     ply.play(p2)
-    # print ply.history
-    # print p2.history
-    evolveCode = [0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0,\
- 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0]                 # For final experiments
-
-    for i in range(len(evolveCode)):
-        if (i >= 64):
-            break
-        print i, ':', Join(decodeVal(i, 3)), ':', decodeMove(evolveCode[i])
-
-    for i in range(64, 67):
-        print 'Self pre move assumption', i - 64, ':', decodeMove(evolveCode[i])
-
-    for i in range(67, 70):
-        print 'Opponent pre move assumption', i - 67, ':', decodeMove(evolveCode[i])
-
-main()

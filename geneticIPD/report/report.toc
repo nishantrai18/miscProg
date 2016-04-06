@@ -1,0 +1,37 @@
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {2}Existing Work}{2}
+\contentsline {section}{\numberline {3}Axelrod's Tournament}{3}
+\contentsline {subsection}{\numberline {3.1}Features of Successful Strategies}{3}
+\contentsline {subsection}{\numberline {3.2}Axelrod Strategies}{4}
+\contentsline {section}{\numberline {4}Motivation}{4}
+\contentsline {section}{\numberline {5}Proposed Algorithms}{4}
+\contentsline {subsection}{\numberline {5.1}Axelrod Strategies using Evolutionary Algorithms}{4}
+\contentsline {subsection}{\numberline {5.2}Reinforcement Learning for Adaptive Strategies}{5}
+\contentsline {section}{\numberline {6}Experiments}{5}
+\contentsline {subsection}{\numberline {6.1}Baseline Strategies}{5}
+\contentsline {subsection}{\numberline {6.2}Tournament Setup}{5}
+\contentsline {section}{\numberline {7}Results for Evolutionary Algorithm}{5}
+\contentsline {subsection}{\numberline {7.1}Evolution Statistics}{5}
+\contentsline {subsubsection}{\numberline {7.1.1}Single Objective Genetic Algorithm}{5}
+\contentsline {subsubsection}{\numberline {7.1.2}Multi Objective Genetic Algorithm}{6}
+\contentsline {subsection}{\numberline {7.2}Effect of Memory on Strategies}{7}
+\contentsline {subsection}{\numberline {7.3}Tournament amongst strategies}{7}
+\contentsline {subsubsection}{\numberline {7.3.1}Multi Objective Strategy Vs Others}{7}
+\contentsline {subsubsection}{\numberline {7.3.2}Single Objective Strategy Vs Others}{8}
+\contentsline {subsubsection}{\numberline {7.3.3}Tournament with all strategies}{8}
+\contentsline {subsection}{\numberline {7.4}Observations}{9}
+\contentsline {subsubsection}{\numberline {7.4.1}Behavior of the Evolved strategies}{9}
+\contentsline {subsubsection}{\numberline {7.4.2}Effect of Memory on Strategies}{10}
+\contentsline {section}{\numberline {8}Results for Adaptive Strategies}{10}
+\contentsline {subsection}{\numberline {8.1}Learning Performance}{10}
+\contentsline {subsubsection}{\numberline {8.1.1}Performance Against Other Strategies}{10}
+\contentsline {subsubsection}{\numberline {8.1.2}Initial Behavior (Payoff)}{11}
+\contentsline {subsection}{\numberline {8.2}Observations}{12}
+\contentsline {subsubsection}{\numberline {8.2.1}Effect of Parameters on Learning}{12}
+\contentsline {subsubsection}{\numberline {8.2.2}Effect of Memory}{14}
+\contentsline {subsubsection}{\numberline {8.2.3}Special Cases: Cooperator and Defector}{15}
+\contentsline {section}{\numberline {9}Showdown: Evolved Strategy Vs Adaptive Strategy}{15}
+\contentsline {subsection}{\numberline {9.1}Performance Against Each Other}{15}
+\contentsline {subsection}{\numberline {9.2}Performance Against Other Strategies}{15}
+\contentsline {section}{\numberline {10}Future Work}{16}
+\contentsline {section}{\numberline {11}References}{16}
