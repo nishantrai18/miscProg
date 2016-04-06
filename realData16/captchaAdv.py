@@ -6,31 +6,64 @@ from sklearn.cluster import MeanShift, estimate_bandwidth
 from sklearn.cluster import spectral_clustering
 import scipy.ndimage
 
-def imageSmooth(img, r, c):
-    img = scipy.ndimage.filters.gaussian_filter(img, 2, mode='nearest')
-    # img = scipy.ndimage.binary_closing(img)
-    # labels = scipy.ndimage.find_objects(img)
-    # print labels
-    limit = 0.3
-    img[img > limit] = 1
-    img[img < limit] = 0
-    return img
-
-def getImage(imgList):
-    # imgList is a list of tupels of the form
-    # [X coord, Y coord]
+def getDim(imgList):
+    if ((imgList is None) or (len(imgList) < 5)):
+        return 0,0,0,0,0,0
     xList, yList = zip(*imgList)
     lx, hx = min(xList), max(xList)
     ly, hy = min(yList), max(yList)
     r = hx - lx + 1
     c = hy - ly + 1
-    # newImage = np.ndarray((r,c,3))
-    newImage = np.zeros((r,c,3))
+    return lx, hx, ly, hy, r, c
+
+def getImage(imgList):
+    if ((imgList is None) or (len(imgList) < 5)):
+        return None
+    # imgList is a list of tupels of the form
+    # [X coord, Y coord]
+    lx, hx, ly, hy, r, c = getDim(imgList)
+    newImage = np.zeros((r,c))
     for p in imgList:
         newImage[p[0]-lx][p[1]-ly] = 1
-    newImage = imageSmooth(newImage, r, c)
+    # newImage = imageSmooth(newImage, r, c)
     newImage.astype(np.uint8)
     return newImage
+
+def imageSmooth(img):
+    r = len(img)
+    c = len(img[0])
+
+    backImg = np.array(img)
+    img = scipy.ndimage.filters.gaussian_filter(img, 2, mode='nearest')
+    
+    limit = 0.3
+    newImg = np.array(img)
+    newImg[newImg > limit] = 1
+    newImg[newImg < limit] = 0
+
+    skimage.io.imshow(newImg)
+    skimage.io.show()
+
+    tmpList = np.array(img).flatten()
+
+    limit = 0.5
+    coords = np.where(tmpList > limit)[0]
+    imgList = [((i/c), i%c) for i in coords]
+
+    lx, hx, ly, hy, nr, nc = getDim(imgList)
+
+    img = newImg[lx:hx,ly:hy]
+
+    print 'APNA'
+
+    if (len(img) > 0):
+        skimage.io.imshow(img)
+        skimage.io.show()
+    else:
+        print 'NOT SHOWN'
+
+
+    return img
 
 tmpStr = raw_input().split()
 rV, cV = int(tmpStr[0]), int(tmpStr[1])
@@ -107,6 +140,15 @@ newImage = newImage.astype(np.uint8)
 
 for m in range(numC):
     tmpImg = getImage(imgList[m])
+    if (len(tmpImg) == 0):
+        continue
+    skimage.io.imshow(tmpImg)
+    skimage.io.show()
+    
+    tmpImg = imageSmooth(tmpImg)
+    if (len(tmpImg) == 0):
+        continue
+
     skimage.io.imshow(tmpImg)
     skimage.io.show()
 
