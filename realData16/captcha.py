@@ -71,120 +71,92 @@ dicy['X']=[[0, 0, 1, 1, 1, 1, 0, 0], [0, 0, 1, 1, 1, 1, 0, 0], [1, 0, 0, 1, 1, 0
 
 dicy['Z']=[[0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 0, 0], [1, 1, 1, 1, 1, 0, 0], [1, 1, 1, 1, 0, 0, 1], [1, 1, 1, 0, 0, 1, 1], [1, 1, 0, 0, 1, 1, 1], [1, 0, 0, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 1], [0, 0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0]]
 
-def similar(mat,tmp):
-    ans=0
-    if (len(mat)==len(tmp)):
-        if (len(mat[0])==len(tmp[0])):
-            for i in range(0,len(tmp)):
-                for j in range(0,len(tmp[0])):
-                    if (mat[i][j]==0 and tmp[i][j]==0):
-                        ans+=1
-                    elif (mat[i][j]!=tmp[i][j]):
-                        ans-=1
+
+import numpy as np
+import skimage.io
+import scipy.ndimage
+import scipy
+from scipy import signal
+from captchaFunc import *
+import operator
+
+np.set_printoptions(precision=2)
+
+def getSim(sample, target, eps = 0.01):
+    sample = 1 - sample
+    target = 1 - target
+    if (len(sample) != len(target)):
+        print 'Error in sizes'
+        return 0
+    ans = 0
+    for i in range(len(sample)):
+        # if (target[i] < eps):
+        #     ans -= 3*sample[i]*(1-target[i])
+        # else:
+        #     ans += sample[i]*target[i]
+        ans += (sample[i] - 0.5)*(target[i] - 0.5)
     return ans
 
-def sim(gor,mat):
-    lst=gor.keys()
-    ans=lst[0]
-    maxa=similar(gor[ans],mat)
-    for x in lst:
-        t=similar(gor[x],mat)
-        if(t>maxa):
-            maxa=t
-            ans=x
-    return ans
+def imgResize(img, dim):
+    return scipy.misc.imresize(img, (dim, dim))
 
-def checkcol(mat,j,n):
-    for i in range(0,n):
-        if (mat[i][j]!=1):
-            return 1
-    return 0
+def getChar(checkImg, charImg):
+    skimage.io.imshow(checkImg)
+    skimage.io.show()
 
-def checkrow(mat,i,n):
-    for j in range(0,n):
-        if (mat[i][j]!=1):
-            return 1
-    return 0
+    score = {}
 
-tmp = raw_input().split()
-r, c = int(tmp[0]), int(tmp[1])
+    for i in sorted(charImg.keys()):
+        d = getSim(checkImg.flatten(), charImg[i].flatten())
+        score[i] = d
 
-mat = []
-    
-for mo in range(0,r):
-    l=raw_input()
-    mo+=1
-    cn=0
-    wd=l.split()
-    lst=[]
-    for x in wd:
-        val = x.split(',')
-        fg = 1
-        r,g,b = int(val[0]), int(val[1]), int(val[2])
-        l = (0.29*r + 0.59*g + 0.11*b)
-        if (l > 150):
-            fg = 0
-        lst.append(fg)
-    mat.append(lst)
-    cn+=1
+    freq = (sorted(score.items(), key=operator.itemgetter(1), reverse = True))[:10]
 
-arr = {}
+    skimage.io.imshow(charImg[freq[0][0]])
+    skimage.io.show()
+    skimage.io.imshow(charImg[freq[1][0]])
+    skimage.io.show()
 
-for x in mat:
-    print ''.join([str(i) for i in x[:130]])
+    return freq[0][0]
 
-j=0
-stat=0
+dim = 18
 
-while(j<c):
-    while(j<c):
-        if checkcol(mat,j,r)==1:
-            break
-        j += 1
+newImg = {}
 
-    if(j>=r):
-        break
-    
-    t=j
+for i in sorted(dicy.keys()):
+    img = np.array(dicy[i])
+    tmpImg = imgResize(img, dim)
+    # tmpImg = scipy.ndimage.filters.gaussian_filter(tmpImg, 0, mode='nearest')
+    tmpImg = tmpImg/255.0
+    limit = 0.4
+    tmpImg[tmpImg >= limit] = 1
+    tmpImg[tmpImg < limit] = 0
+    newImg[i] = np.array(tmpImg)
 
-    while (checkcol(mat,t,r)==1):
-        t += 1
+pre = 'captchaTrainingSet/inputTraining/'
 
-    tmp=[]
+X = polishImg(pre + 'input50.txt')
 
-    for i in range(0,r):
-        lst=[]
-        for k in range(j,t):
-            lst.append(mat[i][k])
-        tmp.append(lst)
+for i in range(len(X)):
+#     skimage.io.imshow(X[i])
+#     skimage.io.show()
+    X[i] = imgResize(X[i], dim)
+    X[i] = X[i]/255.0
+    X[i] = 1 - X[i]
+    limit = 0.5
+    X[i][X[i] >= limit] = 1
+    X[i][X[i] < limit] = 0
+    # X[i] = X[i]/np.max(X[i])
+#     skimage.io.imshow(X[i])
+#     skimage.io.show()
 
-    i=0
-    while(i<r):
-        if checkrow(tmp,i,len(tmp[0]))==1:
-            break
-        i+=1
+print X[0]
 
-    it=i
+# skimage.io.imshow(X[0])
+# skimage.io.show()
 
-    while (checkrow(tmp,it,len(tmp[0]))==1):
-        it+=1
+tmp = ''
+for i in range(len(X)):
+    tmp += getChar(X[i], newImg)
 
-    ktmp=[]
-
-    for o in range(i,it):
-        lst=[]
-        for k in range(0,len(tmp[0])):
-            lst.append(tmp[o][k])
-        ktmp.append(lst)
-   
-    j=t
-    if len(ktmp)>0:
-        arr[stat]=sim(dicy,ktmp)
-        stat+=1
-
-num = ""
-
-for x in range(0,5):
-    num = num+arr[x]
-
-print str(num)
+print tmp
