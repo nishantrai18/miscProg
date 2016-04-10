@@ -46,7 +46,8 @@
 	        \textbf{Abstract\\}
         	\vspace{4mm}
         	\noindent
-{\justifying{The project deals with the problem of computing successful strategies for Iterated Prisoner's dilemma. We start off by discussing existing work in the area along with some results and popular methods used for computing efficient strategies. We simulate multiple results and also confirm previous findings and claims. The discussed algorithms include Evolutionary Strategies and Reinforcement Learning (Which compute optimal and also adaptive strategies which perform well against multiple opponents). We propose new algorithms based on Reinforcement Learning to compute good strategies which perform well against a set of baseline algorithms (Including the extremely simple yet effective 'Tit for Tat'). This strategy is also compared against Axelrod's Evolutionary Strategy. We discuss Axelrod's Tournament and use a similar setup to decide the effectiveness of the computed strategies. The result section shows the superiority of the strategies computed using them. We also discuss the shortcomings and strengths of the algorithms.} \par}
+{\justifying{The project deals with the problem of computing successful strategies for Iterated Prisoner's dilemma. We start off by discussing existing work in the area along with some results and popular methods used for computing efficient strategies. We simulate multiple results and also confirm previous findings and claims. We also show the relevance of choosing memory depth as three in Axelrod's experiments and provide arguments for the same. The discussed algorithms include Evolutionary Strategies and Reinforcement Learning (Which compute optimal and also adaptive strategies which perform well against multiple opponents). We propose new algorithms based on Reinforcement Learning to compute good strategies which perform well against a set of baseline algorithms (Including the extremely simple yet effective 'Tit for Tat'). This strategy is also compared against Axelrod's Evolutionary Strategy. We discuss Axelrod's Tournament and use a similar setup to decide the effectiveness of the computed strategies. The result section shows the superiority of the strategies computed using them. We also discuss the shortcomings and strengths of the algorithms.} \par}
+
 			\vfill
 			\includegraphics[width=0.25\textwidth]{iitklogo.png}\\[0.1in]
             \vspace{3mm}
@@ -65,7 +66,7 @@
 	
 	\section{Introduction}
 	
-	The Prisoner's Dilemma is a classic problem in game theory, which is mainly a paradox demonstrating that two individuals acting in their own interest might choose an action which is worse off than any other. It has become a popular problem because there has been showing its similarity to real-world problems. The standard game is set up such that both players choose to protect themselves (Instead of cooperating) at the expense of their partner. Even though the thought process involved seems to be extremely logical, but both players eventually find themselves in a worse state than if they had cooperated with each other.\\
+	The Prisoner's Dilemma \cite{prisoner} is a classic problem in game theory, which is mainly a paradox demonstrating that two individuals acting in their own interest might choose an action which is worse off than any other. It has become a popular problem because there has been showing its similarity to real-world problems. The standard game is set up such that both players choose to protect themselves (Instead of cooperating) at the expense of their partner. Even though the thought process involved seems to be extremely logical, but both players eventually find themselves in a worse state than if they had cooperated with each other.\\
 	
 	We consider the following instance of Prisoner's Dilemma (Note that the essence remains the same). Players A and B have been arrested in connection with a crime. Both of them are put in a separate interview room and told that a deal may be available to them depending on whether each provides testimony against the other (Defects) or keeps silent (Cooperates). We assume that each  individual wants do as well as possible for only themselves (i.e. without any regard for the welfare of the other player). For further discussions, we denote the possible actions as $C_{x}$ and $D_{x}$ i.e. Player $x$ cooperating or defecting. The payoffs for the game are given in Table 1 below,
 
@@ -81,7 +82,7 @@
 	\caption{Payoff matrix for the Prisoner's Dilemma}
 	\end{table}
 		
-	For ease of discussion afterwards, we define the following terms based on the actions chosen by the players (They are described in Table 2),
+	For ease of discussion afterwards, we define the following terms \cite{optimalipd} based on the actions chosen by the players (They are described in Table 2),
 	\begin{itemize}
 		\item T : \textbf{Temptation} for unilateral defection
 		\item R: \textbf{Reward} for mutual cooperation
@@ -111,17 +112,17 @@
 	
 	\section{Existing Work}
 	
-	There has been a huge amount of work in the area of Prisoner's Dilemma (And its variants), on both theoretical and practical implications and applications. In the case of Infinite Prisoner's Dilemma, it can be argued that Axelrod has been the most influential researcher in the area. His original work set the stage for a regularized study in terms of tournaments amongst multiple strategies. The surprising results of Axelrod's work has fueled a lot of discussions and further works. In his original work, two tournaments based on IPD were undertaken; which later defined the methods by which IPD strategies ought to be compared. In the process, he invited professional game theorists to submit programs for playing a computer-based Infinite Prisoner's Dilemma. His work has also been extremely influential in other studies (Especiallym in demonstrating the effectiveness of Evolutionary Algorithms in unconventional applications).
+	There has been a huge amount of work in the area of Prisoner's Dilemma (And its variants) \cite{existA}, \cite{existB}, \cite{existC}; on both theoretical and practical implications and applications. In the case of Infinite Prisoner's Dilemma, it can be argued that Axelrod \cite{axelrod} has been the most influential researcher in the area. His original work set the stage for a regularized study in terms of tournaments amongst multiple strategies. The surprising results of Axelrod's work \cite{axelrod} has fueled a lot of discussions and further works \cite{existA}, \cite{optimalipd}. In his original work, two tournaments based on IPD were undertaken; which later defined the methods by which IPD strategies ought to be compared. In the process, he invited professional game theorists to submit programs for playing a computer-based Infinite Prisoner's Dilemma. His work has also been extremely influential in other studies (Especially in demonstrating the effectiveness of Evolutionary Algorithms in unconventional applications).
 	
-	Later, Axelrod used a Genetic Algorithm (GA), an artificial intelligence technique (Inspired by biological evolution), to simulate agent learning. The algorithm uses operators such as mutation and crossover (Derived from evolution). Crossover is a genetic operator used to vary the chromosomes from one generation to the next (i.e. Induce diversity and evolution). It is simply a process of taking more than one parent solutions and producing a child solution from them. Mutation is an operator used to maintain genetic diversity from one generation to the next. In investigating evolutionary strategies, Axelrod considered a set of strategies that is deterministic (fixed) and uses results (histories) of the past 'three' moves (Discussed later) to determine the best move for the next turn.
+	Later, Axelrod used a Genetic Algorithm (GA) \cite{genetic}, an artificial intelligence technique (Inspired by biological evolution), to simulate agent learning. The algorithm uses operators such as mutation and crossover (Derived from evolution). Crossover is a genetic operator used to vary the chromosomes from one generation to the next (i.e. Induce diversity and evolution). It is simply a process of taking more than one parent solutions and producing a child solution from them. Mutation is an operator used to maintain genetic diversity from one generation to the next. In investigating evolutionary strategies, Axelrod considered a set of strategies that is deterministic (fixed) and uses results (histories) of the past 'three' moves (Discussed later) to determine the best move for the next turn.
 	
-	There has been work which adapt and extend the same approach showing the effectiveness of their approach. One of the shortcomings of evolved strategies is the fact that the optimization algorithms used to compute good strategies are not able to effectively search the complete solution space. This leads to surprisingly poor strategies as we increase the history considered. We study the effect of this in later sections.
+	There has been work which adapt and extend the same approach showing the effectiveness of their approach \cite{existC}, \cite{optimalipd}. One of the shortcomings of evolved strategies is the fact that the optimization algorithms used to compute good strategies are not able to effectively search the complete solution space. This leads to surprisingly poor strategies as we increase the history considered. We study the effect of this in later sections.
 	
-	Note that most of the strategies in these works are history dependent. In other words, such an a class will consist only of memory-based strategies. However, previous works also show the existence of alternative representation of (effective) strategies. Kraines showed that 'Pavlovian' strategies are able to support the evolution of cooperation in tournaments where players are making errors. Pavlovian strategies are similar to Tit for Tat in the sense that they are extremely simple. If your opponent cooperated with you on the last round, repeat your last move; otherwise, switch your move. Its biggest advantage is that, unlike TFT, it is relatively prone to errors and can bounce back from a $D-D$ stalemate. This has been explored in detail by Kraines.
+	Note that most of the strategies in these works are history dependent. In other words, such an a class will consist only of memory-based strategies. However, previous works \cite{pavlov} also show the existence of alternative representation of (effective) strategies. Kraines et al \cite{pavlov} showed that 'Pavlovian' strategies are able to support the evolution of cooperation in tournaments where players are making errors. Pavlovian strategies are similar to Tit for Tat in the sense that they are extremely simple. If your opponent cooperated with you on the last round, repeat your last move; otherwise, switch your move. Its biggest advantage is that, unlike TFT, it is relatively prone to errors and can bounce back from a $D-D$ stalemate. This has been explored in detail by Kraines et al.
 	
 	\section{Axelrod's Tournament}
 
-	We discuss details of Axelrod's Tournament in detail in this section. Axelrod held a tournament of various strategies for the prisoner's dilemma. A number of game theorists submitted strategies which were simulated using computers. The tournament was a round robin tournament i.e. programs played games against each other repeatedly.\\
+	We discuss details of Axelrod's Tournament \cite{axelrod} in detail in this section. Axelrod held a tournament of various strategies for the prisoner's dilemma. A number of game theorists submitted strategies which were simulated using computers. The tournament was a round robin tournament i.e. programs played games against each other repeatedly.\\
 	The results were extremely interesting and led to many discussions eventually. Some of the strategies submitted were:
 	\begin{itemize}
 	\item \textbf{Always Defect}: This strategy defects on every turn. This is what game theory advocates. It is the safest strategy since it cannot be taken advantage of. However, it misses the chance to gain larger payoffs by cooperating with an opponent who is ready to cooperate.
@@ -136,7 +137,7 @@
 	\subsection{Features of Successful Strategies}
 
 A strategy (pure) for a player in a particular game is a plan describing what move that player should take in each possible situation (information state) that might arise for him.
-In Axelrod’s IPD tournaments, strategies exhibiting the following four properties (As observed by Axelrod) tended to be more successful (i.e., to accumulate higher total payoffs), with the clear-cut winner being the Tit-for-Tat strategy.
+In Axelrod’s IPD tournaments, strategies exhibiting the following four properties (As observed by Axelrod in \cite{axelrod}) tended to be more successful (i.e., to accumulate higher total payoffs), with the clear-cut winner being the Tit-for-Tat strategy.
 	\begin{itemize}
 		\item \textbf{Niceness}: Never be the first to defect.
 		\item \textbf{Provocability}: Get mad quickly at defectors and retaliate.
@@ -148,7 +149,7 @@ In Axelrod’s IPD tournaments, strategies exhibiting the following four propert
 	
 	\subsection{Axelrod Strategies}	
 
-As we have seen earlier that 'Tit for Tat'turned out to be the winner in Axelrod's tournament even though it can perform worse against many opponents (e.g. Random). Axelrod set out to find other simple strategies with similar or greater power. This section describes the procedure followed by Axelrod to compute a new strategy.
+As we have seen earlier that 'Tit for Tat' turned out to be the winner in Axelrod's tournament even though it can perform worse against many opponents (e.g. Random). Axelrod set out to find other simple strategies with similar or greater power. This section describes the procedure followed by Axelrod to compute a new strategy.
 Axelrod adopted a simple but elegant way for encoding strategies, and then used a single-objective evolutionary algorithm to obtain optimal strategies. His encoding scheme has remained a standard way of handling the IPD problem and is described below. We also adopt a similar encoding scheme to compute optimal strategies for the game. Axelrod's method had the following features,
 	\begin{itemize}
 	\item The next move depends upon the behavior of both the parties during previous three (In general k, termed as memory length in this paper) moves.
@@ -179,7 +180,7 @@ Axelrod adopted a simple but elegant way for encoding strategies, and then used 
 
 	\section{Axelrod Strategies using Evolutionary Algorithms}
 
-	As mentioned earlier, Axelrod's approach involved maximizing the self score using a Single Objective Genetic Algorithm. We try to recreate the results and study the effectiveness of the approach proposed by Axelrod. There has also been work which proposes optimizing multiple objectives simultaneously (i.e. Self Score and Opponent score) NSGA-II algorithm. It has been claimed that the latter works better, thus we compare the performance of both the algorithms to validate the claims and get more details related to their effectiveness.
+	As mentioned earlier, Axelrod's approach involved maximizing the self score using a Single Objective Genetic Algorithm. We try to recreate the results and study the effectiveness of the approach proposed by Axelrod. There has also been work \cite{optimalipd} which proposes optimizing multiple objectives simultaneously (i.e. Self Score and Opponent score) NSGA-II \cite{nsga}, \cite{debmulti} algorithm. It has been claimed that the latter works better, thus we compare the performance of both the algorithms to validate the claims and get more details related to their effectiveness.
 	
 	The intuition for using another objective (i.e. Opponent score) is that maximizing our own score is not the only way to win the game. The game can also be won if we minimize the score of the opponent. Thus, minimizing the opponent score might indirectly help us win the game.
 	
@@ -201,7 +202,7 @@ Q_{k}(a) = \frac{R_{1} + R_{2} + \cdots + R_{k}}{k}
 \end{equation} 
 
 Simply put, the expectation for reward at turn $k$ for move $a$ is the mean of all the previous rewards we've received for taking action $a$. Thus, our previous moves and rewards influence our future actions.
-This discussion also introduces the concept of exploration and exploitation. Note that our strategy needs to include some amount of exploitation (i.e. simply choosing the best slot based on what we know so far) and some amount of exploration (i.e. Occasionally choosing random moves to learn more about the nature of the game). This balance between exploration and exploitation leads to the Explore-Exploit dilemma.
+This discussion also introduces the concept of exploration and exploitation. Note that our strategy needs to include some amount of exploitation (i.e. simply choosing the best slot based on what we know so far) and some amount of exploration (i.e. Occasionally choosing random moves to learn more about the nature of the game). This balance between exploration and exploitation leads to the Explore-Exploit dilemma \cite{expexp}.
 
 Thus a simple adaptive strategy	can be simply choosing the (seemingly) best move (i.e. the one with the highest payoff) with probability $p$ and choosing a random move with $1-p$ (This accounts for exploration. We discuss multiple variants for reaching a balance between exploration and exploitation and compare the results in the later sections.
 
@@ -215,7 +216,7 @@ Thus a simple adaptive strategy	can be simply choosing the (seemingly) best move
 	
 	\subsubsection{Adaptive Strategy: Variant C}
 	
-	This variant further modifies the exploration part, we mainly use a softmax probability during the exploratuon part. The effect and motivation are given below. (The examples are inspired from \textbf{(REFER)}.\\
+	This variant further modifies the exploration part, we mainly use a softmax probability during the exploratuon part. The effect and motivation are given below. (The examples are inspired from \cite{reinf}).\\
 	
 	\textbf{Softmax Action Selection:} Let's consider another problem, a new doctor specializes in treating patients with a particular disease. She has $n$ treatment options of which she can choose one to treat each patient she treats. For some reason, all she knows is that these $n$ treatments have different efficacies and risk-profiles for treating heart attacks, and she doesn't know which one is the best yet. We could still use the same $p$ greedy algorithm mentioned above, however policy of randomly choosing a treatment once in a while might prove fatal. Here, randomly treatments could result in patient death. Thus, we would want not to choose the worst treatment but still have some ability to explore our options to find the best one.\\
 	
@@ -235,7 +236,7 @@ Thus a simple adaptive strategy	can be simply choosing the (seemingly) best move
 
 	\subsection{Baseline Strategies}
 	
-	The baseline strategies used in the experiments are as follows,
+	The baseline strategies used in the experiments are as follows \cite{optimalipd},
 	\begin{enumerate}
 	
 	\item \textbf{Always Cooperate:} Cooperates on every move
@@ -269,7 +270,7 @@ cooperated is greater than or equal to the number of times it has defected, else
 	\end{wrapfigure}
 	The single-objective Evolutionary Algorithm used is the same as used by Axelrod in his initial study. As done earlier, the fitness i.e. self-score of the player is maximized during evolution. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure.\\
 	We show the maximum and average fitness of the population. As we can see the population achieves the final value extremely quickly (Under 50 iterations). The fluctuations caused in between are a result of the mutations introduced in the population (Something inherent in Evolutionary Algorithms).\\
-	After 500 generations the maximum fitness amongst all the samples in the population is around 312, which is even higher than the benchmark score (300) \textbf{(Dawkins) \textbf{REFER}}. This shows the superiority of the Evolutionary strategy and is also in line with the results obtained by Axelrod. When this strategy is pitted against other strategy in an Axelrod-like tournament, the evolved strategy emerges as a clear winner (By a huge margin). The results are discussed in later sections.	
+	After 500 generations the maximum fitness amongst all the samples in the population is around 312, which is even higher than the benchmark score (300) \cite{dawkins}. This shows the superiority of the Evolutionary strategy and is also in line with the results obtained by Axelrod. When this strategy is pitted against other strategy in an Axelrod-like tournament, the evolved strategy emerges as a clear winner (By a huge margin). The results are discussed in later sections.	
 
 	\subsubsection{Multi Objective Genetic Algorithm}
 		
@@ -279,8 +280,8 @@ cooperated is greater than or equal to the number of times it has defected, else
 	\caption{\footnotesize{Fitness of Population during Evolution}}
 	\end{wrapfigure}
 	
-	Instead of just maximizing our own score as proposed by Axelrod, we perform another experiment in which along with maximizing our self score we also try to reduce the opponents score. The intuition for this can be seen from the payoff matrix of the game and has been discussed earlier.\\
-	We used a Multi-Objective Evolutionary Algorithm (NSGA-II) \textbf{REFER} to compute the strategy. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure. We show the maximum and average fitness of the population. The behavior of evolution mostly remains similar to the previous case. But we can see that the final value obtained \textit{(321)} in this case is higher than the Single Objective counterpart \textit{(312)}, which further motivates the benefit of using a multi-objective optimization algorithm.\\
+	Instead of just maximizing our own score as proposed by Axelrod \cite{axelrod}, we perform another experiment in which along with maximizing our self score we also try to reduce the opponents score. The intuition for this can be seen from the payoff matrix of the game and has been discussed earlier.\\
+	We used a Multi-Objective Evolutionary Algorithm (NSGA-II) \cite{nsga} to compute the strategy. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure. We show the maximum and average fitness of the population. The behavior of evolution mostly remains similar to the previous case. But we can see that the final value obtained \textit{(321)} in this case is higher than the Single Objective counterpart \textit{(312)}, which further motivates the benefit of using a multi-objective optimization algorithm.\\
 
 	To further demonstrate the evolution, we plot the initial and final strategies obtained in Figure 3. The blue crosses represent the initial randomly initialized strategies. The red pluses represent the final evolved strategies, it can be easily seen that the initially random population slowly approaches the 'optimal' region. The out of place red members in the final evolved population are the mutated individuals.
 	
@@ -325,7 +326,7 @@ cooperated is greater than or equal to the number of times it has defected, else
 
 	\subsection{Tournament amongst strategies}
 
-	We conduct an Axelrod-like tournament amongst the mentioned strategies to compare and evaluate them. The baseline strategies used are mentioned in the earlier sections. The numbers (scores) shown represent the average score received in each move (This is a popular metric used in literature \textbf{REFER}). Remember that 3 is the payoff when both players always cooperate.
+	We conduct an Axelrod-like tournament amongst the mentioned strategies to compare and evaluate them. The baseline strategies used are mentioned in the earlier sections. The numbers (scores) shown represent the average score received in each move (This is a popular metric used in literature \cite{optimalipd} along with the baseline score \cite{dawkins}). Remember that 3 is the payoff when both players always cooperate.
 
 	\subsubsection{Multi Objective Strategy Vs Others}
 
@@ -420,7 +421,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 		
 	\subsection{Behavior of the Evolved strategies}
 
-	We choose a few individuals out of the evolved population randomly and compare the strategies obtained. We mention some of the interesting traits found common in all the strategies. We also try to relate the trends observed in these strategies to the desirable qualities (Proposed by Axelrod \textbf{REFER}) required for successful strategies (Mentioned in previous sections). Some of the trends noted in the strategies are as follows,
+	We choose a few individuals out of the evolved population randomly and compare the strategies obtained. We mention some of the interesting traits found common in all the strategies. We also try to relate the trends observed in these strategies to the desirable qualities (Proposed by Axelrod \cite{axelrod}) required for successful strategies (Mentioned in previous sections). Some of the trends noted in the strategies are as follows,
 	\begin{itemize}
 	\item \textbf{PPP (0) :} In this situation both the players have been defecting over the previous three moves. Since both players were defecting previously, defecting again would be a good choice to minimize the damage and prevent the opponent's score to increase.
 	\item \textbf{PPT (1) :} In this case, the opponent defected on the first two moves, but cooperated in the third move, while player 1 defected in all the three moves. Thus, we should continue to exploit the 'foolishness' of the opponent and defect in the next move too (Expecting the opponent to cooperate).
@@ -468,7 +469,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	\caption{{Performance of Adaptive strategy (Variant B)}}
 	\end{figure}
 
-	As we can see, our strategy generally learns and improves its payoff. But in a few cases (Mostly against 'Tit for Tat' strategies), our strategy shows a slight (Notice the scale) decreasing trend. As we will discuss later, the reason for this is poor exploration. We try to exploit more instead of exploring, which leads to a very slight decrease in the payoff (Notice the scales in the plot). The reason for this also due to only considering 'local' gains while playing (i.e. not caring about the current move on subsequent turns). This issue can be solved using a modification named as Q-Learning \textbf{(REFER)}.
+	As we can see, our strategy generally learns and improves its payoff. But in a few cases (Mostly against 'Tit for Tat' strategies), our strategy shows a slight (Notice the scale) decreasing trend. As we will discuss later, the reason for this is poor exploration. We try to exploit more instead of exploring, which leads to a very slight decrease in the payoff (Notice the scales in the plot). The reason for this also due to only considering 'local' gains while playing (i.e. not caring about the current move on subsequent turns). This issue can be solved using a modification named as Q-Learning \cite{qlearn}.
 
 	\begin{figure}[H]
 	\centering
@@ -547,7 +548,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 
 	As we can see from the above table, increasing memory has little or almost no effect on the performance of the strategy. This can be due to the fact that almost all the above strategies are extremely local in nature (i.e. Do not look more than 1-2 steps back). Thus, only one look up is enough to explain the opposing strategies well enough. This reasoning is supported by the fact that there is a slight improvement in the payoffs of the strategies  \textsc{CyclerCCD} and \textsc{Tit for 2 Tats}, both of which require at least 2-3 memory length to tackle efficiently.\\
 	
-	Also note that the reinforcement learning algorithm discussed here does not look at the future implications of the current move. The related topic is Q-Learning and is extremely powerful in this sense \textbf{(REFER)}. Using it should help in learning future implications and subsequently gaining higher scores.
+	Also note that the reinforcement learning algorithm discussed here does not look at the future implications of the current move. The related topic is Q-Learning and is extremely powerful in this sense \cite{qlearn}. Using it should help in learning future implications and subsequently gaining higher scores.
 	 
 	\subsubsection{Special Cases: Cooperator and Defector}
 
@@ -625,7 +626,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	\end{table}  		
 	\vspace{-3mm}	
 
-	As we can see here, the adaptive strategy performs well or comparable in case of strategies such as Cooperator, Defector, CyclerCCD and Random. But it almost constantly performs poor in case of 'Tit for Tat' type strategies. A highly possible reason for this could be the fact that the solution search is extremely local (And thus we do not focus on the future of the game). Q-Learning is a possible solution for the same.
+	As we can see here, the adaptive strategy performs well or comparable in case of strategies such as Cooperator, Defector, CyclerCCD and Random. But it almost constantly performs poor in case of 'Tit for Tat' type strategies. A highly possible reason for this could be the fact that the solution search is extremely local (And thus we do not focus on the future of the game). Q-Learning \cite{qlearn} is a possible solution for the same.
 
 	It should be mentioned that the above experiment is extremely unfair towards the Adaptive strategy. Since the evolved strategies have been trained on the given strategies. In case of completely new strategies, the evolved ones perform very poorly compared to the adaptive algorithm (Results have not been shown due to space constraints).
 
@@ -653,7 +654,13 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 			
 	We have confirmed known results and findings related to Infinite Prisoner's Dilemma (By Axelrod). We also propose a few changes in the list of desirable traits given by Axelrod, alongside confirming their relevance in high performing strategies. We also show the relevance of choosing memory depth as three in experiments and provide a loose argument to support it. After discussing the flaws associated with evolved strategies, we also propose new adaptive algorithms based on reinforcement learning to counter them. We study the performance of the discussed strategies by conducting various experiments. We use a similar setup (As done by Axelrod) to decide the effectiveness of the computed strategies. We also mention the superiority of the adaptive strategies against fresh strategies which is a weak point for evolved strategies. Hopefully, the improvements an correction suggested (Such as Q-Learning) helps the adaptive strategy obtain high payoffs against those which it is currently weak against.
 					
+	\pagebreak					
+					
 	\section{References}
+
+	\bibliographystyle{plain}
+
+	\bibliography{sources}	
 
 \end{document}
 
