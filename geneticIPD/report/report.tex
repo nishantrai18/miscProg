@@ -165,7 +165,7 @@ Axelrod adopted a simple but elegant way for encoding strategies, and then used 
 	The following \textbf{critical} points should be observed,
 	\begin{itemize}
 	\item The behavior of the player is undefined in the first three moves of the game (Since we do not have histories of the game).
-	\item We also add six bits to the encoding to specify a strategy's premises, i.e. assumption about the pre-game behavior.
+	\item We also add six bits to the encoding to specify a strategy's premises, i.e. assumption about the pre-game behavior (or alternatively behavior in the first three iterations).
 	\item Together, each of the 70-bit strings represent a particular strategy (i.e. State-action codes)	
 	\end{itemize}		
 	
@@ -181,13 +181,54 @@ Axelrod adopted a simple but elegant way for encoding strategies, and then used 
 	
 	The intuition for using another objective (i.e. Opponent score) is that maximizing our own score is not the only way to win the game. The game can also be won if we minimize the score of the opponent. Thus, minimizing the opponent score might indirectly help us win the game.
 	
+	A flaw of such evolved strategies is there non-adaptive nature. Note that the strategies learned using the mentioned algorithms would be fixed i.e. they can not change their behavior based on the opponent's behavior. Also, the computed strategies work well only with the strategies they are trained with (or exposed during the evolution). Their behavior with fresh strategies is disappointing to say the least. To counter this drawback, we study and propose a few adaptive strategies which adapt to the opponent, and learn the best behavior given sufficient time.
+	
 	\section{Proposed Algorithms}
+	
+	The previous section motivates us to search for strategies which are able to adapt to new opponents. This section discusses a topic named Reinforcement learning, which focuses on algorithms which make a player (computer) learn how to play a new game (A game to which it has never been exposed before).
 	
 	\subsection{Reinforcement Learning for Adaptive Strategies}
 	
+	\subsubsection{Introduction}
+	
+	Let's consider a basic game to appreciate the power of reinforcement learning. Let us play the following game (Termed as n-armed bandit). We have $n$ slot machines, each of which gives some unknown (yet constantly distributed, more later) payoff once it is played. Assume that there is no cost associated with playing the game. Thus, we have n possible actions and at each play ($k$), we can choose a single slot machine to play at. After taking an action $a$, we receive a reward $R_{k}$ (reward at turn $k$). Each slot machine has a unique probability distribution of payouts (rewards).\\
+	
+	For example, if we have 10 slot machines, let slot \#3 give an average payoff of 9 while slot \#1 gives an average payoff of 4. Note that since the reward at each play is distributed according to some probability distribution, it is possible that slot \#1 might give us a reward of 1 on some turn. But on average, slot \#1 would give us reward close to 4. Thus, a reasonable strategy would be playing random moves a few times i.e. choosing different slots and observing our rewards for each action. Then we might prefer choosing the slot with the largest observed average payoff. Thus we will need a value which gives us an idea of the expected payoff by choosing move $a$ (Based on our previous turns), let's call this expected reward $Q_{k}(a)$. $Q_{k}(a)$ is a function which accepts action $a$ and gives the expected payoff for the action. Formally we can write it as,
+\begin{equation}
+Q_{k}(a) = \frac{R_{1} + R_{2} + \cdots + R_{k}}{k}
+\end{equation} 
+
+Simply put, the expectation for reward at turn $k$ for move $a$ is the mean of all the previous rewards we've received for taking action $a$. Thus, our previous moves and rewards influence our future actions.
+This discussion also introduces the concept of exploration and exploitation. Note that our strategy needs to include some amount of exploitation (i.e. simply choosing the best slot based on what we know so far) and some amount of exploration (i.e. Occasionally choosing random moves to learn more about the nature of the game). This balance between exploration and exploitation leads to the Explore-Exploit dilemma.
+
+Thus a simple adaptive strategy	can be simply choosing the (seemingly) best move (i.e. the one with the highest payoff) with probability $p$ and choosing a random move with $1-p$ (This accounts for exploration. We discuss multiple variants for reaching a balance between exploration and exploitation and compare the results in the later sections.
+
+	\subsubsection{Adaptive Strategy: Variant A}
+
+	The first variant of the adaptive strategy is an extremely simple algorithm which just chooses the (seemingly) best move (i.e. the one with the highest payoff) with probability $p$ and choosing a random move with $1-p$ (This accounts for exploration). It is the same version we've mentioned above. There are a few flaws in this variant namely, non varying exploration which is actually desired (Since, we would want more exploration initially and then decrease our exploration once we are sure). Thus, the results for this variant are very poor and have not been shown due to space constraints.
+	
+	\subsubsection{Adaptive Strategy: Variant B}
+	
+	The second variant builds upon the 	flaws of variant A and includes varying thresholds for $p$. $p$ decreases as we keep exploring, thus when we become sure about the best response, we shouldn't explore much. The related results for this variant are shown in the result section.
+	
+	\subsubsection{Adaptive Strategy: Variant C}
+	
+	This variant further modifies the exploration part, we mainly use a softmax probability during the exploratuon part. The effect and motivation are given below. (The examples are inspired from \textbf{(REFER)}.\\
+	
+	\textbf{Softmax Action Selection:} Let's consider another problem, a new doctor specializes in treating patients with a particular disease. She has $n$ treatment options of which she can choose one to treat each patient she treats. For some reason, all she knows is that these $n$ treatments have different efficacies and risk-profiles for treating heart attacks, and she doesn't know which one is the best yet. We could still use the same $p$ greedy algorithm mentioned above, however policy of randomly choosing a treatment once in a while might prove fatal. Here, randomly treatments could result in patient death. Thus, we would want not to choose the worst treatment but still have some ability to explore our options to find the best one.\\
+	
+	This is exactly where softmax selection fits in. Instead of choosing an action randomly (during exploration), softmax helps us get a probability distribution on our moves. The option with the largest probability would be equivalent to our best move from the above variants, but we also have some idea about the $2^{nd}$ and $3^{rd}$ best moves. Thus, we can randomly choose to explore other options while avoiding the very worst options. Formally, the softmax equation,
+\begin{equation}
+	P(a) = \frac{e^{Q_{k}(a)/c}}{\sum_{i=0}^{n} {e^{Q_{k}(i)/c}}}
+\end{equation} 
+	
+	The parameter $c$ scales the probability distribution of the moves. A high $c$ will push the probabilities to be very similar, while a low $c$ will magnify the differences in probabilities. This parameter plays a critical role in the final performance of the strategy as will be seen in future sections.
+	
+	\pagebreak	
+	
 	\section{Experiments}
 	
-	Both Single Objective Evolutionary Algorithm and Multi Objective Evolutionary Algorithm (MEA) are used for getting optimal strategies. The proposed strategies are evaluated in the later sections as discussed below.\\
+	Both Single Objective Evolutionary Algorithm and Multi Objective Evolutionary Algorithm (MEA) are used for getting optimal strategies. The discussed strategies are evaluated in the later sections as discussed below.\\
 	We describe the rough structure of the evolutionary algorithms. In each generation, a certain number (referred to as population size) of strategies are generated, and each strategy was made to play against \textbf{n} other players. Each game consisted of \textbf{p} moves. Then the next generation is created using a recombination operator involving the best strategies from the earlier one. The payoff matrix is the same as shown in Table 1. The details of the \textbf{n} other players have been given in the section: \textit{Baseline Strategies}.
 
 	\subsection{Baseline Strategies}
@@ -219,9 +260,9 @@ cooperated is greater than or equal to the number of times it has defected, else
 
 	\subsubsection{Single Objective Genetic Algorithm}	
 
-	\begin{wrapfigure}{R}{0.55\textwidth}
+	\begin{wrapfigure}{R}{0.45\textwidth}
 	\centering
-	\includegraphics[width=0.53\textwidth]{singFitPlot.eps}
+	\includegraphics[width=0.43\textwidth]{singFitPlot.eps}
 	\caption{\footnotesize{Fitness of Population during Evolution}}
 	\end{wrapfigure}
 	The single-objective Evolutionary Algorithm used is the same as used by Axelrod in his initial study. As done earlier, the fitness i.e. self-score of the player is maximized during evolution. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure.\\
@@ -230,22 +271,17 @@ cooperated is greater than or equal to the number of times it has defected, else
 
 	\subsubsection{Multi Objective Genetic Algorithm}
 		
-	\begin{wrapfigure}{R}{0.55\textwidth}
+	\begin{wrapfigure}{R}{0.45\textwidth}
 	\centering
-	\includegraphics[width=0.53\textwidth]{multFitPlot.eps}
+	\includegraphics[width=0.43\textwidth]{multFitPlot.eps}
 	\caption{\footnotesize{Fitness of Population during Evolution}}
 	\end{wrapfigure}
-	Instead of just maximizing our own score as proposed by Axelrod, we perform another experiment in which along with maximizing our self score we also try to reduce the opponents score. The intuition for this can be seen from the payoff matrix of the game. Assume that the opponent has selected his move and it's our turn to choose. Notice that for all moves of the opponent, the one in which we get higher payoff is the one in which our rival gets a lower payoff.\\
+	
+	Instead of just maximizing our own score as proposed by Axelrod, we perform another experiment in which along with maximizing our self score we also try to reduce the opponents score. The intuition for this can be seen from the payoff matrix of the game and has been discussed earlier.\\
 	We used a Multi-Objective Evolutionary Algorithm (NSGA-II) to compute the strategy. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure. We show the maximum and average fitness of the population. The behavior of evolution mostly remains similar to the previous case. But we can see that the final value obtained \textit{(321)} in this case is higher than the Single Objective counterpart \textit{(312)}, which further motivates the benefit of using a multi-objective optimization algorithm.\\
 
 	To further demonstrate the evolution, we plot the initial and final strategies obtained in Figure 3. The blue crosses represent the initial randomly initialized strategies. The red pluses represent the final evolved strategies, it can be easily seen that the initially random population slowly approaches the 'optimal' region. The out of place red members in the final evolved population are the mutated individuals.
-
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{evolvePlot.eps}
-	\caption{{Distribution of Final Evolved Strategies and the Initial Randomly initialized Strategies}}
-	\end{figure}
-
+	
 	\subsection{Effect of Memory on Strategies}
 	
 	Axelrod performed his experiments assuming a memory length of 3. We perform our experiments with multiple memory lengths to gain insight whether it is in fact optimal. The results are shown in the following table,
@@ -267,7 +303,24 @@ cooperated is greater than or equal to the number of times it has defected, else
 	    \caption{\textsc{Effect of Memory}}
 	  \end{center}
 	\end{table}  
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.65\textwidth]{evolvePlot.eps}
+	\caption{{Distribution of Final Evolved Strategies and the Initial Randomly initialized Strategies}}
+	\end{figure}
+
+	As we can see in the table shown above (Table 3). As we increase the memory length, an interesting trend is observed. At first, the memory increases till an optimum value (i.e. 3) then it suddenly decreases. Then, after the sudden decrease it gradually increases once again.\\
 	
+	Notice that ideally, higher memory must result in better performance. Because it's trivial to show that the set of strategies using memory $n$ must be a subset of the set of strategies using memory $n+1$. But unfortunately this is the opposite of what is observed in the experiments. We suspect that the reason for poor performance despite the earlier mentioned fact is the limitations of the Genetic Algorithm. As memory length increases, the corresponding solution space also increases exponentially. This results in the algorithm being prone to get stuck in local minimas. It also means that the Genetic Algorithm would require more generations (iterations) to arrive at a reasonable solution. Thus, the value proposed by Axelrod (i.e. 3) seems to be the optimal memory length considering the trade-off between Computational Power and Performance.\\
+	
+	This trade-off can be loosely formalized using two indicator functions $f_{p}(k)$ (Represents the ideal performance at memory $k$) and $f_{c}(k)$ (Represents the computational cost for computing strategies of memory $k$). On the basis of the earlier discussions, both $f_{p}(k)$, $f_{c}(k)$ would be increasing with k.
+	
+	\noindent
+	The effective efficiency of the learned strategy can be approximated as $(f_{p}(k) - f_{c}(k))$
+	 
+	 The exact formula of $f's$ is difficult to determine but a rough estimate regarding the behavior of the functions can be inferred from the table shown above. 
+
 	\subsection{Tournament amongst strategies}
 
 	We conduct an Axelrod-like tournament amongst the mentioned strategies to compare and evaluate them. The baseline strategies used are mentioned in the earlier sections.
@@ -358,10 +411,8 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	\end{table}  
 
 	It can be seen that the Multi Objective Strategy performs slightly better than the Single counterpart. This reaffirms the superiority of the Multi Objective strategy over the Single Objective one.
-	
-	\subsection{Observations}
-	
-	\subsubsection{Behavior of the Evolved strategies}
+		
+	\subsection{Behavior of the Evolved strategies}
 
 	We choose a few individuals out of the evolved population randomly and compare the strategies obtained. We mention some of the interesting traits found common in all the strategies. We also try to relate the trends observed in these strategies to the desirable qualities required for successful strategies (Mentioned in previous sections). Some of the trends noted in the strategies are as follows,
 	\begin{itemize}
@@ -378,12 +429,6 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	\item \textbf{RRT (61) :} Here, both players have cooperated in the initial two moves and we've exploited it in the last turn. So, now that trust has been lost it would be better to defect.
 	\item \textbf{RRR (63) :} In this case, both players have cooperated in the last few moves. So, the best move would be to continue cooperating (So that we don't lose trust).
 	\end{itemize}
-	
-	\subsubsection{Effect of Memory on Strategies}	
-
-	As we can see in the table shown earlier. As we increase the memory length, an interesting trend is observed. At first, the memory increases till an optimum value (i.e. 3) then it suddenly decreases. Then, after the sudden decrease it gradually increases once again.\\
-	Notice that ideally, higher memory must result in better performance. Because it's trivial to show that the set of strategies using memory $n$ must be a subset of the set of strategies using memory $n+1$. But unfortunately this is the opposite of what is observed in the experiments. We suspect that the reason for poor performance despite the earlier mentioned fact is the limitations of the Genetic Algorithm.\\
-	As memory length increases, the corresponding solution space also increases exponentially. This results in the algorithm being prone to get stuck in local minimas. It also means that the Genetic Algorithm would require more generations (iterations) to arrive at a reasonable solution. Thus, the value proposed by Axelrod (i.e. 3) seems to be the optimal memory length considering the trade-off between Computational Power and Performance.
 	
 	\section{Results for Adaptive Strategies}
 
