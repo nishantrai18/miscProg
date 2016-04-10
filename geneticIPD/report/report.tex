@@ -25,12 +25,15 @@
 \DeclareMathSizes{10}{10}{10}{10}
 \begin{document}
 
-    \newgeometry{left=4cm,right=4cm,top=4cm,bottom=6cm}
+    \newgeometry{left=4cm,right=4cm,top=4cm,bottom=5cm}
 	\begin{titlepage}
 	    \begin{center}
-	        \vspace*{1cm}
+	        \vspace*{5mm}
 	        
-	        {\huge{\textsc{Evolutionary Algorithms for Iterated Prisoner's Dilemma}}\\}
+	        \vspace{5mm}
+	        {\huge{\textsc{Evolutionary Algorithms}}}\\
+	        \vspace{2mm}
+	        {\Large{\textsc{for Infinitely Repeated Prisoner's Dilemma}}}\\
 	        \vspace{8mm}
 	        {\large{Nishant Rai}}\\
 			\vspace{3mm}
@@ -41,10 +44,12 @@
 	        \textbf{Abstract\\}
         	\vspace{4mm}
         	\noindent
-{\justifying{The project deals with the problem of computing successful strategies for Iterated Prisoner's dilemma. We propose multiple algorithms to compute good strategies which perform well against a set of baseline algorithms (Including the extremely simple yet effective 'Tit for Tat'). The proposed algorithms include Evolutionary Strategies and Reinforcement Learning to compute optimal and also adaptive strategies which perform well against multiple opponents. We discuss Axelrod's Tournament and use a similar setup to decide the effectiveness of the computed strategies. The result section shows the superiority of the strategies computed using them.} \par}
+{\justifying{The project deals with the problem of computing successful strategies for Iterated Prisoner's dilemma. We start off by discussing existing work in the area along with some results and popular methods used for computing efficient strategies. We simulate multiple results and also confirm previous findings and claims. The discussed algorithms include Evolutionary Strategies and Reinforcement Learning (Which compute optimal and also adaptive strategies which perform well against multiple opponents). We propose new algorithms based on Reinforcement Learning to compute good strategies which perform well against a set of baseline algorithms (Including the extremely simple yet effective 'Tit for Tat'). This strategy is also compared against Axelrod's Evolutionary Strategy. We discuss Axelrod's Tournament and use a similar setup to decide the effectiveness of the computed strategies. The result section shows the superiority of the strategies computed using them. We also discuss the shortcomings and strengths of the algorithms.} \par}
 			\vfill
 			\includegraphics[width=0.25\textwidth]{iitklogo.png}\\[0.1in]
             \vspace{3mm}
+	        {\Large{\textsc{ECO502A: Case Study}}\\}
+			\vspace{3mm}            
             \normalsize{Under the guidance of Dr. Vimal Kumar\\}
             \vspace{1mm}
             {Indian Institute of Technology, Kanpur}
@@ -58,33 +63,23 @@
 	
 	\section{Introduction}
 	
-	The Prisoner's Dilemma is a classic problem in game theory, discovered in 1950 by Melvin Dresher and Merrill Flood, whose purpose is, among other things, to describe a situation in which rational behavior (defined as that behavior which will maximize one's expected benefit) can be, in a sense, self-undermining. It has become a popular problem because it is seen as fundamentally similar to real-world problems in sociology and politics. \\
-	The Prisoner's Dilemma can be described as follows: suppose that two individuals, A and B, have been arrested in connection with a crime. Each is put in a separate interview room and told that a deal may be available to them depending on whether each provides testimony against the other (defects) or keeps silent (cooperates). Each individual is assumed to want to do as well as possible for themselves without regard to the welfare of the other player.\\
+	The Prisoner's Dilemma is a classic problem in game theory, which is mainly a paradox demonstrating that two individuals acting in their own interest might choose an action which is worse off than any other. It has become a popular problem because there has been showing its similarity to real-world problems. The standard game is set up such that both players choose to protect themselves (Instead of cooperating) at the expense of their partner. Even though the thought process involved seems to be extremely logical, but both players eventually find themselves in a worse state than if they had cooperated with each other.\\
+	
+	We consider the following instance of Prisoner's Dilemma (Note that the essence remains the same). Players A and B have been arrested in connection with a crime. Both of them are put in a separate interview room and told that a deal may be available to them depending on whether each provides testimony against the other (Defects) or keeps silent (Cooperates). We assume that each  individual wants do as well as possible for only themselves (i.e. without any regard for the welfare of the other player). For further discussions, we denote the possible actions as $C_{x}$ and $D_{x}$ i.e. Player $x$ cooperating or defecting. The payoffs for the game are given in Table 1 below,
 
 	\tabcolsep=0.51cm
 	\begin{table}[H]
 	\centering
 	\begin{tabular}{|c|c|c|}
 	\hline
-						& B co-operates            & B defects 					\\ \hline
-	A co-operates  		& (3,3) 		 			& (0,5)         			\\ \hline
-	A defects 			& (5,0)           			& (1,1)            			\\ \hline
+					& $C_{B}$           		& $D_{B}$ 					\\ \hline
+	$C_{A}$  		& (3,3) 		 			& (0,5)         			\\ \hline
+	$D_{A}$			& (5,0)           			& (1,1)            			\\ \hline
 	\end{tabular}
 	\caption{Payoff matrix for the Prisoner's Dilemma}
 	\end{table}
 		
-	\begin{table}[H]
-	\centering
-	\begin{tabular}{|c|c|c|}
-	\hline
-						& B co-operates            & B defects 					\\ \hline
-	A co-operates  		& (R,R) 		 			& (S,T)         			\\ \hline
-	A defects 			& (T,S)           			& (P,P)            			\\ \hline
-	\end{tabular}
-	\caption{State definitions for the Prisoner's Dilemma}
-	\end{table}
-
-	This situation is formally specified by the matrix in Figure 1, subject to the following definitions and restrictions:
+	For ease of discussion afterwards, we define the following terms based on the actions chosen by the players (They are described in Table 2),
 	\begin{itemize}
 		\item T : \textbf{Temptation} for unilateral defection
 		\item R: \textbf{Reward} for mutual cooperation
@@ -92,16 +87,29 @@
 		\item S: \textbf{Sacrifice} for unilateral cooperation	
 	\end{itemize}
 	
-	A variant of the classical prisoner's game arises as a result of repeated games. It is termed as Iterated Prisoner's Dilemma. The situation is more interesting when the game satisfies the following conditions,
+	\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|c|}
+	\hline
+					& $C_{B}$           		& $D_{B}$ 					\\ \hline
+	$C_{A}$  		& (R,R) 		 			& (S,T)         			\\ \hline
+	$D_{A}$ 		& (T,S)           			& (P,P)            			\\ \hline
+	\end{tabular}
+	\caption{State definitions for the Prisoner's Dilemma}
+	\end{table}
+
+	As discussed earlier, we can conclude that the moves chosen by the players would be $(D_{A},D_{B})$. This can be termed as the Nash Equilibrium of the game. An interesting variant of the classical prisoner's game arises when the game is repeated multiple times. It is termed as Iterated Prisoner's Dilemma. The situation becomes even more interesting when the game satisfies the following conditions,
 	\begin{enumerate}
-	\item The number of moves should not be known to the two players.
 	\item The winner is the player with the highest score in the end.
+	\item The number of moves should 'not' be known to the two players.
 	\item Usually, there are many players in the fray, and there is a Round Robin Tournament among all the players - the player with the highest score wins.		
 	\end{enumerate}
 	
+	Due to the fact that the players do not know the number of repetitions of the game, thus it becomes equivalent to playing the game infinite times.	This is the game we will be studying in this Case study: The Infinitely Repeated Prisoner's Dilemma.
+	
 	\section{Existing Work}
 	
-	It can be argued that Axelrod has been the most influential researcher in the area of the Iterated Prisoner's Dilemma. In Axelrod's original work, two computer tournaments based on IPD were undertaken; which later defined the methods by which IPD strategies ought to be compared. In this process, Axelrod invited professional game theorists to submit programs for playing a computer-based Iterated Prisoner's Dilemma. Axelrod's work has also been extremely influential in other studies.\\
+	There has been a huge amount of work on It can be argued that Axelrod has been the most influential researcher in the area of the Iterated Prisoner's Dilemma. In Axelrod's original work, two tournaments based on IPD were undertaken; which later defined the methods by which IPD strategies ought to be compared. In this process, Axelrod invited professional game theorists to submit programs for playing a computer-based Iterated Prisoner's Dilemma. Axelrod's work has also been extremely influential in other studies.\\
 	Later, Axelrod used a Genetic Algorithm (GA), an artificial intelligence technique (Inspired by biological evolution), to simulate agent learning. The algorithm uses operators such as mutation and crossover (Derived from evolution). In investigating evolutionary future round tournaments, Axelrod considered a set of strategies that is deterministic and uses outcomes of the past 'three' moves (Discussed later) to determine a current move.\\
 	Further works adapt the same approach. This means that all strategies encoded in these environments are history dependent. In other word, such environment consists only of memory-based strategies. However, alternative representation of strategies could exist. Kraines showed that ‘Pavlovian’ strategies are able to support the evolution of cooperation in tournaments where players are making errors. 
 	
