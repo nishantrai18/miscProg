@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{caption}
+\usepackage[justification=centering]{caption}
 \usepackage{amsmath}
 \usepackage{subcaption}
 \usepackage[export]{adjustbox}
@@ -16,6 +17,7 @@
 \usepackage{mdframed}
 \usepackage{booktabs}
 \usepackage{ragged2e}
+\usepackage{subfig}
 
 \graphicspath{{learnerPlots/}}
 
@@ -267,7 +269,7 @@ cooperated is greater than or equal to the number of times it has defected, else
 	\end{wrapfigure}
 	The single-objective Evolutionary Algorithm used is the same as used by Axelrod in his initial study. As done earlier, the fitness i.e. self-score of the player is maximized during evolution. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure.\\
 	We show the maximum and average fitness of the population. As we can see the population achieves the final value extremely quickly (Under 50 iterations). The fluctuations caused in between are a result of the mutations introduced in the population (Something inherent in Evolutionary Algorithms).\\
-	After 500 generations the maximum fitness amongst all the samples in the population is around 312, which is even higher than the benchmark score (300) \textbf{(Dawkins)}. This shows the superiority of the Evolutionary strategy and is also in line with the results obtained by Axelrod. When this strategy is pitted against other strategy in an Axelrod-like tournament, the evolved strategy emerges as a clear winner (By a huge margin). The results are discussed in later sections.	
+	After 500 generations the maximum fitness amongst all the samples in the population is around 312, which is even higher than the benchmark score (300) \textbf{(Dawkins) \textbf{REFER}}. This shows the superiority of the Evolutionary strategy and is also in line with the results obtained by Axelrod. When this strategy is pitted against other strategy in an Axelrod-like tournament, the evolved strategy emerges as a clear winner (By a huge margin). The results are discussed in later sections.	
 
 	\subsubsection{Multi Objective Genetic Algorithm}
 		
@@ -278,13 +280,13 @@ cooperated is greater than or equal to the number of times it has defected, else
 	\end{wrapfigure}
 	
 	Instead of just maximizing our own score as proposed by Axelrod, we perform another experiment in which along with maximizing our self score we also try to reduce the opponents score. The intuition for this can be seen from the payoff matrix of the game and has been discussed earlier.\\
-	We used a Multi-Objective Evolutionary Algorithm (NSGA-II) to compute the strategy. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure. We show the maximum and average fitness of the population. The behavior of evolution mostly remains similar to the previous case. But we can see that the final value obtained \textit{(321)} in this case is higher than the Single Objective counterpart \textit{(312)}, which further motivates the benefit of using a multi-objective optimization algorithm.\\
+	We used a Multi-Objective Evolutionary Algorithm (NSGA-II) \textbf{REFER} to compute the strategy. For the experiment, the population size was fixed at 60. The results obtained when the evolutionary algorithm is run for 500 generations is shown in figure. We show the maximum and average fitness of the population. The behavior of evolution mostly remains similar to the previous case. But we can see that the final value obtained \textit{(321)} in this case is higher than the Single Objective counterpart \textit{(312)}, which further motivates the benefit of using a multi-objective optimization algorithm.\\
 
 	To further demonstrate the evolution, we plot the initial and final strategies obtained in Figure 3. The blue crosses represent the initial randomly initialized strategies. The red pluses represent the final evolved strategies, it can be easily seen that the initially random population slowly approaches the 'optimal' region. The out of place red members in the final evolved population are the mutated individuals.
 	
 	\subsection{Effect of Memory on Strategies}
 	
-	Axelrod performed his experiments assuming a memory length of 3. We perform our experiments with multiple memory lengths to gain insight whether it is in fact optimal. The results are shown in the following table,
+	Axelrod performed his experiments assuming a memory length of \textbf{3}. We perform our experiments with multiple memory lengths to gain insight whether it is in fact optimal. The results are shown in the following table,
 	
 	\begin{table}[H]
 	  \begin{center}
@@ -323,7 +325,7 @@ cooperated is greater than or equal to the number of times it has defected, else
 
 	\subsection{Tournament amongst strategies}
 
-	We conduct an Axelrod-like tournament amongst the mentioned strategies to compare and evaluate them. The baseline strategies used are mentioned in the earlier sections.
+	We conduct an Axelrod-like tournament amongst the mentioned strategies to compare and evaluate them. The baseline strategies used are mentioned in the earlier sections. The numbers (scores) shown represent the average score received in each move (This is a popular metric used in literature \textbf{REFER}). Remember that 3 is the payoff when both players always cooperate.
 
 	\subsubsection{Multi Objective Strategy Vs Others}
 
@@ -353,6 +355,8 @@ cooperated is greater than or equal to the number of times it has defected, else
 	  \end{center}
 	\end{table}  
 
+	Notice the high performance of 'Tit for Tat' strategy which confirms Axelrod's result.
+
 	\subsubsection{Single Objective Strategy Vs Others}
 
 In this setup we conduct a tournament between the strategy computed using the Single Objective GA and the baseline strategies. The best performer has been highlighted in bold text. The average score refers to the average payoff per turn.
@@ -379,11 +383,13 @@ In this setup we conduct a tournament between the strategy computed using the Si
 	    \end{tabular}
 	    \caption{\textsc{Tournament Results}}
 	  \end{center}
-	\end{table}  
+	\end{table}
+	
+	The same trend as earlier follows in this case too. But also observe that the average score obtained by the Multi-Objective Strategy is higher than that of the Single Objective strategy. Which supports the inclusion of multiple objectives during optimization.d
 
 	\subsubsection{Tournament with all strategies}
 	
-In this setup we conduct a tournament consisting of both the evolutionary strategy and the baseline strategies. The best performer has been highlighted in bold text. The average score refers to the average payoff per turn.	
+In this setup we conduct a tournament consisting of both the evolutionary strategy and the baseline strategies. The best performer has been highlighted in bold text. As earlier, the average score refers to the average payoff per turn.	
 	
 	\begin{table}[H]
 	  \begin{center}
@@ -414,7 +420,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 		
 	\subsection{Behavior of the Evolved strategies}
 
-	We choose a few individuals out of the evolved population randomly and compare the strategies obtained. We mention some of the interesting traits found common in all the strategies. We also try to relate the trends observed in these strategies to the desirable qualities required for successful strategies (Mentioned in previous sections). Some of the trends noted in the strategies are as follows,
+	We choose a few individuals out of the evolved population randomly and compare the strategies obtained. We mention some of the interesting traits found common in all the strategies. We also try to relate the trends observed in these strategies to the desirable qualities (Proposed by Axelrod \textbf{REFER}) required for successful strategies (Mentioned in previous sections). Some of the trends noted in the strategies are as follows,
 	\begin{itemize}
 	\item \textbf{PPP (0) :} In this situation both the players have been defecting over the previous three moves. Since both players were defecting previously, defecting again would be a good choice to minimize the damage and prevent the opponent's score to increase.
 	\item \textbf{PPT (1) :} In this case, the opponent defected on the first two moves, but cooperated in the third move, while player 1 defected in all the three moves. Thus, we should continue to exploit the 'foolishness' of the opponent and defect in the next move too (Expecting the opponent to cooperate).
@@ -430,9 +436,17 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	\item \textbf{RRR (63) :} In this case, both players have cooperated in the last few moves. So, the best move would be to continue cooperating (So that we don't lose trust).
 	\end{itemize}
 	
+	We observe that the strategies learned are 'Nice', 'Provocative' and 'Clear'. Because, in case both the players are cooperating, we do not defect and break trust i.e. not the first one to defect (Niceness). We also lash back at a defecting opponent accordingly and not be misused by him (Provocative).  We 'might' also say that our moves are pretty 'Clear' and give a straight signal to the opponent (We say it is clear on the basis of the discussion above i.e. the idea behind most moves was explained using simple-straightforward logic).\\
+	
+	A deviation from Axelrod's features occurs in case of 'Forgiveness'. We do not easily forgive the opponent, which is in a way a nice feature (But fails in case of a few strategies i.e. Tit for Tat). We propose another feature named 'Exploiter', which basically means being able to exploit a foolish opponent. It's easy to see that exploiting the opponent is the major source of points (payoffs) in the game.
+	
 	\section{Results for Adaptive Strategies}
 
+	In this section we discuss various results related to the adaptive strategies and study the effect of parameters and also the performance of different exploration variants.
+
 	\subsection{Learning Performance}
+		
+	In this section we study the learning behavior of the strategy. Features such as how fast it converges to the best value, the highest score reached are discussed here. The results shown in this section are for memory = \textbf{2}. We study the effect of memory in later sections.
 		
 	\subsubsection{Performance Against Other Strategies}
 	
@@ -440,7 +454,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{learnerB.png}
+	\includegraphics[width=0.9\textwidth]{learnerB.png}
 	\caption{{Performance of Adaptive strategy (Variant B)}}
 	\end{figure}
 
@@ -450,52 +464,55 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{learnerInitialB.png}
+	\includegraphics[width=0.9\textwidth]{learnerInitialB.png}
 	\caption{{Performance of Adaptive strategy (Variant B)}}
 	\end{figure}
 
-	As we can see, our strategy generally learns and improves its payoff. But in a few cases (Mostly against 'Tit for Tat' strategies), our strategy shows a slight (Notice the scale) decreasing trend. As we will discuss later, the reason for this is poor exploration. We try to exploit more instead of exploring, which leads to a very slight decrease in the payoff (Notice the scales in the plot).
+	As we can see, our strategy generally learns and improves its payoff. But in a few cases (Mostly against 'Tit for Tat' strategies), our strategy shows a slight (Notice the scale) decreasing trend. As we will discuss later, the reason for this is poor exploration. We try to exploit more instead of exploring, which leads to a very slight decrease in the payoff (Notice the scales in the plot). The reason for this also due to only considering 'local' gains while playing (i.e. not caring about the current move on subsequent turns). This issue can be solved using a modification named as Q-Learning \textbf{(REFER)}.
 
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{learnerInitialC_b8.png}
+	\includegraphics[width=0.9\textwidth]{learnerInitialC_b8.png}
 	\caption{{Performance of Adaptive strategy (Variant C)}}
 	\end{figure}
 
-	As we can see, Variant C is able to tackle the issue of decreasing payoffs to a certain extent. We'll have a more extensive discussion on this in future sections. Using softmax to incorporate exploration at each turn helps the model in continuing to learn. The 
+	As we can see, Variant C is able to tackle the issue of decreasing payoffs to a certain extent. We'll have a more extensive discussion on this in future sections. Using softmax to incorporate exploration at each turn helps the model in continuing to learn. The effect of the parameter $c$ which critically affects the final results id discussed later.  
 	
 	\subsection{Observations}
 	
+	We discuss the possible reasons for the behavior seen in this section. We mainly discuss the effect of $c$ (used in softmax) on the final result. This'll hopefully give us an idea about how varying the exploration strategy affects the final result. We also, try to conduct tournaments 	
+	
 	\subsubsection{Effect of Parameters on Learning}
 
-	As discussed earlier, using softmax drastically helps in improving the results. Here, we study the effect of the constant $c$ on the performance of the learning algorithm. Note that, a small $c$ neglects the role of the expected payoff while a higher $c$ makes its role even more important.
+	As discussed earlier, using softmax drastically helps in improving the results. Here, we study the effect of the constant $c$ on the performance of the learning algorithm. Note that, a small $c$ neglects the role of the expected payoff while a higher $c$ makes its role even more important.\\
+
+	As we can see, for $c=2$ there is almost no decreasing trend observed (Note that the fluctuations are extremely small). This is due to more emphasis on exploration instead of exploiting the current best move. Also note the higher payoffs observed in case of 'Tit for Tat' Strategies and also the slight drop in payoffs for the others.\\
+	
+	With increasing $c$, the decreasing payoff effect becomes more prominent. Also, the payoffs for 'Tit for Tat' strategies decrease while it increases for the others. As mentioned earlier, this can be accounted to local greediness used by the player (i.e. not thinking about the effect of the current moves on future turns). Note that although, the payoffs are low. The adaptive strategy easily gains the highest (After defector) number of wins.
 
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{learnerInitialC_b2.png}
+	\includegraphics[width=0.73\textwidth]{learnerInitialC_b2.png}
 	\caption*{{Performance of Variant C ($c = 2$)}}
 	\end{figure}
-	
-	As we can see, for $c=2$ there is almost no decreasing trend observed (Note that the fluctuations are extremely small). This is due to more emphasis on exploration instead of exploiting the current best move. Also note the higher payoffs observed in case of 'Tit for Tat' Strategies and also the slight drop in payoffs for the others.
 
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{learnerInitialC_b8.png}
+	\includegraphics[width=0.73\textwidth]{learnerInitialC_b8.png}
 	\caption*{{Performance of Variant C ($c = 8$)}}
 	\end{figure}
 
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{learnerInitialC_b32.png}
+	\includegraphics[width=0.73\textwidth]{learnerInitialC_b32.png}
 	\caption*{{Performance of Variant C ($c = 32$)}}
 	\end{figure}
 
-	With increasing $c$, the decreasing payoff effect becomes more prominent. Also, the payoffs for 'Tit for Tat' strategies decrease while it increases for the others.
-
 	\subsubsection{Effect of Memory}
 	
-	Let's study the effect of memory on the performance of the adaptive strategy. It's evident that the number of states increase exponentially with memory length.	Consequently, the rate of learning will also be reduced accordingly since we have a larger number of unknowns which need to be estimated. The performance of the strategies for different memory lengths are shown below,\\
+	Let's study the effect of memory on the performance of the adaptive strategy. It's evident that the number of states increase exponentially with memory length. Consequently, the rate of learning will also be reduced accordingly since we have a larger number of unknowns which need to be estimated. This would mean more emphasis on exploration. The performance of the strategies for different memory lengths are shown below,\\
 	
+	\vspace{-5mm}	
 	\begin{table}[H]
 	  \begin{center}
 	    \begin{tabular}{|c|c|c|c|c|}
@@ -508,8 +525,10 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 		   \bottomrule
 	    \end{tabular}
 	  \end{center}
-	\end{table}  		
+	\end{table} 
 
+	\vspace{-8mm}	
+	
 	\begin{table}[H]
 	  \begin{center}
 	    \begin{tabular}{|c|c|c|c|c|c|}
@@ -524,7 +543,11 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	  \end{center}
 	\end{table}  		
 	 
-	As we can see from the above table, increasing memory has little or almost no effect on the performance of the strategy. This can be due to the fact that almost all the above strategies are extremely local in nature (i.e. Do not look more than 1-2 steps back). Thus, only one look up is enough to explain the opposing strategies well enough. This reasoning is supported by the fact that there is a slight improvement in the payoffs of the strategies  \textsc{CyclerCCD} and \textsc{Tit for 2 Tats}, both of which require at least 2-3 memory length to tackle efficiently.
+	\vspace{-5mm}	
+
+	As we can see from the above table, increasing memory has little or almost no effect on the performance of the strategy. This can be due to the fact that almost all the above strategies are extremely local in nature (i.e. Do not look more than 1-2 steps back). Thus, only one look up is enough to explain the opposing strategies well enough. This reasoning is supported by the fact that there is a slight improvement in the payoffs of the strategies  \textsc{CyclerCCD} and \textsc{Tit for 2 Tats}, both of which require at least 2-3 memory length to tackle efficiently.\\
+	
+	Also note that the reinforcement learning algorithm discussed here does not look at the future implications of the current move. The related topic is Q-Learning and is extremely powerful in this sense \textbf{(REFER)}. Using it should help in learning future implications and subsequently gaining higher scores.
 	 
 	\subsubsection{Special Cases: Cooperator and Defector}
 
@@ -534,7 +557,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	\textbf{Cooperator: } As the name suggests, this is a simple strategy which always cooperates. Our algorithm starts off in a pure state, having no knowledge of what would be a better strategy. It interacts with the opponent and slowly learns which strategy give better returns. As can be seen in earlier figures, the strategy performs poorly initially (Due to no knowledge at the moment). Initially, it tries exploring all possible moves and infer which moves should be better. Thus, as observed in the plots, the payoffs slowly start to rise and approach 5 (The optimal value). In the end, the payoff is still slightly less than 5 due to a small amount of exploration being performed (To check whether another better strategy can be found).\\
 	
 	\noindent
-	\textbf{Defector: } As the name suggests, this is a simple strategy which always defects. Note that against such a strategy, the maximum payoff is 1. 	Similar to the previous case, our algorithm starts off by having no previous knowledge. It interacts with the opponent and slowly learns which strategy give better returns. As can be seen in earlier figures, the strategy performs poorly initially (Due to exploration being performed). Thus, as observed in the plots and noted in the previous case, the payoffs slowly start to rise and approach 1 (The optimal value). Note that a defector will always win (In any case, against any strategy other then Defector itself) and consequently will always have higher (>=) payoff than the opponent. So, in effect our strategy has managed to learn the (nearly) best possible action in this case.
+	\textbf{Defector: } As the name suggests, this is a simple strategy which always defects. Note that against such a strategy, the maximum payoff is 1. 	Similar to the previous case, our algorithm starts off by having no previous knowledge. It interacts with the opponent and slowly learns which strategy give better returns. As can be seen in earlier figures, the strategy performs poorly initially (Due to exploration being performed). Thus, as observed in the plots and noted in the previous case, the payoffs slowly start to rise and approach 1 (The optimal value). Note that a defector will always win (In any case, against any strategy other then Defector itself) and consequently will always have higher ($\geq$) payoff than the opponent. So, in effect our strategy has managed to learn the (nearly) best possible action in this case.
 
 	\section{Showdown: Evolved Strategy Vs Adaptive Strategy}
 
@@ -559,10 +582,13 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	    \end{tabular}
 	  \end{center}
 	\end{table}  		
+	\vspace{-5mm}
 	
 	As we can see above, the adaptive strategy slowly adapts to the evolved strategy and starts outperforming them as the number of turns played increases. Note that the payoffs shown for turns = 20, 200 have extremely high variance and thus are not reliable (and should not be taken at face value).
 	
 	\subsection{Performance Against Other Strategies}
+	
+	Here, we study the performance of the discussed strategies against other players. The strategies used are a subset of those mentioned earlier.	
 	
 	\renewcommand{\tabcolsep}{8pt}
 
@@ -580,6 +606,7 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	  \end{center}
 	\end{table}  		
 
+	\vspace{-8mm}	
 	\renewcommand{\tabcolsep}{6pt}
 
 	\begin{table}[H]
@@ -596,9 +623,36 @@ In this setup we conduct a tournament consisting of both the evolutionary strate
 	    \end{tabular}
 	  \end{center}
 	\end{table}  		
+	\vspace{-3mm}	
 
-	\section{Future Work}
+	As we can see here, the adaptive strategy performs well or comparable in case of strategies such as Cooperator, Defector, CyclerCCD and Random. But it almost constantly performs poor in case of 'Tit for Tat' type strategies. A highly possible reason for this could be the fact that the solution search is extremely local (And thus we do not focus on the future of the game). Q-Learning is a possible solution for the same.
+
+	It should be mentioned that the above experiment is extremely unfair towards the Adaptive strategy. Since the evolved strategies have been trained on the given strategies. In case of completely new strategies, the evolved ones perform very poorly compared to the adaptive algorithm (Results have not been shown due to space constraints).
+
+	\section{Significance of the Results}
+	
+	We see that evolved strategies perform well in general but that only holds true against known strategies. We can conclude the following features of the Evolved Strategies on the basis of the above discussions,
+	\begin{itemize}
+		\item \textbf{High Performance:} Evolved strategies perform extremely well (In terms of average payoff) against known strategies (i.e. strategies against which they've been trained).
+		\item \textbf{Poor Performance against Fresh Opponents:} Evolved strategies perform vwey poorly against fresh strategies. Mainly due to there rigid strategies which aren't able to adapt to the new strategies.
+		\item \textbf{Low Win Rate:} In the round robin tournament conducted, it was observed that even though the scores obtained by the evolved strategies were high. They were not able to win a large number of games. Their final position was around $5^{th}-6^{th}$ out of 11 players.
+		\item \textbf{Fixed Behavior:} It is evident that the evolved strategies are rigid in nature and do not change their behavior on the basis of the opponent. Which is a desirable quality in a strategy.
+	\end{itemize}
+
+	We can observe the following features of the Adaptive Strategies,
+	\begin{itemize}
+		\item \textbf{Varying Performance:} Adaptive strategies sometimes perform extremely well (In some cases, being able to exploit the optimal strategy) against some strategies. While in case of others, their average return isn't that high and they lose to evolved strategies. But an important point to note is that even thought their returns are low, they manage to win most of the games. More discussion in the latter points.
+		\item \textbf{Poor Performance against 'Tit for Tat' strategies:} It can be seen in the results that the payoffs are low for 'Tit for Tat' class of strategies. But, it still manages to win finally. The low payoff can be rectified by using Q-Learning (A variant which considers the effect on future moves).
+		\item \textbf{Robust against Fresh Opponents:} Unlike the Evolved strategies, adaptive strategies manage to learn the best (good) way to play against new opponents.
+		\item \textbf{High Win Rate:} In the round robin tournament conducted, it was observed that even though the scores obtained by the Adaptive Strategy was moderate. It was able to win a majority of games. Its final position was $2^{nd}$ out of 11 players. Only coming behind 'Defector' which as discussed earlier can not be defeated.	
+		\item \textbf{Adaptive Behavior:} As the name suggests, this strategy adapts well to new opponents. Which is an extremely desirable quality in a strategy.
+		\item \textbf{Gradual Increase in Performance:} It is natural that the strategy performs poorly initially but then its performance improves as the number of turns progresses.				
+	\end{itemize}		
+	
+	\section{Conclusion}	
 			
+	We have confirmed known results and findings related to Infinite Prisoner's Dilemma (By Axelrod). We also propose a few changes in the list of desirable traits given by Axelrod, alongside confirming their relevance in high performing strategies. We also show the relevance of choosing memory depth as three in experiments and provide a loose argument to support it. After discussing the flaws associated with evolved strategies, we also propose new adaptive algorithms based on reinforcement learning to counter them. We study the performance of the discussed strategies by conducting various experiments. We use a similar setup (As done by Axelrod) to decide the effectiveness of the computed strategies. We also mention the superiority of the adaptive strategies against fresh strategies which is a weak point for evolved strategies. Hopefully, the improvements an correction suggested (Such as Q-Learning) helps the adaptive strategy obtain high payoffs against those which it is currently weak against.
+					
 	\section{References}
 
 \end{document}
