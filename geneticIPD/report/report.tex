@@ -31,9 +31,9 @@
 	        \vspace*{5mm}
 	        
 	        \vspace{5mm}
-	        {\huge{\textsc{Evolutionary Algorithms}}}\\
+	        {\Huge{\textsc{Evolutionary Algorithms}}}\\
 	        \vspace{2mm}
-	        {\Large{\textsc{for Infinitely Repeated Prisoner's Dilemma}}}\\
+	        {\huge{\textsc{for Infinite Prisoner's Dilemma}}}\\
 	        \vspace{8mm}
 	        {\large{Nishant Rai}}\\
 			\vspace{3mm}
@@ -105,31 +105,36 @@
 	\item Usually, there are many players in the fray, and there is a Round Robin Tournament among all the players - the player with the highest score wins.		
 	\end{enumerate}
 	
-	Due to the fact that the players do not know the number of repetitions of the game, thus it becomes equivalent to playing the game infinite times.	This is the game we will be studying in this Case study: The Infinitely Repeated Prisoner's Dilemma.
+	Due to the fact that the players do not know the number of repetitions of the game, thus it becomes equivalent to playing the game infinite times.	This is the game we will be studying in this Case study: The Infinitely Repeated Prisoner's Dilemma (Or Infinite Prisoner's Dilemma (IPD)).
 	
 	\section{Existing Work}
 	
-	There has been a huge amount of work on It can be argued that Axelrod has been the most influential researcher in the area of the Iterated Prisoner's Dilemma. In Axelrod's original work, two tournaments based on IPD were undertaken; which later defined the methods by which IPD strategies ought to be compared. In this process, Axelrod invited professional game theorists to submit programs for playing a computer-based Iterated Prisoner's Dilemma. Axelrod's work has also been extremely influential in other studies.\\
-	Later, Axelrod used a Genetic Algorithm (GA), an artificial intelligence technique (Inspired by biological evolution), to simulate agent learning. The algorithm uses operators such as mutation and crossover (Derived from evolution). In investigating evolutionary future round tournaments, Axelrod considered a set of strategies that is deterministic and uses outcomes of the past 'three' moves (Discussed later) to determine a current move.\\
-	Further works adapt the same approach. This means that all strategies encoded in these environments are history dependent. In other word, such environment consists only of memory-based strategies. However, alternative representation of strategies could exist. Kraines showed that ‘Pavlovian’ strategies are able to support the evolution of cooperation in tournaments where players are making errors. 
+	There has been a huge amount of work in the area of Prisoner's Dilemma (And its variants), on both theoretical and practical implications and applications. In the case of Infinite Prisoner's Dilemma, it can be argued that Axelrod has been the most influential researcher in the area. His original work set the stage for a regularized study in terms of tournaments amongst multiple strategies. The surprising results of Axelrod's work has fueled a lot of discussions and further works. In his original work, two tournaments based on IPD were undertaken; which later defined the methods by which IPD strategies ought to be compared. In the process, he invited professional game theorists to submit programs for playing a computer-based Infinite Prisoner's Dilemma. His work has also been extremely influential in other studies (Especiallym in demonstrating the effectiveness of Evolutionary Algorithms in unconventional applications).
+	
+	Later, Axelrod used a Genetic Algorithm (GA), an artificial intelligence technique (Inspired by biological evolution), to simulate agent learning. The algorithm uses operators such as mutation and crossover (Derived from evolution). Crossover is a genetic operator used to vary the chromosomes from one generation to the next (i.e. Induce diversity and evolution). It is simply a process of taking more than one parent solutions and producing a child solution from them. Mutation is an operator used to maintain genetic diversity from one generation to the next. In investigating evolutionary strategies, Axelrod considered a set of strategies that is deterministic (fixed) and uses results (histories) of the past 'three' moves (Discussed later) to determine the best move for the next turn.
+	
+	There has been work which adapt and extend the same approach showing the effectiveness of their approach. One of the shortcomings of evolved strategies is the fact that the optimization algorithms used to compute good strategies are not able to effectively search the complete solution space. This leads to surprisingly poor strategies as we increase the history considered. We study the effect of this in later sections.
+	
+	Note that most of the strategies in these works are history dependent. In other words, such an a class will consist only of memory-based strategies. However, previous works also show the existence of alternative representation of (effective) strategies. Kraines showed that 'Pavlovian' strategies are able to support the evolution of cooperation in tournaments where players are making errors. Pavlovian strategies are similar to Tit for Tat in the sense that they are extremely simple. If your opponent cooperated with you on the last round, repeat your last move; otherwise, switch your move. Its biggest advantage is that, unlike TFT, it is relatively prone to errors and can bounce back from a $D-D$ stalemate. This has been explored in detail by Kraines.
 	
 	\section{Axelrod's Tournament}
 
-	In 1980, Robert Axelrod, professor of political science at the University of Michigan, held a tournament of various strategies for the prisoner's dilemma. He invited a number of well-known game theorists to submit strategies to be run by computers. In the tournament, programs played games against each other and themselves repeatedly. Each strategy specified whether to cooperate or defect based on the previous moves of both the strategy and its opponent.\\
-	Some of the strategies submitted were:
+	We discuss details of Axelrod's Tournament in detail in this section. Axelrod held a tournament of various strategies for the prisoner's dilemma. A number of game theorists submitted strategies which were simulated using computers. The tournament was a round robin tournament i.e. programs played games against each other repeatedly.\\
+	The results were extremely interesting and led to many discussions eventually. Some of the strategies submitted were:
 	\begin{itemize}
 	\item \textbf{Always Defect}: This strategy defects on every turn. This is what game theory advocates. It is the safest strategy since it cannot be taken advantage of. However, it misses the chance to gain larger payoffs by cooperating with an opponent who is ready to cooperate.
 	\item \textbf{Always Cooperate:} This strategy does very well when matched against itself. However, if the opponent chooses to defect, then this strategy will do badly.
 	\item \textbf{Random:} The strategy selects its move randomly i.e. cooperates and defects 50\% of the time.
+	\item \textbf{Tit for Tat:} Cooperates on the first move, then simply copies the opponent's last move.
 	\end{itemize}
 	
-	All of these strategies are prescribed in advance. Therefore, they cannot take advantage of knowing the opponent's previous moves and figuring out its strategy. The winner of Axelrod's tournament was the 'Tit for Tat' strategy. The strategy cooperates on the first move, and then does whatever its opponent has done on the previous move. Thus, when matched against the all-defect strategy, 'Tit for Tat' strategy always defects after the first move. When matched against the all-cooperate strategy, 'Tit for Tat' always cooperates. This strategy has the benefit of both cooperating with a friendly opponent, getting the full benefits of cooperation, and of defecting when matched against an opponent who defects. When matched against itself, the 'Tit for Tat' strategy always cooperates.\\
-	'Tit for Tat' relies on the assumption that its opponent is trying to maximize his score. When paired with a mindless strategy like 'Random', 'Tit for Tat' sinks to its opponent's level. For that reason, 'Tit for Tat' cannot be called a 'best' strategy. It must be realized that there really is no 'best' strategy for prisoner's dilemma. Each individual strategy will work best when matched against a 'worse' strategy. In order to win, a player must figure out his opponent's strategy and then pick a strategy that is best suited for the situation.
+	All of these strategies act without any knowledge of the future behavior of the opponent. Therefore, they cannot take advantage of knowing the opponent's previous moves and figuring out its strategy (There was actually a bugged tournament conducted later on, which suffered from this flaw and was exploited effectively by the winner). The winner of Axelrod's tournament was the extremely simple 'Tit for Tat' strategy. As mentioned earlier, the strategy cooperates on the first move, and then does whatever its opponent has done on the previous move. Thus, when matched against the all-defect strategy, 'Tit for Tat' strategy always defects after the first move. When matched against the all-cooperate strategy, 'Tit for Tat' always cooperates. This strategy has the benefit of both cooperating with a friendly opponent, getting the full benefits of cooperation, and of defecting when matched against an opponent who defects. When matched against itself, the 'Tit for Tat' strategy always cooperates.\\
+	'Tit for Tat' relies on the assumption that its opponent is trying to maximize his score. When paired with a mindless strategy like 'Random', 'Tit for Tat' sinks to its opponent's level. For that reason, 'Tit for Tat' cannot be called the 'best' strategy. It must be realized that there really is no 'best' strategy for prisoner's dilemma. Each individual strategy will work best when matched against a 'worse' strategy. In order to win, a player must figure out his opponent's strategy and then pick a strategy that is best suited for the situation.
 	
 	\subsection{Features of Successful Strategies}
 
 A strategy (pure) for a player in a particular game is a plan describing what move that player should take in each possible situation (information state) that might arise for him.
-In Axelrod’s IPD tournaments, strategies exhibiting the following four properties tended to be more successful (i.e., to accumulate higher total payoffs), with the clear-cut winner being the Tit-for-Tat strategy.
+In Axelrod’s IPD tournaments, strategies exhibiting the following four properties (As observed by Axelrod) tended to be more successful (i.e., to accumulate higher total payoffs), with the clear-cut winner being the Tit-for-Tat strategy.
 	\begin{itemize}
 		\item \textbf{Niceness}: Never be the first to defect.
 		\item \textbf{Provocability}: Get mad quickly at defectors and retaliate.
@@ -137,18 +142,20 @@ In Axelrod’s IPD tournaments, strategies exhibiting the following four propert
 		\item \textbf{Clarity}: Act in ways that are straightforward for others to understand.
 	\end{itemize}
 
+	We study whether these traits are actually useful or not in the result section. We try to see  if the computed strategies have the mentioned features.
+	
 	\subsection{Axelrod Strategies}	
 
-As we have seen earlier that 'Tit for Tat', such a simple strategy turned out to be the winner in Axelrod's tournament. Axelrod set out to find other simple strategies with similar or greater power.\\
-Axelrod adopted a simple but elegant way for encoding strategies, and then used a single-objective evolutionary algorithm to obtain optimal strategies. His encoding scheme remained a standard way of handling the IPD problem and is described below. We also adopt a similar encoding scheme to compute optimal strategies for the game. Axelrod's method had the following features,
+As we have seen earlier that 'Tit for Tat'turned out to be the winner in Axelrod's tournament even though it can perform worse against many opponents (e.g. Random). Axelrod set out to find other simple strategies with similar or greater power. This section describes the procedure followed by Axelrod to compute a new strategy.
+Axelrod adopted a simple but elegant way for encoding strategies, and then used a single-objective evolutionary algorithm to obtain optimal strategies. His encoding scheme has remained a standard way of handling the IPD problem and is described below. We also adopt a similar encoding scheme to compute optimal strategies for the game. Axelrod's method had the following features,
 	\begin{itemize}
 	\item The next move depends upon the behavior of both the parties during previous three (In general k, termed as memory length in this paper) moves.
 	\item We have four possibilities for the previous move, which are as follows,
 	\begin{itemize}
 		\item CC or R for Reward
-		\item CD or S for Sucker
+		\item CD or S for Sacrifice
 		\item DC or T for Temptation
-		\item DD or P for Penalty
+		\item DD or P for Punishment
 	\end{itemize}		
 	\item We code the particular behavioral sequence as a 3-letter string.	
 	\item We then use the 3-letter sequence to generated a number between 0 and 63 (i.e. $4^{3} = 4^{k}$) by interpreting it as an integer base 4 (Since there were 4 possibilities for each turn).
@@ -162,17 +169,20 @@ Axelrod adopted a simple but elegant way for encoding strategies, and then used 
 	\item Together, each of the 70-bit strings represent a particular strategy (i.e. State-action codes)	
 	\end{itemize}		
 	
+	Note that we can vary the history considered by the strategy, which consequently changes the memory required for the strategy encoding. This also raises the computational cost as mentioned earlier. We study the effect of memory in the result section.
+	
 	\section{Motivation}
 	
-	As discussed in the previous section, Axelrod's encoding can be used to define a strategy. We decide to use Evolutionary Algorithms to compute the optimal (Axelrod) strategy because the total number of all possible strategies very high (i.e. $2^{70}$). If we perform exhaustive search, it will take a huge amount of time (A couple billion years or more!). We do not seek help from standard optimization procedure since the fitness function required is not continuous or differentiable, thus classical methods will not work. Hence, genetic (evolutionary) algorithms are a good choice.
+	As discussed in the previous section, Axelrod's encoding can be used to define a strategy. We decide to use Evolutionary Algorithms to compute the optimal (Axelrod) strategy because the total number of all possible strategies very high (i.e. $2^{70}$). If we perform an exhaustive search, it will take a huge amount of time (A couple billion years or more!). We do not seek help from standard optimization procedure since the fitness function required is not continuous or differentiable, thus classical methods will not work. Hence, genetic (evolutionary) algorithms are a good choice.
+
+	\section{Axelrod Strategies using Evolutionary Algorithms}
+
+	As mentioned earlier, Axelrod's approach involved maximizing the self score using a Single Objective Genetic Algorithm. We try to recreate the results and study the effectiveness of the approach proposed by Axelrod. There has also been work which proposes optimizing multiple objectives simultaneously (i.e. Self Score and Opponent score) NSGA-II algorithm. It has been claimed that the latter works better, thus we compare the performance of both the algorithms to validate the claims and get more details related to their effectiveness.
+	
+	The intuition for using another objective (i.e. Opponent score) is that maximizing our own score is not the only way to win the game. The game can also be won if we minimize the score of the opponent. Thus, minimizing the opponent score might indirectly help us win the game.
 	
 	\section{Proposed Algorithms}
 	
-	\subsection{Axelrod Strategies using Evolutionary Algorithms}
-
-	As mentioned earlier, Axelrod's approach involved maximizing the self score using a Single Objective Genetic Algorithm. We study Axelrod's model along with optimizing multiple objectives (i.e. Self Score and Opponent score) simultaneously using NSGA-II algorithm. We later compare the computed strategies.\\
-	The intuition for using another objective (i.e. Opponent score) is that the Prisoner's dilemma game is similar to a constant sum game (If we exclude the case when both confess), thus minimizing the opponent score might indirectly help us in maximizing our own score.
-
 	\subsection{Reinforcement Learning for Adaptive Strategies}
 	
 	\section{Experiments}
