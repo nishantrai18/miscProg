@@ -30,7 +30,7 @@ def DetectFace(frame):
 	# Assuming only one face for now
 	frame = np.array(frame)
 	(x, y, w, h) = faces[0]
-	return frame[x:(x+w),y:(y+h),:]
+	return frame[y:(y+h),x:(x+w),:]
 
 def DrawFace(frame):
 	'''
@@ -110,7 +110,7 @@ def DetectFaceInList(frameList, faceCascade = None, debug = False):
 			gray,
 			scaleFactor=1.2,
 			minNeighbors=5,
-			minSize=(30, 30),
+			minSize=(50, 50),
 			flags = cv2.cv.CV_HAAR_FIND_BIGGEST_OBJECT
 			# flags = cv2.cv.CV_HAAR_SCALE_IMAGE
 		)
@@ -122,13 +122,10 @@ def DetectFaceInList(frameList, faceCascade = None, debug = False):
 			if cv2.waitKey(1) & 0xFF == ord('q'):
 				break
 
-		if (len(faces) != 1):
-			print "Inconsistent frame. Multiple or no faces found."
-			raw_input("What to do? Execution resumes after input.")
-
-		frame = np.array(frame)
-		(x, y, w, h) = faces[0]
-		faceList.append(frame[x:(x+w),y:(y+h),:])
+		if (len(faces) == 1):
+			frame = np.array(frame)
+			(x, y, w, h) = faces[0]
+			faceList.append(frame[y:(y+h),x:(x+w),:])
 
 	faceList = np.array(faceList)
 	return faceList

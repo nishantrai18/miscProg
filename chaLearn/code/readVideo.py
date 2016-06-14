@@ -4,7 +4,7 @@ import cv2
 import skimage
 import os
 from faceDetect import *
-from imgProcess import *
+from dataProcess import *
 
 def PlayVideo(fileName, redFact = 0.5):
 	'''
@@ -67,9 +67,10 @@ if __name__ == "__main__":
 	vidNames = os.listdir(videoPath)
 	vidNames = [x for x in vidNames if x.endswith(".mp4")]
 	fileName = vidNames[0]
-
+	# fileName = '8XBprf4NyOg.001.mp4'
 	# PlayVideo(videoPath+fileName)
 
+	# savedVidPath = 'KORA'
 	savedVidPath = 'tmpData/tmpVid'
 	savedPicPath = 'tmpData/tmpPic.jpg'
 
@@ -82,5 +83,5 @@ if __name__ == "__main__":
 
 	# DetectFace(frameList[0])
 	# DrawFace(frameList[0])
-	DetectFaceInList(frameList)
+	DetectFaceInList(frameList, None, True)
 	# cv2.imwrite(savedPicPath, frameList[0])

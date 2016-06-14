@@ -1,4 +1,5 @@
 from readVideo import *
+import sys
 
 def getVisualFetA():
 	'''
@@ -6,6 +7,9 @@ def getVisualFetA():
 	Simply extract the face from each frame, followed by resizing
 	The generated file for each video contains a nump array of subimages (Of faces) 
 	'''
+
+	# fileName = '../training/training_gt.csv'
+	# trueMap = getTruthVal(fileName)
 
 	print 'Started extracting features A'
 
@@ -26,18 +30,25 @@ def getVisualFetA():
 	if not os.path.exists(saveVidPath):
 	    os.makedirs(saveVidPath)
 
-	for fileName in vidNames:
+	vidNames = vidNames[170:1000]
+
+	for i in range(len(vidNames)):
+		fileName = vidNames[i]
 		frameList = GetFrames(videoPath+fileName, redFact = 0.5, skipLength = 5)
 		savePath = saveVidPath + fileName.strip('.mp4')
-		print savePath
-		raw_input('Alright?')
-		np.save(savePath, frameList)
+		
+		# np.save(savePath, frameList)
+		# Do not save, too large!
+
 		faceList = DetectFaceInList(frameList, faceCascade)
 		faceList = equalizeImgList(faceList)
 		savePath = saveFetPath + fileName.strip('.mp4')
-		print savePath
-		raw_input('Alright?')
 		np.save(savePath, faceList)
+
+		print ('\r'), ((i*(1.0))/len(vidNames)), 'part completed. Currently at file:', fileName,
+		sys.stdout.flush()
+
+	print '\n'
 
 if __name__ == "__main__":
 	getVisualFetA()
