@@ -4,6 +4,7 @@ import cv2
 import skimage
 import os
 from faceDetect import *
+from imgProcess import *
 
 def PlayVideo(fileName, redFact = 0.5):
 	'''
@@ -27,7 +28,7 @@ def PlayVideo(fileName, redFact = 0.5):
 	cap.release()
 	cv2.destroyAllWindows()
 
-def GetFrames(fileName, redFact = 0.5, skipLength = 1):
+def GetFrames(fileName, redFact = 0.5, skipLength = 1, debug = False):
 	'''
 	returns numpy array of frames
 	'''
@@ -40,7 +41,8 @@ def GetFrames(fileName, redFact = 0.5, skipLength = 1):
 	frameList = []
 	cnt = 0
 
-	print "Started creating Frame List"
+	if debug:
+		print "Started creating Frame List"
 
 	while True:
 		if not retval:
@@ -54,11 +56,10 @@ def GetFrames(fileName, redFact = 0.5, skipLength = 1):
 		retval, image = cap.read()
 	cap.release()
 
-	print "Finished creating Frame List"
+	if debug:
+		print "Finished creating Frame List"
 
-	# print len(frameList)
 	frameList = np.array(frameList)
-	print frameList.shape
 	return frameList
 
 if __name__ == "__main__":
@@ -70,13 +71,16 @@ if __name__ == "__main__":
 	# PlayVideo(videoPath+fileName)
 
 	savedVidPath = 'tmpData/tmpVid'
+	savedPicPath = 'tmpData/tmpPic.jpg'
 
 	frameList = None
 	if (not os.path.isfile(savedVidPath + '.npy')):
-		frameList = GetFrames(videoPath+fileName, redFact = 0.5, skipLength = 3)
+		frameList = GetFrames(videoPath+fileName, redFact = 0.5, skipLength = 5)
 		np.save(savedVidPath, frameList)
 	else:
 		frameList = np.load(savedVidPath+'.npy')
 
+	# DetectFace(frameList[0])
 	# DrawFace(frameList[0])
 	DetectFaceInList(frameList)
+	# cv2.imwrite(savedPicPath, frameList[0])
