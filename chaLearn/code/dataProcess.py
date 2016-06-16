@@ -60,14 +60,15 @@ def readFromFile(fileName, skipLength = 2, augment = False):
 	tmpList = np.array(tmpList)
 	return tmpList
 
-def readData(fileNames, trueVal):
+def readData(fileNames, trueVal = None):
 	X = []
 	Y = []
 	# CAN BE OPTIMIZED
 	for fileName in fileNames:
 		imgList = readFromFile(fileName, 6, augment = True)
 		X.extend(imgList)
-		Y.extend([trueVal[fileName]]*len(imgList))
+		if (trueVal is not None):
+			Y.extend([trueVal[fileName]]*len(imgList))
 	X = np.array(X)
 	Y = np.array(Y)
 	return X, Y

@@ -2,6 +2,7 @@ import numpy as np
 from skvideo.io import VideoCapture
 import cv2
 import skimage
+import dlib
 
 def DetectFace(frame):
 	'''
@@ -131,22 +132,23 @@ def DetectFaceInList(frameList, faceCascade = None, debug = False):
 	return faceList
 
 def NormalizeShape(shape, face):
-	row = (face.up() + face.down())/2.0
+	row = (face.top() + face.bottom())/2.0
 	col = (face.left() + face.right())/2.0
-	rowSize = np.abs(face.up() - face.down())
+	rowSize = np.abs(face.top() - face.bottom())
 	colSize = np.abs(face.left() - face.right())
 	shapeList = []
-	for i in xrange(68):
+	shapeNum = 68
+	for i in xrange(shapeNum):
 		# Hard coded 68 value
-		shapeList.append((shape.part(i)[0] - row)/rowSize)
-		shapeList.append((shape.part(i)[1] - col)/colSize)
+		shapeList.append((shape.part(i).y - row)/rowSize)
+		shapeList.append((shape.part(i).x - col)/colSize)
 	shapeList = np.array(shapeList)
 	return shapeList
 
-def DetectFaceLandmarksInList(frameList, detector = None, predictor = None, debug = False):
+def DetectFaceLandmarksInList(frameList, faceDetector = None, shapePredictor = None, skipLength = 2, debug = False):
 	'''
 	Given a frame list, detect (track) the faces
-	Returns list of subimages containing facial landmarks
+	Returns details of the facial landmarks for each frame
 	'''
 	if ((faceDetector is None) or (shapePredictor is None)):
 		predictorPath = 'coreData/shape_predictor_68_face_landmarks.dat'
@@ -154,25 +156,30 @@ def DetectFaceLandmarksInList(frameList, detector = None, predictor = None, debu
 		shapePredictor = dlib.shape_predictor(predictorPath)
 
 	if (debug):
-	    win.clear_overlay()
-	    win.set_image(img)
+		win = dlib.image_window()
+		win.clear_overlay()
 
 	faceList = []
 
-	for i in range(0, frameList.shape[0]):
+	for i in range(0, frameList.shape[0], skipLength):
 		frame = frameList[i]
-	    dets = detector(frame, 1)
+		dets = faceDetector(frame, 1)
 
 		if debug:
-		    print("Number of faces detected: {}".format(len(dets)))
-		    for k, d in enumerate(dets):
-		        print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(k, d.left(), d.top(), d.right(), d.bottom()))
-		        shape = predictor(img, d)
-		        win.add_overlay(shape)
-		    win.add_overlay(dets)
+			win.clear_overlay()
+			win.set_image(frame)
+			print("Number of faces detected: {}".format(len(dets)))
+			for k, d in enumerate(dets):
+				print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(k, d.left(), d.top(), d.right(), d.bottom()))
+				shape = shapePredictor(frame, d)
+				win.add_overlay(shape)
+			win.add_overlay(dets)
 
-		if (len(enumerate(dets)) == 1):
-	        shape = predictor(frame, dets[0][1])
+		dets = list(enumerate(dets))
+		faceNum = len(dets)
+
+		if (faceNum == 1):
+			shape = shapePredictor(frame, dets[0][1])
 			faceShape = NormalizeShape(shape, dets[0][1])
 			faceList.append(faceShape)
 

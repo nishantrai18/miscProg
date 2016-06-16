@@ -35,6 +35,23 @@ def evaluateTraits(p, gt):
         
     return meanAccs
 
+def predictScore(fileName, model):
+    X, _ = readData([fileName])
+    Y_pred = model.predict(X)
+    finalScore = np.mean(Y_pred, axis=0)
+    return finalScore
+
+def evaluateValidation(model):
+    predVal = {}
+    videoPath = '../training/download_train-val/validationFiles/'
+    vidNames = os.listdir(videoPath)
+    vidNames = [x for x in vidNames if x.endswith(".mp4")]
+    for i in xrange(len(vidNames)):
+        vidNames[i] = vidNames[i].strip('.mp4')
+    for fileName in vidNames:
+        predVal[fileName] = predictScore(fileName, model)
+    return predVal
+
 videoPath = '../training/download_train-val/trainFiles/'
 vidNames = os.listdir(videoPath)
 vidNames = [x for x in vidNames if x.endswith(".mp4")]
@@ -56,10 +73,12 @@ X_test = X_test.astype('float32')
 X_test /= 255
 
 model_file_name = 'tmpData/models/visualFetA_BasicConv_16_32_256'
+# model_file_name = 'tmpData/models/visualFetA_BasicConv_Augmented_32_64_256'
 
 model = model_from_json(open(model_file_name + '.json').read())
 print model_file_name
 model.load_weights(model_file_name + '_epoch_25.hdf5')
+# model.load_weights(model_file_name + '.hdf5')
 model.compile(loss='mean_absolute_error', optimizer='rmsprop')
 
 print 'Model Loaded. Prediction in progress'

@@ -1,5 +1,6 @@
 from readVideo import *
 import sys
+import dlib
 
 def getVisualFetA():
 	'''
@@ -13,7 +14,8 @@ def getVisualFetA():
 
 	print 'Started extracting features A'
 
-	videoPath = '../training/download_train-val/trainFiles/'
+	# videoPath = '../training/download_train-val/trainFiles/'
+	videoPath = '../training/download_train-val/validationFiles/'
 	vidNames = os.listdir(videoPath)
 	vidNames = [x for x in vidNames if x.endswith(".mp4")]
 
@@ -30,7 +32,7 @@ def getVisualFetA():
 	if not os.path.exists(saveVidPath):
 	    os.makedirs(saveVidPath)
 
-	vidNames = vidNames[658:]
+	vidNames = vidNames
 
 	for i in range(len(vidNames)):
 		fileName = vidNames[i]
@@ -50,5 +52,55 @@ def getVisualFetA():
 
 	print '\n'
 
+def getVisualFetB():
+	'''
+	Second attempt at extracting features
+	Simply extract the face from each frame, followed by extracting details of the landmarks
+	The generated file for each video contains a numpy array of the vectors (Of facial landmarks) 
+	'''
+
+	# fileName = '../training/training_gt.csv'
+	# trueMap = getTruthVal(fileName)
+
+	print 'Started extracting features B'
+
+	# videoPath = '../training/download_train-val/trainFiles/'
+	videoPath = '../training/download_train-val/validationFiles/'
+	vidNames = os.listdir(videoPath)
+	vidNames = [x for x in vidNames if x.endswith(".mp4")]
+
+	# Initialize detectors, load it for face detection
+	predictorPath = 'coreData/shape_predictor_68_face_landmarks.dat'
+	faceDetector = dlib.get_frontal_face_detector()
+	shapePredictor = dlib.shape_predictor(predictorPath)
+
+	saveFetPath = 'tmpData/visualFetB/'
+	saveVidPath = 'tmpData/vidData/'
+
+	if not os.path.exists(saveFetPath):
+	    os.makedirs(saveFetPath)
+
+	if not os.path.exists(saveVidPath):
+	    os.makedirs(saveVidPath)
+
+	vidNames = vidNames
+
+	for i in range(len(vidNames)):
+		fileName = vidNames[i]
+		frameList = GetFrames(videoPath+fileName, redFact = 0.5, skipLength = 5)
+		savePath = saveVidPath + fileName.strip('.mp4')
+		
+		# np.save(savePath, frameList)
+		# Do not save, too large!
+
+		faceList = DetectFaceLandmarksInList(frameList, faceDetector, shapePredictor)
+		savePath = saveFetPath + fileName.strip('.mp4')
+		np.save(savePath, faceList)
+
+		print ('\r'), ((i*(1.0))/len(vidNames)), 'part completed. Currently at file:', fileName,
+		sys.stdout.flush()
+
+	print '\n'
+
 if __name__ == "__main__":
-	getVisualFetA()
+	getVisualFetB()

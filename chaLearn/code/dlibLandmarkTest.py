@@ -31,6 +31,7 @@ for f in glob.glob(os.path.join(faces_folder_path, "*.jpg")):
         print("Part 0: {}, Part 1: {} ...".format(shape.part(0),
                                                   shape.part(1)))
         # Draw the face landmarks on the screen.
+        print shape.part(0)
         win.add_overlay(shape)
 
     win.add_overlay(dets)
