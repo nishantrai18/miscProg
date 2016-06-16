@@ -39,22 +39,22 @@ numBatch = (len(vidNames)/numPerBatch)
 model_save_interval = 5
 num_epochs = 40
 
-model_file_name = 'tmpData/visualFetA_BasicConv_Augmented_16_32_256'
+model_file_name = 'tmpData/visualFetA_BasicConv_Augmented_32_64_256'
 
 model = Sequential()
 # input: 100x100 images with 3 channels -> (3, 100, 100) tensors.
 # this applies 64 convolution filters of size 3x3 each.
 
-model.add(Convolution2D(16, 3, 3, border_mode='valid', input_shape=(3, row, col)))
+model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(3, row, col)))
 model.add(Activation('relu'))
-model.add(Convolution2D(16, 3, 3))
+model.add(Convolution2D(32, 3, 3))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Convolution2D(32, 3, 3, border_mode='valid'))
+model.add(Convolution2D(64, 3, 3, border_mode='valid'))
 model.add(Activation('relu'))
-model.add(Convolution2D(32, 3, 3))
+model.add(Convolution2D(64, 3, 3))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
