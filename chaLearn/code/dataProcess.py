@@ -2,6 +2,7 @@ import numpy as np
 from skvideo.io import VideoCapture
 import cv2
 import skimage
+import random
 
 def equalizeImgList(imgList, row = 100, col = 100):
 	'''
@@ -38,6 +39,35 @@ def getTruthVal(fileName):
 		# The first one is not a valid entry
 		tmpList = list(trueVal[i][1:])
 		tmpList = [float(x) for x in tmpList]
-		trueMap[trueVal[i][0]] = np.array(tmpList)
+		tmpKey = trueVal[i][0].strip('.mp4')
+		trueMap[tmpKey] = np.array(tmpList)
 
 	return trueMap
+
+def readFromFile(fileName, skipLength = 2, augment = False):
+	filePath = 'tmpData/visualFetA/'
+	fileName = filePath+fileName+'.npy'
+	newImgList = np.load(fileName)
+	tmpList = []
+	row, col = 50, 50
+	startInd = random.randint(0, skipLength-1)
+	for i in range(startInd, newImgList.shape[0], skipLength):
+		newImg = cv2.resize(newImgList[i], (row, col))
+		if augment:
+			if (random.randint(1,2) > 1):
+				newImg = np.fliplr(newImg)
+		tmpList.append(newImg)
+	tmpList = np.array(tmpList)
+	return tmpList
+
+def readData(fileNames, trueVal):
+	X = []
+	Y = []
+	# CAN BE OPTIMIZED
+	for fileName in fileNames:
+		imgList = readFromFile(fileName, 6, augment = True)
+		X.extend(imgList)
+		Y.extend([trueVal[fileName]]*len(imgList))
+	X = np.array(X)
+	Y = np.array(Y)
+	return X, Y

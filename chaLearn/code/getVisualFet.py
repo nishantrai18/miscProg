@@ -30,7 +30,7 @@ def getVisualFetA():
 	if not os.path.exists(saveVidPath):
 	    os.makedirs(saveVidPath)
 
-	vidNames = vidNames[170:1000]
+	vidNames = vidNames[658:]
 
 	for i in range(len(vidNames)):
 		fileName = vidNames[i]

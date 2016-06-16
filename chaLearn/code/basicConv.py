@@ -11,18 +11,6 @@ import random
 from sklearn import preprocessing
 from sklearn.externals import joblib
 
-def readData(fileNames, trueVal):
-	X = []
-	Y = []
-	# CAN BE OPTIMIZED
-	for fileName in fileNames:
-		imgList = readFromFile(fileName)
-		X.extend(imgList)
-		Y.extend([trueVal[fileName]]*len(imgList))
-	X = np.array(X)
-	Y = np.array(Y)
-	return X, Y
-
 videoPath = '../training/download_train-val/trainFiles/'
 vidNames = os.listdir(videoPath)
 vidNames = [x for x in vidNames if x.endswith(".mp4")]
@@ -35,9 +23,8 @@ for i in xrange(len(vidNames)):
 # Contains the list of videos, been stripped of .mp4
 
 # Training and testing splits
-
 row, col = 50, 50
-splitVal = 0.95
+splitVal = 0.9
 vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 vidNames = vidNames[:int(splitVal*len(vidNames))]
 
@@ -46,11 +33,13 @@ X_test = X_test.reshape(X_test.shape[0], 3, row, col)
 X_test = X_test.astype('float32')
 X_test /= 255
 
-numPerBatch = 20
-numBatch = (len(vidNames)/numPerBatch) + 1
+numPerBatch = 50
+numBatch = (len(vidNames)/numPerBatch)
 
-model_save_interval = 10
-num_epochs = 50
+model_save_interval = 5
+num_epochs = 40
+
+model_file_name = 'tmpData/visualFetA_BasicConv_Augmented_16_32_256'
 
 model = Sequential()
 # input: 100x100 images with 3 channels -> (3, 100, 100) tensors.
@@ -79,8 +68,16 @@ model.add(Dropout(0.5))
 model.add(Dense(5))
 model.add(Activation('sigmoid'))
 
-model.compile(loss='mean_squared_error', optimizer='rmsprop')
+model.compile(loss='mean_absolute_error', optimizer='rmsprop')
 # Prefer mean_absolute_error, since that is the one used for the challenge
+
+# Saving model
+jsonString = model.to_json()
+open(model_file_name + '.json', 'w').write(jsonString)
+
+raw_input("DONE")
+
+minScore = 1.0
 
 print 'Training started...'
 for k in xrange(num_epochs):
@@ -89,7 +86,7 @@ for k in xrange(num_epochs):
 
 	progbar = generic_utils.Progbar(len(vidNames))
 
-	for i in xrange(numBatch-1):
+	for i in xrange(numBatch):
 		# Read numPerBatch files, get the images and answers
 
 		# print 'Starting reading the batch'
@@ -114,8 +111,11 @@ for k in xrange(num_epochs):
 		progbar.add(numPerBatch, values=[("train loss", loss)])
 
 	#print type(loss)
-	if k%model_save_interval == 0:
-		model.save_weights(model_file_name + '_epoch_{:02d}.hdf5'.format(k))
+	# if k%model_save_interval == 0:
+	# 	model.save_weights(model_file_name + '_epoch_{:02d}.hdf5'.format(k))
 
-	score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
-	print score
+	score = model.evaluate(X_test, Y_test, verbose=0)
+	print "For epoch", k, ",Testing loss is", score
+	if minScore > score:
+		model.save_weights(model_file_name + '.hdf5', overwrite = True)
+		minScore = score
