@@ -84,5 +84,6 @@ if __name__ == "__main__":
 	# DetectFace(frameList[0])
 	# DrawFace(frameList[0])
 	# DetectFaceInList(frameList, None, True)
-	DetectFaceLandmarksInList(frameList, None, None)
+	# DetectFaceLandmarksInList(frameList, None, None)
+	DetectFaceInListDlib(frameList, None, 2, True)
 	# cv2.imwrite(savedPicPath, frameList[0])
