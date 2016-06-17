@@ -145,6 +145,20 @@ def NormalizeShape(shape, face):
 	shapeList = np.array(shapeList)
 	return shapeList
 
+def RawShape(shape, face):
+	row = (face.top() + face.bottom())/2.0
+	col = (face.left() + face.right())/2.0
+	rowSize = np.abs(face.top() - face.bottom())
+	colSize = np.abs(face.left() - face.right())
+	shapeList = [row, col, rowSize, colSize]
+	shapeNum = 68
+	for i in xrange(shapeNum):
+		# Hard coded 68 value
+		shapeList.append(shape.part(i).y)
+		shapeList.append(shape.part(i).x)
+	shapeList = np.array(shapeList)
+	return shapeList
+
 def DetectFaceLandmarksInList(frameList, faceDetector = None, shapePredictor = None, skipLength = 2, debug = False):
 	'''
 	Given a frame list, detect (track) the faces
@@ -180,8 +194,83 @@ def DetectFaceLandmarksInList(frameList, faceDetector = None, shapePredictor = N
 
 		if (faceNum == 1):
 			shape = shapePredictor(frame, dets[0][1])
-			faceShape = NormalizeShape(shape, dets[0][1])
+			# faceShape = NormalizeShape(shape, dets[0][1])
+			faceShape = RawShape(shape, dets[0][1])
 			faceList.append(faceShape)
+
+	faceList = np.array(faceList)
+	return faceList
+
+def DetectFaceInListDlib(frameList, faceDetector = None, skipLength = 2, debug = False):
+	'''
+	Given a frame list, detect (track) the faces
+	Returns subimages of faces after normalization and smoothing the enclosing rectangle
+	'''
+	if ((faceDetector is None)):
+		predictorPath = 'coreData/shape_predictor_68_face_landmarks.dat'
+		faceDetector = dlib.get_frontal_face_detector()
+
+	if (debug):
+		win = dlib.image_window()
+		win.clear_overlay()
+
+	faceList = []
+	newFrameList = []
+	rowList = []
+	colList = []
+	detsList = []
+	smoothRowSize = []
+	smoothColSize = []
+	winSize = (50/skipLength)
+
+	print 'We are here'
+
+	for i in range(0, frameList.shape[0], skipLength):
+		frame = frameList[i]
+		dets = faceDetector(frame, 1)
+		dets = list(enumerate(dets))
+		if (len(dets) != 1):
+			continue
+		detsList.append(dets)
+		newFrameList.append(frame)
+		for k, d in (dets):
+			rowList.append(np.abs(d.left() - d.right()))
+			colList.append(np.abs(d.top() - d.bottom()))
+
+	print winSize
+	print rowList
+
+	for i in range(len(rowList)):
+		rowAvg = np.mean(rowList[max(0,i-winSize):min(len(rowList),i+winSize)]) + 10
+		colAvg = np.mean(colList[max(0,i-winSize):min(len(colList),i+winSize)]) + 10
+		smoothRowSize.append(int(round(rowAvg)))
+		smoothColSize.append(int(round(colAvg)))
+
+	print smoothRowSize
+
+	for i in range(len(detsList)):
+		dets = detsList[i]
+		frame = newFrameList[i]
+		grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+		
+		rowc = (d.left() + d.right())/2
+		colc = (d.top() + d.bottom())/2		
+		rows = smoothRowSize[i]
+		cols = smoothColSize[i]
+		
+		faceImg = grayFrame[max(0,colc-(cols/2)):min(frame.shape[0],colc+(cols/2)+1), max(0,rowc-(rows/2)):min(frame.shape[1],rowc+(rows/2)+1)]
+		# Smoothing rectangle sizes (Running average of -50/+50 frames)
+		faceImg = cv2.equalizeHist(faceImg)
+		# Illumination (CLAHE normalization) Normalization
+		faceImg = np.array(faceImg)
+
+		if debug:
+			win.clear_overlay()
+			grayFrame[max(0,colc-(cols/2)):min(frame.shape[0],colc+(cols/2)+1), max(0,rowc-(rows/2)):min(frame.shape[1],rowc+(rows/2)+1)] = faceImg
+			win.set_image(grayFrame)
+			dlib.hit_enter_to_continue()
+		
+		faceList.append(faceImg)
 
 	faceList = np.array(faceList)
 	return faceList
