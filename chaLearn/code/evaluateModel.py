@@ -11,32 +11,6 @@ import numpy as np
 from readVideo import *
 import random
 
-def evaluateTraits(p, gt):
-    if (len(p) == len(gt)):
-        for i in range(len(p)):
-            if (len(p[i]) != 5) or (len(gt[i]) != 5):
-                print "Inputs must be a list of 5 values within the range [0,1]. Traits could not be evaluated."
-                return
-            for j in range(len(p[i])):
-                if p[i][j] < 0 or p[i][j] > 1 or gt[i][j] < 0 or gt[i][j] > 1:
-                    print "Inputs must be values in the range [0,1]. Traits could not be evaluated."
-                    return
-    
-    errors = np.abs(p-gt)
-    meanAccs = 1-np.mean(errors, axis=0)
-    
-    print "\nAverage accuracy of "+str(np.mean(meanAccs))+": "
-    
-    # These scores are reported.
-    print "Accuracy predicting Extraversion: "+str(meanAccs[0])
-    print "Accuracy predicting Agreeableness: "+str(meanAccs[1])
-    print "Accuracy predicting Conscientiousness: "+str(meanAccs[2])
-    print "Accuracy predicting Neuroticism: "+str(meanAccs[3])
-    print "Accuracy predicting Openness to Experience: "+str(meanAccs[4])
-    print "\n"
-        
-    return meanAccs
-
 def predictScore(fileName, model):
     X, _ = readData([fileName])
     X = X.reshape(X.shape[0], 3, 50, 50)
@@ -73,9 +47,9 @@ def predictVideos(fileList, modelName, model):
     predVal = {}
     for i in range(len(fileList)):
         fileName = fileList[i]
-        predVal[fileName] = predictScore(fileName, model)
-        print '\r', (i*(1.0))/len(vidNames), 'part completed',
-    pickle.dump(predVal, open('tmpData/predictions/predList' + modelName +'.p', 'wb'))
+        predVal[fileName] = predictScoreList(fileName, model)
+        print '\r', (i*(1.0))/len(fileList), 'part completed',
+    pickle.dump(predVal, open('tmpData/predictions/predList' + modelName +'_test.p', 'wb'))
     return predVal
 
 def generatePredFile(p, subset='validation'):
@@ -96,51 +70,52 @@ def generatePredFile(p, subset='validation'):
             gtwriter.writerow([vnames[i]+'.mp4', p[vnames[i]][0], p[vnames[i]][1], p[vnames[i]][2], p[vnames[i]][3], p[vnames[i]][4]])
     csvfile.close()
 
-videoPath = '../training/download_train-val/trainFiles/'
-vidNames = os.listdir(videoPath)
-vidNames = [x for x in vidNames if x.endswith(".mp4")]
+if __name__ == "__main__":
+    videoPath = '../training/download_train-val/trainFiles/'
+    vidNames = os.listdir(videoPath)
+    vidNames = [x for x in vidNames if x.endswith(".mp4")]
 
-fileName = '../training/training_gt.csv'
-trueVal = getTruthVal(fileName)
+    fileName = '../training/training_gt.csv'
+    trueVal = getTruthVal(fileName)
 
-for i in xrange(len(vidNames)):
-	vidNames[i] = vidNames[i].strip('.mp4')
+    for i in xrange(len(vidNames)):
+    	vidNames[i] = vidNames[i].strip('.mp4')
 
-row, col = 50, 50
-splitVal = 0.9
-vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
-vidNames = vidNames[:int(splitVal*len(vidNames))]
+    row, col = 50, 50
+    splitVal = 0.9
+    vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
+    vidNames = vidNames[:int(splitVal*len(vidNames))]
 
-X_test, Y_test = readData(vidNamesTest, trueVal)
-X_test = X_test.reshape(X_test.shape[0], 3, row, col)
-X_test = X_test.astype('float32')
-X_test /= 255
+    X_test, Y_test = readData(vidNamesTest, trueVal)
+    X_test = X_test.reshape(X_test.shape[0], 3, row, col)
+    X_test = X_test.astype('float32')
+    X_test /= 255
 
-# p = pickle.load(open('tmpData/predictions/predA.p', 'rb'))
-# generatePredFile(p)
-# raw_input('FINISHED')
+    # p = pickle.load(open('tmpData/predictions/predA.p', 'rb'))
+    # generatePredFile(p)
+    # raw_input('FINISHED')
 
-# modelName = 'visualFetA_BasicConv_16_32_256'
-# model_file_name = 'tmpData/models/visualFetA_BasicConv_16_32_256'
-modelName = 'visualFetA_BasicConv_Augmented_32_64_256'
-model_file_name = 'tmpData/models/visualFetA_BasicConv_Augmented_32_64_256'
+    modelName = 'visualFetA_BasicConv_16_32_256'
+    model_file_name = 'tmpData/models/visualFetA_BasicConv_16_32_256'
+    # modelName = 'visualFetA_BasicConv_Augmented_32_64_256'
+    # model_file_name = 'tmpData/models/visualFetA_BasicConv_Augmented_32_64_256'
 
-model = model_from_json(open(model_file_name + '.json').read())
-print model_file_name
-# model.load_weights(model_file_name + '_epoch_25.hdf5')
-model.load_weights(model_file_name + '.hdf5')
-model.compile(loss='mean_absolute_error', optimizer='rmsprop')
+    model = model_from_json(open(model_file_name + '.json').read())
+    print model_file_name
+    model.load_weights(model_file_name + '_epoch_25.hdf5')
+    # model.load_weights(model_file_name + '.hdf5')
+    model.compile(loss='mean_absolute_error', optimizer='rmsprop')
 
-print 'Model Loaded. Prediction in progress'
+    print 'Model Loaded. Prediction in progress'
 
-# generatePredFile(evaluateValidation(model))
-predictVideos([(videoPath + x) for x in vidNames], modelName, model)
-# Save the prediction list in a file
+    # generatePredFile(evaluateValidation(model))
+    predictVideos([(x) for x in vidNamesTest], modelName, model)
+    # Save the prediction list in a file
 
-Y_pred = model.predict(X_test)
+    Y_pred = model.predict(X_test)
 
-print Y_pred
-print Y_pred.max(0)
-print np.mean(Y_pred, axis=0)
+    print Y_pred
+    print Y_pred.max(0)
+    print np.mean(Y_pred, axis=0)
 
-evaluateTraits(Y_pred, Y_test)
+    evaluateTraits(Y_pred, Y_test)

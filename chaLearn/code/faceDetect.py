@@ -221,9 +221,7 @@ def DetectFaceInListDlib(frameList, faceDetector = None, skipLength = 2, debug =
 	detsList = []
 	smoothRowSize = []
 	smoothColSize = []
-	winSize = (50/skipLength)
-
-	print 'We are here'
+	winSize = (30/skipLength)
 
 	for i in range(0, frameList.shape[0], skipLength):
 		frame = frameList[i]
@@ -237,16 +235,11 @@ def DetectFaceInListDlib(frameList, faceDetector = None, skipLength = 2, debug =
 			rowList.append(np.abs(d.left() - d.right()))
 			colList.append(np.abs(d.top() - d.bottom()))
 
-	print winSize
-	print rowList
-
 	for i in range(len(rowList)):
-		rowAvg = np.mean(rowList[max(0,i-winSize):min(len(rowList),i+winSize)]) + 10
-		colAvg = np.mean(colList[max(0,i-winSize):min(len(colList),i+winSize)]) + 10
+		rowAvg = np.mean(rowList[max(0,i-winSize):min(len(rowList),i+winSize)]) + 6
+		colAvg = np.mean(colList[max(0,i-winSize):min(len(colList),i+winSize)]) + 6
 		smoothRowSize.append(int(round(rowAvg)))
 		smoothColSize.append(int(round(colAvg)))
-
-	print smoothRowSize
 
 	for i in range(len(detsList)):
 		dets = detsList[i]
@@ -254,14 +247,18 @@ def DetectFaceInListDlib(frameList, faceDetector = None, skipLength = 2, debug =
 		grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 		
 		rowc = (d.left() + d.right())/2
-		colc = (d.top() + d.bottom())/2		
+		colc = (d.top() + d.bottom())/2	
 		rows = smoothRowSize[i]
 		cols = smoothColSize[i]
+		# Forcefully make the enclosing box a square
+		rows = max(rows, cols)
+		cols = max(rows, cols)
 		
 		faceImg = grayFrame[max(0,colc-(cols/2)):min(frame.shape[0],colc+(cols/2)+1), max(0,rowc-(rows/2)):min(frame.shape[1],rowc+(rows/2)+1)]
 		# Smoothing rectangle sizes (Running average of -50/+50 frames)
 		faceImg = cv2.equalizeHist(faceImg)
 		# Illumination (CLAHE normalization) Normalization
+		faceImg = cv2.resize(faceImg, (100, 100))
 		faceImg = np.array(faceImg)
 
 		if debug:
