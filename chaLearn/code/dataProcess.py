@@ -78,6 +78,27 @@ def readFromFileFetB(fileName, skipLength = 2):
 	tmpList.astype(np.float32)
 	return tmpList
 
+
+def readFromFileFetC(fileName, skipLength = 2, augment = False):
+	filePath = 'tmpData/visualFetC/'
+	fileName = filePath+fileName+'.npy'
+	newImgList = np.load(fileName)
+	tmpList = []
+	row, col = 50, 50
+	startInd = random.randint(0, skipLength-1)
+	for i in range(startInd, newImgList.shape[0], skipLength):
+		ind1 = random.randint(0, 8)
+		ind2 = random.randint(0, 8)
+		l = 100 - (ind1 + ind2)
+		newImg = newImgList[i][ind1:ind1 + l, ind2:ind2 + l]
+		newImg = cv2.resize(newImg, (row, col))
+		if augment:
+			if (random.randint(1,2) > 1):
+				newImg = np.fliplr(newImg)
+		tmpList.append(newImg)
+	tmpList = np.array(tmpList)
+	return tmpList
+
 def readData(fileNames, trueVal = None, feature = 'A'):
 	X = []
 	Y = []
@@ -87,6 +108,8 @@ def readData(fileNames, trueVal = None, feature = 'A'):
 			imgList = readFromFileFetA(fileName, 6, augment = True)
 		elif (feature == 'B'):
 			imgList = readFromFileFetB(fileName, 2)			
+		elif (feature == 'C'):
+			imgList = readFromFileFetC(fileName, 6)
 		if (len(imgList) == 0):
 			continue
 		X.extend(imgList)
