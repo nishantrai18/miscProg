@@ -6,7 +6,7 @@ import random
 from pydub import AudioSegment
 import subprocess
 import arff
-import os
+import os, sys
 
 def equalizeImgList(imgList, row = 100, col = 100):
 	'''
@@ -51,6 +51,8 @@ def getTruthVal(fileName):
 def readFromFileFetA(fileName, skipLength = 2, augment = False):
 	filePath = 'tmpData/visualFetA/'
 	fileName = filePath+fileName+'.npy'
+	if (not os.path.isfile(fileName)):
+		return []
 	newImgList = np.load(fileName)
 	tmpList = []
 	row, col = 50, 50
@@ -82,6 +84,8 @@ def readFromFileFetB(fileName, skipLength = 2):
 def readFromFileFetC(fileName, skipLength = 2, augment = False):
 	filePath = 'tmpData/visualFetC/'
 	fileName = filePath+fileName+'.npy'
+	if (not os.path.isfile(fileName)):
+		return []
 	newImgList = np.load(fileName)
 	tmpList = []
 	row, col = 50, 50
@@ -103,18 +107,21 @@ def readData(fileNames, trueVal = None, feature = 'A'):
 	X = []
 	Y = []
 	# CAN BE OPTIMIZED
-	for fileName in fileNames:
+	for i in xrange(len(fileNames)):
+		fileName = fileNames[i]
 		if (feature == 'A'):
-			imgList = readFromFileFetA(fileName, 6, augment = True)
+			imgList = readFromFileFetA(fileName, 6, augment = False)
 		elif (feature == 'B'):
 			imgList = readFromFileFetB(fileName, 2)			
 		elif (feature == 'C'):
-			imgList = readFromFileFetC(fileName, 6)
+			imgList = readFromFileFetC(fileName, 5, augment = True)
 		if (len(imgList) == 0):
 			continue
 		X.extend(imgList)
 		if (trueVal is not None):
 			Y.extend([trueVal[fileName]]*len(imgList))
+			print '\r', (i*(1.0))/len(fileNames), 'part reading completed',
+			sys.stdout.flush()
 	X = np.array(X)
 	Y = np.array(Y)
 	return X, Y
@@ -145,27 +152,27 @@ def getAudioFeatureAList(fileName, segLen = 4, overlap = 3):
 	return fetList
 
 def evaluateTraits(p, gt):
-    if (len(p) == len(gt)):
-        for i in range(len(p)):
-            if (len(p[i]) != 5) or (len(gt[i]) != 5):
-                print "Inputs must be a list of 5 values within the range [0,1]. Traits could not be evaluated."
-                return
-            for j in range(len(p[i])):
-                if p[i][j] < 0 or p[i][j] > 1 or gt[i][j] < 0 or gt[i][j] > 1:
-                    print "Inputs must be values in the range [0,1]. Traits could not be evaluated."
-                    return
-    
-    errors = np.abs(p-gt)
-    meanAccs = 1-np.mean(errors, axis=0)
-    
-    print "\nAverage accuracy of "+str(np.mean(meanAccs))+": "
-    
-    # These scores are reported.
-    print "Accuracy predicting Extraversion: "+str(meanAccs[0])
-    print "Accuracy predicting Agreeableness: "+str(meanAccs[1])
-    print "Accuracy predicting Conscientiousness: "+str(meanAccs[2])
-    print "Accuracy predicting Neuroticism: "+str(meanAccs[3])
-    print "Accuracy predicting Openness to Experience: "+str(meanAccs[4])
-    print "\n"
-        
-    return meanAccs
+	if (len(p) == len(gt)):
+		for i in range(len(p)):
+			if (len(p[i]) != 5) or (len(gt[i]) != 5):
+				print "Inputs must be a list of 5 values within the range [0,1]. Traits could not be evaluated."
+				return
+			for j in range(len(p[i])):
+				if p[i][j] < 0 or p[i][j] > 1 or gt[i][j] < 0 or gt[i][j] > 1:
+					print "Inputs must be values in the range [0,1]. Traits could not be evaluated."
+					return
+	
+	errors = np.abs(p-gt)
+	meanAccs = 1-np.mean(errors, axis=0)
+	
+	print "\nAverage accuracy of "+str(np.mean(meanAccs))+": "
+	
+	# These scores are reported.
+	print "Accuracy predicting Extraversion: "+str(meanAccs[0])
+	print "Accuracy predicting Agreeableness: "+str(meanAccs[1])
+	print "Accuracy predicting Conscientiousness: "+str(meanAccs[2])
+	print "Accuracy predicting Neuroticism: "+str(meanAccs[3])
+	print "Accuracy predicting Openness to Experience: "+str(meanAccs[4])
+	print "\n"
+		
+	return meanAccs
