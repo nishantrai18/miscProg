@@ -121,14 +121,14 @@ def getVisualFetC():
 	print 'Started extracting features C'
 
 	videoPath = '../training/download_train-val/validationFiles/'
-	vidNamesTest = os.listdir(videoPath)
-	vidNamesTest = [x for x in vidNamesTest if x.endswith(".mp4")]
-
-	videoPath = '../training/download_train-val/trainFiles/'
 	vidNames = os.listdir(videoPath)
 	vidNames = [x for x in vidNames if x.endswith(".mp4")]
 
-	vidNames.extend(vidNamesTest)
+	# videoPath = '../training/download_train-val/trainFiles/'
+	# vidNames = os.listdir(videoPath)
+	# vidNames = [x for x in vidNames if x.endswith(".mp4")]
+
+	# vidNames.extend(vidNamesTest)
 
 	# Initialize detectors, load it for face detection
 	predictorPath = 'coreData/shape_predictor_68_face_landmarks.dat'

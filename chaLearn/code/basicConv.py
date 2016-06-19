@@ -39,7 +39,7 @@ numBatch = (len(vidNames)/numPerBatch)
 model_save_interval = 5
 num_epochs = 40
 
-model_file_name = 'tmpData/visualFetA_BasicConv_Augmented_32_64_256'
+model_file_name = 'tmpData/models/new_visualFetA_BasicConv_Augmented_32_64_256'
 
 model = Sequential()
 # input: 100x100 images with 3 channels -> (3, 100, 100) tensors.

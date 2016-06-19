@@ -28,10 +28,7 @@ splitVal = 0.9
 vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 vidNames = vidNames[:int(splitVal*len(vidNames))]
 
-X_test, Y_test = readData(vidNamesTest, trueVal)
-
-print X_test
-
+X_test, Y_test = readData(vidNamesTest, trueVal, 'C')
 X_test = X_test.reshape(X_test.shape[0], 1, row, col)
 X_test = X_test.astype('float32')
 X_test /= 255
@@ -42,7 +39,7 @@ numBatch = (len(vidNames)/numPerBatch)
 model_save_interval = 5
 num_epochs = 100
 
-model_file_name = 'tmpData/visualFetC_Conv_Augmented_32_64_256'
+model_file_name = 'tmpData/models/visualFetC_Conv_Augmented_32_64_256'
 
 model = Sequential()
 # input: 100x100 images with 3 channels -> (3, 100, 100) tensors.
@@ -111,8 +108,8 @@ for k in xrange(num_epochs):
 		progbar.add(numPerBatch, values=[("train loss", loss)])
 
 	#print type(loss)
-	# if k%model_save_interval == 0:
-	# 	model.save_weights(model_file_name + '_epoch_{:02d}.hdf5'.format(k))
+	if k%model_save_interval == 0:
+		model.save_weights(model_file_name + '_epoch_{:02d}.hdf5'.format(k))
 
 	score = model.evaluate(X_test, Y_test, verbose=0)
 	print "For epoch", k, ",Testing loss is", score
