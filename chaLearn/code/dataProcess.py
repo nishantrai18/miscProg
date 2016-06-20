@@ -80,7 +80,6 @@ def readFromFileFetB(fileName, skipLength = 2):
 	tmpList.astype(np.float32)
 	return tmpList
 
-
 def readFromFileFetC(fileName, skipLength = 2, augment = False):
 	filePath = 'tmpData/visualFetC/'
 	fileName = filePath+fileName+'.npy'
@@ -149,6 +148,48 @@ def getAudioFeatureAList(fileName, segLen = 4, overlap = 3):
 		p = subprocess.Popen('rm tmpFeature.arff', shell=True, stdout=subprocess.PIPE)
 		p.wait()
 
+	return fetList
+
+def randomCrops(frame, numCrops = 8, row = 224, col = 224):
+	X = []
+	rows = frame.shape[0]
+	cols = frame.shape[1]
+
+	if (rows*cols == 0):
+		return np.array([])
+
+	if ((rows < row) or (cols < col)):
+		return np.array([])
+
+	meanVal = np.array([103.939, 116.779, 123.68])   # BGR
+	for i in range(numCrops):
+		x = random.randint(0, rows - row)
+		y = random.randint(0, cols - col)
+		img = frame[x:(x+row), y:(y+col), :].astype(np.float32)
+		img = img[::-1]  # switch to BGR, since VGG requires BGR images
+		img -= meanVal
+		X.append(img)
+
+	X = np.array(X)
+	return X
+
+def GetBGFeatures(frameList, model, numCrops = 8):
+	fetList = []
+	row, col = 224, 224
+
+	# print len(frameList)
+	for i in xrange(len(frameList)):
+		frame = frameList[i]
+		X = randomCrops(frame, numCrops, row = row, col = col)
+		X = X.reshape(X.shape[0], 3, row, col)
+
+		embed = model.predict(X)
+		# Don't do max pool right now. Store all the embeddings to perform augmentation later.
+		# finX = np.max(embed, axis = 0)
+		fetList.append(embed)
+
+	fetList = np.array(fetList)
+	# print fetList.shape
 	return fetList
 
 def evaluateTraits(p, gt):

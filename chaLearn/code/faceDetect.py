@@ -221,7 +221,7 @@ def DetectFaceInListDlib(frameList, faceDetector = None, skipLength = 2, debug =
 	detsList = []
 	smoothRowSize = []
 	smoothColSize = []
-	winSize = (30/skipLength)
+	winSize = (20/skipLength)
 
 	for i in range(0, frameList.shape[0], skipLength):
 		frame = frameList[i]
@@ -258,8 +258,6 @@ def DetectFaceInListDlib(frameList, faceDetector = None, skipLength = 2, debug =
 		# Smoothing rectangle sizes (Running average of -50/+50 frames)
 		faceImg = cv2.equalizeHist(faceImg)
 		# Illumination (CLAHE normalization) Normalization
-		faceImg = cv2.resize(faceImg, (100, 100))
-		faceImg = np.array(faceImg)
 
 		if debug:
 			win.clear_overlay()
@@ -267,6 +265,8 @@ def DetectFaceInListDlib(frameList, faceDetector = None, skipLength = 2, debug =
 			win.set_image(grayFrame)
 			dlib.hit_enter_to_continue()
 		
+		faceImg = cv2.resize(faceImg, (100, 100))
+		faceImg = np.array(faceImg)
 		faceList.append(faceImg)
 
 	faceList = np.array(faceList)

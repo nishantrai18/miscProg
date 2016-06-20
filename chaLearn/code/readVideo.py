@@ -35,25 +35,23 @@ def GetFrames(fileName, redFact = 0.5, skipLength = 1, debug = False):
 	cap = VideoCapture(fileName)
 	cap.open()
 
-	retval, image = cap.read()  
-	# Read first to get an estimate of the number of frames
-
 	frameList = []
-	cnt = 0
+	cnt = -1
 
 	if debug:
 		print "Started creating Frame List"
 
 	while True:
+		retval, image = cap.read()
+		cnt = (cnt+1)%skipLength
+		if (cnt != 0):
+			continue
 		if not retval:
 			break
 		image = cv2.resize(image, None, fx=redFact, fy=redFact)
 		image = image[:,:,::-1]
 		image = np.array(image, dtype = np.uint8)
-		if (cnt == 0):
-			frameList.append(image)
-		cnt = (cnt+1)%skipLength
-		retval, image = cap.read()
+		frameList.append(image)
 	cap.release()
 
 	if debug:
@@ -77,13 +75,13 @@ if __name__ == "__main__":
 	frameList = None
 	if (not os.path.isfile(savedVidPath + '.npy')):
 		frameList = GetFrames(videoPath+fileName, redFact = 0.5, skipLength = 5)
-		np.save(savedVidPath, frameList)
+		# np.save(savedVidPath, frameList)
 	else:
 		frameList = np.load(savedVidPath+'.npy')
 
 	# DetectFace(frameList[0])
 	# DrawFace(frameList[0])
-	# DetectFaceInList(frameList, None, True)
+	DetectFaceInList(frameList, None, True)
 	# DetectFaceLandmarksInList(frameList, None, None)
-	DetectFaceInListDlib(frameList, None, 2, True)
+	# DetectFaceInListDlib(frameList, None, 2, True)
 	# cv2.imwrite(savedPicPath, frameList[0])

@@ -11,16 +11,46 @@ import numpy as np
 from readVideo import *
 import random, sys
 
-def predictScore(fileName, model):
-	X, _ = readData([fileName])
-	X = X.reshape(X.shape[0], 3, 50, 50)
+def predictScore(fileName, model, merger = None, choice = 'A'):
+	X, _ = readData([fileName], None, choice)
+	if (choice == 'A'):
+		X = X.reshape(X.shape[0], 3, 50, 50)
+	elif (choice == 'C'):
+		X = X.reshape(X.shape[0], 1, 50, 50)
 	X = X.astype('float32')
 	X /= 255
 	Y_pred = model.predict(X)
-	finalScore = np.mean(Y_pred, axis=0)
+	finalScore = []
+	if (merger is None):
+		finalScore = np.mean(Y_pred, axis=0)
+	elif (len(Y_pred) == 0):
+		return np.float64(np.nan)
+	else:
+		for i in range(5):
+			x = getSortedFeatures(Y_pred[:,i])
+			y = merger[i].predict([x])[0]
+			finalScore.append(y)
+		finalScore = np.array(finalScore)
 	return finalScore
 
-def evaluateValidation(model):
+def getSortedFeatures(fetList, size = 15):
+	if (len(fetList) == 0):
+		avg = 0.5
+		fetList = np.append(fetList, ([avg]*(size-len(fetList))))
+	elif (len(fetList) < size):
+		avg = np.mean(fetList)
+		fetList = np.append(fetList, ([avg]*(size-len(fetList))))
+	elif (len(fetList) > size):
+		for i in range(len(fetList)-size):
+			fetList[-2] = (fetList[-2]+fetList[-1])/2.0
+			fetList = np.delete(fetList, -1)
+			newVal = fetList[-1]
+			fetList = np.delete(fetList, -1)
+			fetList = np.insert(fetList, 0, newVal)
+	sortFet = np.sort(fetList)
+	return sortFet
+
+def evaluateValidation(model, merger = None, choice = 'A'):
 	predVal = {}
 	videoPath = '../training/download_train-val/validationFiles/'
 	vidNames = os.listdir(videoPath)
@@ -29,10 +59,10 @@ def evaluateValidation(model):
 		vidNames[i] = vidNames[i].strip('.mp4')
 	for i in range(len(vidNames)):
 		fileName = vidNames[i]
-		predVal[fileName] = predictScore(fileName, model)
+		predVal[fileName] = predictScore(fileName, model, merger, choice)
 		print '\r', (i*(1.0))/len(vidNames), 'part completed',
 		sys.stdout.flush()
-	pickle.dump(predVal, open('tmpData/predictions/predB.p', 'wb'))
+	pickle.dump(predVal, open('tmpData/predictions/predC.p', 'wb'))
 	return predVal
 
 def predictScoreList(fileName, model, choice = 'A'):
@@ -137,6 +167,8 @@ if __name__ == "__main__":
 		evaluateTraits(Y_pred, Y_test)
 
 	elif (action == 'genSubmit'):
+		merger = pickle.load(open('tmpData/models/mergeScore_FetC_LS.p', 'rb'))
+
 		model = model_from_json(open(model_file_name + '.json').read())
 		print model_file_name
 		# model.load_weights(model_file_name + '_epoch_25.hdf5')
@@ -144,7 +176,7 @@ if __name__ == "__main__":
 		model.compile(loss='mean_absolute_error', optimizer='rmsprop')
 
 		print 'Model Loaded. Prediction in progress'
-		generatePredFile(evaluateValidation(model))
+		generatePredFile(evaluateValidation(model, merger, 'C'))
 	
 	# p = pickle.load(open('tmpData/predictions/predA.p', 'rb'))
 	# generatePredFile(p)

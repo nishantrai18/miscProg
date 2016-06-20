@@ -31,8 +31,9 @@ def weightedModelFit(X, Y):
 	weights = np.zeros((X.shape[1]))
 	for i in xrange(X.shape[0]):
 		weights = weights + np.abs(X[i] - Y[i])
+	weights = 1.0/weights
+	# weights = np.power(weights, 0.5)
 	weights = weights/np.sum(weights)
-	print weights
 	return weights
 
 def weightedModelPredict(X, weights):
@@ -104,7 +105,7 @@ clfList = []
 modelChoice = 'LS'			# Best performer
 # modelChoice = 'RF'
 # modelChoice = 'ADA'
-# modelChoice = 'WGT'
+# modelChoice = 'WGT'		# Performs slightly worse than simple average
 
 modelName, model_file_name = '', ''
 
@@ -199,7 +200,7 @@ elif (modelChoice == 'NN'):
 
 		print 'NN model compiled. Training now...'
 
-		model.fit(X_train[i], Y_train[:,i], nb_epoch=15, batch_size = 32, validation_data=(X_test[i], Y_test[:,i]))
+		model.fit(X_train[i], Y_train[:,i], nb_epoch=10, batch_size = 32, validation_data=(X_test[i], Y_test[:,i]))
 		score = model.evaluate(X_test[i], Y_test[:,i], batch_size = 32)
 
 		Y_pred[:,i] = model.predict(X_test[i])[:1]
