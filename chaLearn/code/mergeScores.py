@@ -9,6 +9,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import AdaBoostRegressor
+from sklearn.ensemble import BaggingRegressor
+from sklearn.tree import DecisionTreeRegressor
 
 def getSortedFeatures(fetList, size = 15):
 	if (len(fetList) == 0):
@@ -102,10 +104,11 @@ clfList = []
 
 # modelChoice = 'NN'		# Poor performance
 # modelChoice = 'SVR'		# Comparable results to Lasso
-modelChoice = 'LS'			# Best performer
+# modelChoice = 'LS'			# Best performer, Ridge also performs well
 # modelChoice = 'RF'
 # modelChoice = 'ADA'
 # modelChoice = 'WGT'		# Performs slightly worse than simple average
+modelChoice = 'BAG'
 
 modelName, model_file_name = '', ''
 
@@ -115,7 +118,8 @@ if (modelChoice == 'LS'):
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		clfList.append(linear_model.Lasso(alpha = 2e-4, positive = True, max_iter = 5000))
+		clfList.append(linear_model.Ridge(alpha = 5))
+		# clfList.append(linear_model.Lasso(alpha = 2e-4, positive = True, max_iter = 5000))
 		# Parameter study for C
 		clfList[i].fit(X_train[i], Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
@@ -162,6 +166,24 @@ elif (modelChoice == 'ADA'):
 		clfList[i].fit(X_train[i], Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
 		Y_pred[:,i] = clfList[i].predict(X_test[i])
+		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
+
+elif (modelChoice == 'BAG'):
+	modelName = 'mergeScore_Fet' + choice + '_BAG'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_BAG'
+
+	for i in range(5):
+		print 'Currently training the', i, 'th regressor'
+		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
+		clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 100, n_jobs = 4))
+		# clfList.append(BaggingRegressor(linear_model.Ridge(alpha = 5)))		
+		# clfList.append(linear_model.SGDRegressor())
+		clfList[i].fit(X_train[i], Y_train[:,i])
+		print 'Model Trained. Prediction in progress'
+		Y_pred[:,i] = clfList[i].predict(X_test[i])
+		print np.max(Y_pred[:,i])
+		print np.min(Y_pred[:,i])
+		print np.mean(Y_pred[:,i])
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'WGT'):

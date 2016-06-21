@@ -7,6 +7,7 @@ from pydub import AudioSegment
 import subprocess
 import arff
 import os, sys
+import cPickle as pickle
 
 def equalizeImgList(imgList, row = 100, col = 100):
 	'''
@@ -47,6 +48,21 @@ def getTruthVal(fileName):
 		trueMap[tmpKey] = np.array(tmpList)
 
 	return trueMap
+
+def readFromFileAudioFetA(fileName):
+	filePath = 'tmpData/audioFetA/'
+	fileName = filePath+fileName+'.p'
+	if (not os.path.isfile(fileName)):
+		return []
+	fetList = pickle.load(open(fileName, 'rb'))
+	tmpList = []
+	for i in range(len(fetList)):
+		audioFet = np.array(fetList[i]['data'][0][1:-1])
+		# The first and last values are unnecessary
+		tmpList.append(audioFet)
+	# tmpList = np.array(tmpList)
+	# print tmpList.shape
+	return tmpList
 
 def readFromFileFetA(fileName, skipLength = 2, augment = False):
 	filePath = 'tmpData/visualFetA/'
@@ -114,6 +130,8 @@ def readData(fileNames, trueVal = None, feature = 'A'):
 			imgList = readFromFileFetB(fileName, 2)			
 		elif (feature == 'C'):
 			imgList = readFromFileFetC(fileName, 5, augment = True)
+		elif (feature == 'AudioA'):
+			imgList = readFromFileAudioFetA(fileName)
 		if (len(imgList) == 0):
 			continue
 		X.extend(imgList)
@@ -121,8 +139,9 @@ def readData(fileNames, trueVal = None, feature = 'A'):
 			Y.extend([trueVal[fileName]]*len(imgList))
 			print '\r', (i*(1.0))/len(fileNames), 'part reading completed',
 			sys.stdout.flush()
-	X = np.array(X)
-	Y = np.array(Y)
+	X = np.array(X, dtype = np.float16)
+	Y = np.array(Y, dtype = np.float16)
+	print X.shape, Y.shape
 	return X, Y
 
 def getAudioFeatureAList(fileName, segLen = 4, overlap = 3):

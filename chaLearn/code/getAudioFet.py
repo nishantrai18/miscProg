@@ -15,17 +15,17 @@ def getAudioFetA():
 
 	print 'Started extracting audio features'
 
-	# videoPath = '../training/download_train-val/validationFiles/'
-	# vidNamesTest = os.listdir(videoPath)
-	# vidNamesTest = [x for x in vidNamesTest if x.endswith(".mp4")]
-
 	videoPath = '/home/nishant/gitrepo/prog/chaLearn/training/download_train-val/trainFilesAudio/'
 	vidNames = os.listdir(videoPath)
 	vidNames = [x for x in vidNames if x.endswith(".wav")]
 
+	videoPath = '/home/nishant/gitrepo/prog/chaLearn/training/download_train-val/validationFilesAudio/'
+	vidNamesTest = os.listdir(videoPath)
+	vidNamesTest = [x for x in vidNamesTest if x.endswith(".wav")]
+
 	openSmilePath = '/home/nishant/Downloads/openSMILE-2.2rc1/'
 
-	# vidNames.extend(vidNamesTest)
+	vidNames.extend(vidNamesTest)
 
 	# Initialize detectors, load it for face detection
 
@@ -40,7 +40,7 @@ def getAudioFetA():
 	for i in range(len(vidNames)):
 		fileName = vidNames[i]
 
-		if (os.path.isfile(saveFetPath+fileName.strip('.wav')+'.npy')):
+		if (os.path.isfile(saveFetPath+fileName.strip('.mp4.wav')+'.p')):
 			continue
 
 		fetList = getAudioFeatureAList(videoPath+fileName, segLen = 4, overlap = 3)

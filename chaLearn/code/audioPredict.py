@@ -141,12 +141,12 @@ elif (modelChoice == 'ADA'):
 
 elif (modelChoice == 'BAG'):
 	modelName = 'audioFetA_BAG'
-	model_file_name = 'tmpData/models/audioFetA_BAG'
+	model_file_name = 'tmpData/models/audioFetA_BAG_n100'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		clfList.append(BaggingRegressor(DecisionTreeRegressor(max_depth = 6), n_estimators = 70, n_jobs = 6))
+		clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 100, n_jobs = 4))
 		# clfList.append(BaggingRegressor(linear_model.Ridge(alpha = 5)))		
 		# clfList.append(linear_model.SGDRegressor())
 		clfList[i].fit(X_train, Y_train[:,i])
