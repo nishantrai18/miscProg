@@ -175,7 +175,7 @@ elif (modelChoice == 'NN'):
 	model.add(Activation('relu'))
 	model.add(Dropout(0.25))
 	model.add(Dense(32, init='uniform'))
-	model.add(Activation('relu'))
+	model.add(Activation('sigmoid'))
 	model.add(Dropout(0.25))
 	model.add(Dense(5, init='uniform'))
 	model.add(Activation('sigmoid'))
