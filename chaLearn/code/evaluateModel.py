@@ -6,7 +6,7 @@ from keras.utils import np_utils, generic_utils
 from keras.models import model_from_json
 
 import csv
-import pickle
+import cPickle as pickle
 import numpy as np
 from readVideo import *
 import random, sys
@@ -15,16 +15,35 @@ def predictScore(fileName, model, merger = None, choice = 'A'):
 	X, _ = readData([fileName], None, choice)
 	if (choice == 'A'):
 		X = X.reshape(X.shape[0], 3, 50, 50)
+		X = X.astype('float32')
+		X /= 255
 	elif (choice == 'C'):
 		X = X.reshape(X.shape[0], 1, 50, 50)
-	X = X.astype('float32')
-	X /= 255
-	Y_pred = model.predict(X)
+		X = X.astype('float32')
+		X /= 255
+
+	if (isinstance(model, list)):
+		Y_pred = np.zeros((X.shape[0], 5))
+		if (X.shape[0] == 0):
+			Y_pred = np.zeros((1, 5))
+			Y_pred.fill(0.5)
+			# print Y_pred
+			return Y_pred
+		for i in range(5):
+			Y_pred[:,i] = model[i].predict(X)
+	else:
+		Y_pred = model.predict(X)
+
 	finalScore = []
 	if (merger is None):
 		finalScore = np.mean(Y_pred, axis=0)
 	elif (len(Y_pred) == 0):
-		return np.float64(np.nan)
+		finalScore = np.array([0.5]*5)
+	elif (type(merger[0]).__module__ == 'numpy'):
+		for i in range(5):
+			x = getSortedFeatures(Y_pred[:,i])
+			finalScore.append(x.mean(0))
+		finalScore = np.array(finalScore)
 	else:
 		for i in range(5):
 			x = getSortedFeatures(Y_pred[:,i])
@@ -50,7 +69,7 @@ def getSortedFeatures(fetList, size = 15):
 	sortFet = np.sort(fetList)
 	return sortFet
 
-def evaluateValidation(model, merger = None, choice = 'A'):
+def evaluateValidation(model, merger = None, modelName = '', choice = 'A'):
 	predVal = {}
 	videoPath = '../training/download_train-val/validationFiles/'
 	vidNames = os.listdir(videoPath)
@@ -62,18 +81,32 @@ def evaluateValidation(model, merger = None, choice = 'A'):
 		predVal[fileName] = predictScore(fileName, model, merger, choice)
 		print '\r', (i*(1.0))/len(vidNames), 'part completed',
 		sys.stdout.flush()
-	pickle.dump(predVal, open('tmpData/predictions/predC.p', 'wb'))
+	pickle.dump(predVal, open('tmpData/predictions/valPrediction' + modelName + '.p', 'wb'))
 	return predVal
 
 def predictScoreList(fileName, model, choice = 'A'):
 	X, _ = readData([fileName], None, choice)
 	if (choice == 'A'):
 		X = X.reshape(X.shape[0], 3, 50, 50)
+		X /= 255
+		X = X.astype('float32')
 	elif (choice == 'C'):
 		X = X.reshape(X.shape[0], 1, 50, 50)
-	X = X.astype('float32')
-	X /= 255
-	Y_pred = model.predict(X)
+		X /= 255
+		X = X.astype('float32')
+
+	if (isinstance(model, list)):
+		Y_pred = np.zeros((X.shape[0], 5))
+		if (X.shape[0] == 0):
+			Y_pred = np.zeros((1, 5))
+			Y_pred.fill(0.5)
+			# print Y_pred
+			return Y_pred
+		for i in range(5):
+			Y_pred[:,i] = model[i].predict(X)
+	else:
+		Y_pred = model.predict(X)
+
 	return Y_pred
 
 def predictVideos(fileList, modelName, model, choice = 'A', append = 'test'):
@@ -117,12 +150,15 @@ if __name__ == "__main__":
 		vidNames[i] = vidNames[i].strip('.mp4')
 
 	row, col = 50, 50
-	splitVal = 0.9
+	splitVal = 0.4
 	vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 	vidNames = vidNames[:int(splitVal*len(vidNames))]
 
 	choice = 'C'
+	# choice = 'B'
+	# choice = 'AudioA'
 	action = 'genSubmit'
+	# action = 'getPredList'
 
 	# modelName = 'visualFetA_BasicConv_16_32_256'
 	# model_file_name = 'tmpData/models/visualFetA_BasicConv_16_32_256'
@@ -130,25 +166,49 @@ if __name__ == "__main__":
 	# model_file_name = 'tmpData/models/visualFetA_BasicConv_Augmented_32_64_256'
 	modelName = 'visualFetC_Conv_Augmented_32_64_256'
 	model_file_name = 'tmpData/models/visualFetC_Conv_Augmented_32_64_256'
+	# modelName = 'audioFetA_BAG_n50'
+	# model_file_name = 'tmpData/models/audioFetA_BAG_n50'
+	# modelName = 'visualFetB_MISC'
+	# model_file_name = 'tmpData/models/visualFetB_MISC'
 
 	if (action == 'getPredList'):
-		# Change the five lines below to get test or train prediction lists
-		X_train, Y_train = readData(vidNames, trueVal, choice)
-		# X_train = X_train.reshape(X_train.shape[0], 3, row, col)
-		X_train = X_train.reshape(X_train.shape[0], 1, row, col)
-		X_train = X_train.astype('float32')
-		X_train /= 255
 
-		model = model_from_json(open(model_file_name + '.json').read())
-		print model_file_name
-		# model.load_weights(model_file_name + '_epoch_25.hdf5')
-		model.load_weights(model_file_name + '.hdf5')
-		model.compile(loss='mean_absolute_error', optimizer='rmsprop')
+		# Get prediction list for each video in training or testing data
+		# Can be used for merging scores later
+
+		# Change the five lines below to get test or train prediction lists
+		# X_train, Y_train = readData(vidNames, trueVal, choice)
+		# # X_train = X_train.reshape(X_train.shape[0], 3, row, col)
+		# X_train = X_train.reshape(X_train.shape[0], 1, row, col)
+		# X_train = X_train.astype('float32')
+		# X_train /= 255
+
+		# X_test, Y_test = readData(vidNamesTest, trueVal, choice)
+
+		if ('Conv' in modelName):
+			# X_train = X_train.reshape(X_train.shape[0], 3, row, col)
+			X_test = X_test.reshape(X_test.shape[0], 1, row, col)
+			X_test = X_test.astype('float32')
+			X_test /= 255
+
+			model = model_from_json(open(model_file_name + '.json').read())
+			print model_file_name
+			# model.load_weights(model_file_name + '_epoch_25.hdf5')
+			model.load_weights(model_file_name + '.hdf5')
+			model.compile(loss='mean_absolute_error', optimizer='rmsprop')
+
+		else:
+			model = pickle.load(open(model_file_name + '.p', 'rb'))
 
 		print 'Model Loaded. Prediction in progress'
-		predictVideos([(x) for x in vidNames], modelName, model, choice, 'train')
+
+		# Also change this line for test/train
+		predictVideos([(x) for x in vidNamesTest], modelName, model, choice, 'test' + str(splitVal))
 
 	elif (action == 'getTestScore'):
+
+		# Get the test score for the whole list of data points
+
 		X_test, Y_test = readData(vidNamesTest, trueVal, 'C')
 		# X_test = X_test.reshape(X_test.shape[0], 3, row, col)
 		X_test = X_test.reshape(X_test.shape[0], 1, row, col)
@@ -167,16 +227,22 @@ if __name__ == "__main__":
 		evaluateTraits(Y_pred, Y_test)
 
 	elif (action == 'genSubmit'):
-		merger = pickle.load(open('tmpData/models/mergeScore_FetC_LS.p', 'rb'))
+		mergeName = '_WGT'
+		merger = pickle.load(open('tmpData/models/mergeScore_FetC_WGT.p', 'rb'))
 
-		model = model_from_json(open(model_file_name + '.json').read())
-		print model_file_name
-		# model.load_weights(model_file_name + '_epoch_25.hdf5')
-		model.load_weights(model_file_name + '.hdf5')
-		model.compile(loss='mean_absolute_error', optimizer='rmsprop')
+		if ('Conv' in modelName):
+
+			model = model_from_json(open(model_file_name + '.json').read())
+			print model_file_name
+			# model.load_weights(model_file_name + '_epoch_25.hdf5')
+			model.load_weights(model_file_name + '.hdf5')
+			model.compile(loss='mean_absolute_error', optimizer='rmsprop')
+
+		else:
+			model = pickle.load(open(model_file_name + '.p', 'rb'))
 
 		print 'Model Loaded. Prediction in progress'
-		generatePredFile(evaluateValidation(model, merger, 'C'))
+		generatePredFile(evaluateValidation(model, merger, modelName + mergeName, 'C'))
 	
 	# p = pickle.load(open('tmpData/predictions/predA.p', 'rb'))
 	# generatePredFile(p)
