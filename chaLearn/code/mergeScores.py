@@ -32,7 +32,8 @@ def getSortedFeatures(fetList, size = 15):
 def weightedModelFit(X, Y):
 	weights = np.zeros((X.shape[1]))
 	for i in xrange(X.shape[0]):
-		weights = weights + np.abs(X[i] - Y[i])
+		# weights = weights + np.abs(X[i] - Y[i])
+		weights = weights + np.abs(1)
 	weights = 1.0/weights
 	# weights = np.power(weights, 0.5)
 	weights = weights/np.sum(weights)
@@ -54,33 +55,38 @@ trueVal = getTruthVal(fileName)
 for i in xrange(len(vidNames)):
 	vidNames[i] = vidNames[i].strip('.mp4')
 
-choice = 'C'
-splitVal = 0.9
+# choice = 'C'
+choice = 'AudioA'
+splitVal = 0.4
 origVidNames = []
 vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 vidNames = vidNames[:int(splitVal*len(vidNames))]
 
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_train.p', 'rb'))
-trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_train.p', 'rb'))
+# trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_train' + str(splitVal) +'.p', 'rb'))
+trainData = pickle.load(open('tmpData/predictions/predListaudioFetA_MISC_train' + str(splitVal) +'.p', 'rb'))
 X_train, Y_train = [], []
 
 for i in range(5):
 	X_train.append([])
 	for k in trainData.keys():
+		# print trainData[k]
 		if (len(trainData[k]) == 0):
 			continue
 		X_train[i].append(getSortedFeatures(trainData[k][:,i]))
 		if (i == 0):
 			# Do this only once
 			Y_train.append(trueVal[k])
-			origVidNames.append(k)
+			# origVidNames.append(k)
+
 	X_train[i] = np.array(X_train[i])
 
 X_train = np.array(X_train)
 Y_train = np.array(Y_train)
 
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_test.p', 'rb'))
-testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_test.p', 'rb'))
+# testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_test' + str(splitVal) +'.p', 'rb'))
+testData = pickle.load(open('tmpData/predictions/predListaudioFetA_MISC_test' + str(splitVal) +'.p', 'rb'))
 X_test, Y_test = [], []
 
 for i in range(5):
@@ -107,12 +113,13 @@ clfList = []
 
 # modelChoice = 'NN'		# Poor performance
 # modelChoice = 'SVR'		# Comparable results to Lasso
-modelChoice = 'LS'			# Best performer, Ridge also performs well
+# modelChoice = 'LS'			# Best performer, Ridge also performs well
 # modelChoice = 'RF'
 # modelChoice = 'ADA'
 # modelChoice = 'WGT'		# Performs slightly worse than simple average
 # modelChoice = 'BAG'
-# modelChoice = 'EnsembleRIDGE'
+# modelChoice = 'Ensemble_LS'
+modelChoice = 'Ensemble_WGT'
 
 modelName, model_file_name = '', ''
 predFileName = ''
@@ -123,8 +130,8 @@ if (modelChoice == 'LS'):
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		clfList.append(linear_model.Ridge(alpha = 5))
-		# clfList.append(linear_model.Lasso(alpha = 2e-4, positive = True, max_iter = 5000))
+		# clfList.append(linear_model.Ridge(alpha = 5))
+		clfList.append(linear_model.Lasso(alpha = 2e-4, positive = True, max_iter = 5000))
 		# Parameter study for C
 		clfList[i].fit(X_train[i], Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
@@ -233,15 +240,38 @@ elif (modelChoice == 'NN'):
 		Y_pred[:,i] = model.predict(X_test[i])[:1]
 		clfList.append(model)
 
-elif (modelChoice == 'EnsembleRIDGE'):
+elif (modelChoice == 'Ensemble_WGT'):
 
-	modelName = 'mergeScore_Fet' + choice + '_LS'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_LS'
-	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + '_Ridge'
+	modelName = 'mergeScore_Fet' + choice + '_WGT'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_WGT'
+	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + '_WGT'
 	
 	clfList = pickle.load(open(model_file_name + '.p', 'rb'))
-	X = np.concatenate((X_train, X_test), axis = 1)
+	X = X_test
+	Y = np.zeros((X.shape[1], 5))
 
+	for i in range(5):
+		print 'Currently predicting using the', i, 'th regressor'
+		Y[:,i] = weightedModelPredict(X[i], clfList[i])
+
+	Y[Y < 0] = 0
+	Y[Y > 1] = 1
+
+	predDict = {}
+	for i in range(len(origVidNames)):
+		fileName = origVidNames[i]
+		predDict[fileName] = Y[i]
+
+elif ('Ensemble' in modelChoice):
+
+	modelName = 'mergeScore_Fet' + choice + modelChoice.strip('Ensemble')
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + modelChoice.strip('Ensemble')
+	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + modelChoice.strip('Ensemble')
+	
+	clfList = pickle.load(open(model_file_name + '.p', 'rb'))
+
+	# X = np.concatenate((X_train, X_test), axis = 1)
+	X = X_test
 	Y = np.zeros((X.shape[1], 5))
 
 	print X.shape, X_train.shape, X_test.shape
@@ -250,6 +280,9 @@ elif (modelChoice == 'EnsembleRIDGE'):
 		print 'Currently predicting using the', i, 'th regressor'
 		Y[:,i] = clfList[i].predict(X[i])
 
+	Y[Y < 0] = 0
+	Y[Y > 1] = 1
+
 	predDict = {}
 	for i in range(len(origVidNames)):
 		fileName = origVidNames[i]
@@ -257,19 +290,21 @@ elif (modelChoice == 'EnsembleRIDGE'):
 
 # Scale transform data, save the scaler for later use
 # Save the trained models and predictions
-# pickle.dump(clfList, open(model_file_name + '.p', 'wb'))
 
 if (predFileName != ''):
 	pickle.dump(predDict, open(predFileName + '.p', 'wb'))
+
+	print len(predDict)
 
 	# print Y_test
 	# print Y_pred
 	# print Y_pred.max(0)
 	# print Y_pred.min(0)
 	print np.mean(Y, axis=0)
-	Y_true = np.concatenate((Y_train, Y_test), axis = 0)
-	print Y_true
-	print Y
+	# Y_true = np.concatenate((Y_train, Y_test), axis = 0)
+	Y_true = Y_test
+	# print Y_true
+	# print Y
 	print Y.max(0)
 	print Y.min(0)
 	evaluateTraits(Y, Y_true)
@@ -277,7 +312,8 @@ if (predFileName != ''):
 else:
 	# print Y_test
 	# print Y_pred
-	# print Y_pred.max(0)
-	# print Y_pred.min(0)
+	print Y_pred.max(0)
+	print Y_pred.min(0)
 	print np.mean(Y_pred, axis=0)
 	evaluateTraits(Y_pred, Y_test)
+	pickle.dump(clfList, open(model_file_name + '.p', 'wb'))
