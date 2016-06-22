@@ -1,0 +1,1642 @@
+visualFetA, Basic Conv (16, 32, 256):
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.12110.119628090926
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11790.122397385578
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11670.122381556231
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11570.125370888512
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11470.119096506895
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11460.119468321819
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11310.122401707206
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11310.118466909864
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11200.118420166812
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11160.118619183695
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11010.120962890165
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.11040.116401094969
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.10950.115442502816
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.10930.119204819891
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.10770.11456328708
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.10720.113816970184
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.10700.115060170501
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.10550.11857247656
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.10480.114498076265
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.10410.115828674306
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.10330.11413893716
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.10260.112996049547
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.10140.113922976179
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.10070.116367348316
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.10010.113681777387
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.09920.115029689198
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.09880.114297541161
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.09730.114714167142
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.09700.112995458619
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.09660.113465862008
+
+Average accuracy of 0.883737147521: 
+Accuracy predicting Extraversion: 0.878823259762
+Accuracy predicting Agreeableness: 0.888579918101
+Accuracy predicting Conscientiousness: 0.879285162805
+Accuracy predicting Neuroticism: 0.879771836345
+Accuracy predicting Openness to Experience: 0.892225560593
+
+
+visualFetA, Basic Augmented Conv (32, 64, 256) (Higher variance in training set):
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.1229For epoch 0 ,Testing loss is 0.122199280877
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.1177For epoch 1 ,Testing loss is 0.122975683749
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.1166For epoch 2 ,Testing loss is 0.121455934749
+3050/3096 [============================>.] - ETA: 14s - train loss: 0.1161For epoch 3 ,Testing loss is 0.119675088359
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.1150For epoch 4 ,Testing loss is 0.118228729403
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.1141For epoch 5 ,Testing loss is 0.119901357964
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.1137For epoch 6 ,Testing loss is 0.117477111464
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.1128For epoch 7 ,Testing loss is 0.117315949257
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.1130For epoch 8 ,Testing loss is 0.115897085064
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.1119For epoch 9 ,Testing loss is 0.116663568242
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.1114For epoch 10 ,Testing loss is 0.116319516146
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.1107For epoch 11 ,Testing loss is 0.115800876719
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1098 For epoch 12 ,Testing loss is 0.113697531186
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1092 For epoch 13 ,Testing loss is 0.118500757785
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1087 For epoch 14 ,Testing loss is 0.119442036143
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1087 For epoch 15 ,Testing loss is 0.114331915231
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1078 For epoch 16 ,Testing loss is 0.11409744454
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1070 For epoch 17 ,Testing loss is 0.114209962105
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1063 For epoch 18 ,Testing loss is 0.114058104888
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1064 For epoch 19 ,Testing loss is 0.112987233018
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1051 For epoch 20 ,Testing loss is 0.113114377435
+3050/3096 [============================>.] - ETA: 8s - train loss: 0.1042 For epoch 21 ,Testing loss is 0.112332004507
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1038 For epoch 22 ,Testing loss is 0.112895921181
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1036 For epoch 23 ,Testing loss is 0.113539819269
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1024 For epoch 24 ,Testing loss is 0.111201724235
+3050/3096 [============================>.] - ETA: 8s - train loss: 0.1021 For epoch 25 ,Testing loss is 0.112114313027
+3050/3096 [============================>.] - ETA: 9s - train loss: 0.1018 For epoch 26 ,Testing loss is 0.111232321138
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.1006For epoch 27 ,Testing loss is 0.112232217128
+3050/3096 [============================>.] - ETA: 13s - train loss: 0.1000For epoch 28 ,Testing loss is 0.110450350622
+3050/3096 [============================>.] - ETA: 12s - train loss: 0.0993For epoch 29 ,Testing loss is 0.11067917109
+3050/3096 [============================>.] - ETA: 11s - train loss: 0.0992For epoch 30 ,Testing loss is 0.111295377889
+
+Average accuracy of 0.889301421607: 
+Accuracy predicting Extraversion: 0.884052501896
+Accuracy predicting Agreeableness: 0.891729236166
+Accuracy predicting Conscientiousness: 0.887006103961
+Accuracy predicting Neuroticism: 0.88706105534
+Accuracy predicting Openness to Experience: 0.896658210674
+
+Merging Scores with SVR, C = 0.01:
+Sorted scores of size 15
+
+(5, 3075, 15) (3075, 5)
+(5, 341, 15) (341, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.46916921]
+ [ 0.46916921  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.36938025]
+ [ 0.36938025  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.50650343]
+ [ 0.50650343  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.44197713]
+ [ 0.44197713  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.49398836]
+ [ 0.49398836  1.        ]]
+
+Average accuracy of 0.890424851729: 
+Accuracy predicting Extraversion: 0.884479116786
+Accuracy predicting Agreeableness: 0.892700350054
+Accuracy predicting Conscientiousness: 0.889098187987
+Accuracy predicting Neuroticism: 0.887244327711
+Accuracy predicting Openness to Experience: 0.898602276106
+
+
+Merging Scores with Lasso, alpha = 0.0001:
+Sorted scores of size 15
+
+(5, 3075, 15) (3075, 5)
+(5, 341, 15) (341, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[ 0.          0.          0.01284877  0.          0.          0.55875797
+  0.11071918  0.          0.          0.          0.17795434  0.27805411
+  0.          0.10284452  0.        ]
+[[ 1.         0.4686244]
+ [ 0.4686244  1.       ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[ 0.          0.          0.          0.          0.13148183  0.
+  0.17332015  0.          0.          0.68072134  0.26967771  0.12948427
+  0.          0.          0.        ]
+[[ 1.          0.36344988]
+ [ 0.36344988  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[ 0.08024979  0.          0.12838789  0.02461225  0.31703293  0.          0.
+  0.          0.          0.73961311  0.          0.          0.          0.
+  0.        ]
+[[ 1.          0.50585317]
+ [ 0.50585317  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[ 0.          0.          0.          0.11597293  0.          0.64385662
+  0.          0.          0.          0.          0.53103697  0.03260935
+  0.          0.          0.        ]
+[[ 1.          0.44510397]
+ [ 0.44510397  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[ 0.          0.          0.          0.          0.          0.4176268
+  0.25867931  0.          0.          0.          0.06830576  0.32031629
+  0.11437801  0.12019244  0.        ]
+[[ 1.          0.49273391]
+ [ 0.49273391  1.        ]]
+[ 0.48709247  0.55678718  0.52693258  0.52935954  0.57479705]
+
+Average accuracy of 0.890360044592: 
+Accuracy predicting Extraversion: 0.884368114897
+Accuracy predicting Agreeableness: 0.892451128962
+Accuracy predicting Conscientiousness: 0.88917536309
+Accuracy predicting Neuroticism: 0.887136103581
+Accuracy predicting Openness to Experience: 0.898669512433
+
+AdaBoost Regressor (50 estimators, max depth = 3):
+Good performance for agreebleness
+
+(5, 3075, 15) (3075, 5)
+(5, 341, 15) (341, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.43436284]
+ [ 0.43436284  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.38690379]
+ [ 0.38690379  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.50354807]
+ [ 0.50354807  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.44244073]
+ [ 0.44244073  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.47209067]
+ [ 0.47209067  1.        ]]
+[ 0.48065307  0.54843489  0.52660712  0.52571188  0.57458208]
+
+Average accuracy of 0.89001955023: 
+Accuracy predicting Extraversion: 0.88226628574
+Accuracy predicting Agreeableness: 0.894412673367
+Accuracy predicting Conscientiousness: 0.888653350476
+Accuracy predicting Neuroticism: 0.887612222921
+Accuracy predicting Openness to Experience: 0.897153218646
+
+AdaBoost Regressor (50 estimators, max depth = 4):
+Even better performance for agreebleness
+
+(5, 3075, 15) (3075, 5)
+(5, 341, 15) (341, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.42846681]
+ [ 0.42846681  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.39321095]
+ [ 0.39321095  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.49383431]
+ [ 0.49383431  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.44425649]
+ [ 0.44425649  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.47342058]
+ [ 0.47342058  1.        ]]
+[ 0.48457177  0.54813019  0.52726053  0.52500932  0.57274226]
+
+Average accuracy of 0.890077505642: 
+Accuracy predicting Extraversion: 0.882423634576
+Accuracy predicting Agreeableness: 0.895493958144
+Accuracy predicting Conscientiousness: 0.887395389849
+Accuracy predicting Neuroticism: 0.887599027574
+Accuracy predicting Openness to Experience: 0.897475518067
+
+Merge scores for fetC with Lasso (Positive Constraint) (alpha = 0.0002):
+
+(5, 5351, 15) (5351, 5)
+(5, 592, 15) (592, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[ 0.04426915  0.13801254  0.13341147  0.20546358  0.13099445  0.          0.
+  0.          0.          0.          0.07268432  0.          0.37804204
+  0.15512618  0.15866625]
+[[ 1.          0.57227383]
+ [ 0.57227383  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[ 0.13382255  0.29277854  0.08837974  0.06417944  0.17897043  0.          0.
+  0.          0.          0.          0.          0.18275259  0.15151759
+  0.32850845  0.20967635]
+[[ 1.          0.44299067]
+ [ 0.44299067  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[ 0.11175364  0.06645791  0.16480496  0.          0.2279602   0.          0.
+  0.          0.          0.          0.          0.19035847  0.41675906
+  0.22481612  0.08892267]
+[[ 1.          0.54694422]
+ [ 0.54694422  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[ 0.09898413  0.27355235  0.00905333  0.24241802  0.00161615  0.          0.
+  0.          0.          0.          0.04516653  0.05732646  0.36379285
+  0.27497507  0.13638561]
+[[ 1.          0.53337464]
+ [ 0.53337464  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[ 0.04513799  0.08119839  0.01501996  0.04080434  0.69021694  0.          0.
+  0.          0.          0.          0.          0.          0.18255577
+  0.30234462  0.06357906]
+[[ 1.          0.51819091]
+ [ 0.51819091  1.        ]]
+[ 0.47974164  0.55080364  0.52184408  0.52174135  0.56880188]
+
+Average accuracy of 0.899796601195: 
+Accuracy predicting Extraversion: 0.898134168257
+Accuracy predicting Agreeableness: 0.90171113168
+Accuracy predicting Conscientiousness: 0.897993800095
+Accuracy predicting Neuroticism: 0.897662971738
+Accuracy predicting Openness to Experience: 0.903480934203
+
+Merge scores with self implemented weight heuristic:
+
+(5, 5351, 15) (5351, 5)
+(5, 592, 15) (592, 5)
+Currently training the 0 th regressor
+[ 0.07192587  0.065895    0.06389906  0.06343605  0.06369349  0.06384589
+  0.06386577  0.06388948  0.06390005  0.06397771  0.06433175  0.06542603
+  0.06752024  0.0720473   0.08234628]
+Model Trained. Prediction in progress
+[[ 1.          0.57156157]
+ [ 0.57156157  1.        ]]
+Currently training the 1 th regressor
+[ 0.06967123  0.06597188  0.06499352  0.06483446  0.06496953  0.06504378
+  0.06507465  0.065088    0.06509674  0.065186    0.06546224  0.06606675
+  0.06738443  0.06964043  0.07551638]
+Model Trained. Prediction in progress
+[[ 1.          0.44296191]
+ [ 0.44296191  1.        ]]
+Currently training the 2 th regressor
+[ 0.07424669  0.06781957  0.06545387  0.0645755   0.06433429  0.06438866
+  0.06440653  0.06440529  0.06442277  0.06445449  0.06448523  0.06495621
+  0.06614294  0.06925977  0.0766482 ]
+Model Trained. Prediction in progress
+[[ 1.          0.54710838]
+ [ 0.54710838  1.        ]]
+Currently training the 3 th regressor
+[ 0.07085262  0.06560402  0.06432599  0.0640285   0.06423614  0.06438327
+  0.06445421  0.06446392  0.06447122  0.06454639  0.06483071  0.0657278
+  0.06748761  0.07112916  0.07945844]
+Model Trained. Prediction in progress
+[[ 1.          0.53159244]
+ [ 0.53159244  1.        ]]
+Currently training the 4 th regressor
+[ 0.07093199  0.06595089  0.06448647  0.06427039  0.0642752   0.06446608
+  0.0645065   0.06451676  0.06452338  0.06457619  0.06491851  0.06567533
+  0.067374    0.07076577  0.07876255]
+Model Trained. Prediction in progress
+[[ 1.          0.51830406]
+ [ 0.51830406  1.        ]]
+[ 0.49649197  0.5653326   0.5311984   0.5398023   0.58443772]
+
+Average accuracy of 0.897462247282: 
+Accuracy predicting Extraversion: 0.895125471008
+Accuracy predicting Agreeableness: 0.899612391991
+Accuracy predicting Conscientiousness: 0.895475319154
+Accuracy predicting Neuroticism: 0.895107464412
+Accuracy predicting Openness to Experience: 0.901990589847
+
+Audio features A, Ridge regression (alpha = 9500):
+Only 1/6th of the total training set used.
+
+10307
+(10307, 1582) (10307, 5)
+(1149, 1582) (1149, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.47195908]
+ [ 0.47195908  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.25942622]
+ [ 0.25942622  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.37882729]
+ [ 0.37882729  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.49293712]
+ [ 0.49293712  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.48785895]
+ [ 0.48785895  1.        ]]
+[[ 0.3737793   0.51660156  0.33007812  0.51025391  0.61132812]
+ [ 0.3737793   0.51660156  0.33007812  0.51025391  0.61132812]
+ [ 0.3737793   0.51660156  0.33007812  0.51025391  0.61132812]
+ ..., 
+ [ 0.48608398  0.53857422  0.58251953  0.5         0.63330078]
+ [ 0.48608398  0.53857422  0.58251953  0.5         0.63330078]
+ [ 0.48608398  0.53857422  0.58251953  0.5         0.63330078]]
+[[ 0.31145665  0.47303266  0.42182867  0.40845176  0.42095916]
+ [ 0.34651762  0.50528525  0.42650854  0.43015723  0.41476575]
+ [ 0.37333886  0.51142738  0.49710718  0.42917573  0.44457784]
+ ..., 
+ [ 0.53217829  0.53632262  0.61947609  0.57368831  0.60326946]
+ [ 0.50916183  0.52381861  0.61005837  0.57882388  0.56934219]
+ [ 0.53427585  0.55933199  0.59438545  0.57954999  0.5768153 ]]
+[ 0.67041758  0.71211569  0.7362149   0.71846533  0.74331404]
+[ 0.13340047  0.19155223  0.04865268  0.09098663  0.26505445]
+[ 0.47741488  0.54355823  0.52454056  0.52127919  0.56945545]
+
+Average accuracy of 0.897492747416: 
+Accuracy predicting Extraversion: 0.900074476307
+Accuracy predicting Agreeableness: 0.900126389068
+Accuracy predicting Conscientiousness: 0.885589943974
+Accuracy predicting Neuroticism: 0.899657534263
+Accuracy predicting Openness to Experience: 0.902015393465
+
+Audio features A, Ridge regression (alpha = 9500):
+Full training set used.
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.42053155]
+ [ 0.42053155  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.32606882]
+ [ 0.32606882  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.42372722]
+ [ 0.42372722  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.43986274]
+ [ 0.43986274  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.44435004]
+ [ 0.44435004  1.        ]]
+[[ 0.4206543   0.45043945  0.640625    0.54150391  0.48876953]
+ [ 0.4206543   0.45043945  0.640625    0.54150391  0.48876953]
+ [ 0.4206543   0.45043945  0.640625    0.54150391  0.48876953]
+ ..., 
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]]
+[[ 0.40577539  0.4838734   0.44791009  0.45199558  0.47441574]
+ [ 0.4315159   0.49496639  0.41081402  0.45537654  0.48672369]
+ [ 0.42619615  0.49959817  0.43186611  0.44591647  0.46285374]
+ ..., 
+ [ 0.48986821  0.54717093  0.54873073  0.47974045  0.57428129]
+ [ 0.52805118  0.57542857  0.6012273   0.53827962  0.62151884]
+ [ 0.49281964  0.5486904   0.53738557  0.50378472  0.58621352]]
+[ 0.75711994  0.71585233  0.71733329  0.79896712  0.79266933]
+[ 0.15030719  0.28937518  0.15873424  0.18172693  0.24452532]
+[ 0.48103082  0.55117126  0.52608361  0.52525012  0.56972821]
+
+Average accuracy of 0.8915851068: 
+Accuracy predicting Extraversion: 0.886501636809
+Accuracy predicting Agreeableness: 0.896516763899
+Accuracy predicting Conscientiousness: 0.885647996441
+Accuracy predicting Neuroticism: 0.891360243395
+Accuracy predicting Openness to Experience: 0.897898893455
+
+Neural Network (64 nodes in hidden layer, sigmoid, After standard scaling):
+
+NN model compiled. Training now...
+Train on 62176 samples, validate on 6829 samples
+Epoch 1/15
+62176/62176 [==============================] - 3s - loss: 0.1205 - val_loss: 0.1195
+Epoch 2/15
+62176/62176 [==============================] - 4s - loss: 0.1195 - val_loss: 0.1202
+Epoch 3/15
+62176/62176 [==============================] - 6s - loss: 0.1184 - val_loss: 0.1273
+Epoch 4/15
+62176/62176 [==============================] - 7s - loss: 0.1180 - val_loss: 0.1191
+Epoch 5/15
+62176/62176 [==============================] - 7s - loss: 0.1174 - val_loss: 0.1275
+Epoch 6/15
+62176/62176 [==============================] - 7s - loss: 0.1174 - val_loss: 0.1258
+Epoch 7/15
+62176/62176 [==============================] - 7s - loss: 0.1163 - val_loss: 0.1225
+Epoch 8/15
+62176/62176 [==============================] - 7s - loss: 0.1161 - val_loss: 0.1205
+Epoch 9/15
+62176/62176 [==============================] - 7s - loss: 0.1161 - val_loss: 0.1295
+Epoch 10/15
+62176/62176 [==============================] - 7s - loss: 0.1171 - val_loss: 0.1282
+Epoch 11/15
+62176/62176 [==============================] - 7s - loss: 0.1161 - val_loss: 0.1217
+Epoch 12/15
+62176/62176 [==============================] - 7s - loss: 0.1162 - val_loss: 0.1337
+Epoch 13/15
+62176/62176 [==============================] - 7s - loss: 0.1164 - val_loss: 0.1349
+Epoch 14/15
+62176/62176 [==============================] - 7s - loss: 0.1159 - val_loss: 0.1348
+Epoch 15/15
+62176/62176 [==============================] - 7s - loss: 0.1156 - val_loss: 0.1293
+6816/6829 [============================>.] - ETA: 0s[[ 0.4206543   0.45043945  0.640625    0.54150391  0.48876953]
+ [ 0.4206543   0.45043945  0.640625    0.54150391  0.48876953]
+ [ 0.4206543   0.45043945  0.640625    0.54150391  0.48876953]
+ ..., 
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]]
+[[ 0.54682922  0.59268039  0.55793411  0.58672667  0.61007595]
+ [ 0.56582135  0.59881645  0.57367486  0.60321319  0.6286056 ]
+ [ 0.58519173  0.60345644  0.58772051  0.62028807  0.6480096 ]
+ ..., 
+ [ 0.58297181  0.60400629  0.59127945  0.61929584  0.65022629]
+ [ 0.58216518  0.59987414  0.59089184  0.61760896  0.64847738]
+ [ 0.58363974  0.60053664  0.58787572  0.61887264  0.64765751]]
+[ 0.5976277   0.60953468  0.59957975  0.63137025  0.65982109]
+[ 0.38418752  0.48573041  0.40469912  0.42243263  0.44174609]
+[ 0.57358967  0.59771212  0.58302905  0.61062329  0.63925003]
+
+Average accuracy of 0.870665626018: 
+Accuracy predicting Extraversion: 0.857339930488
+Accuracy predicting Agreeableness: 0.88640141409
+Accuracy predicting Conscientiousness: 0.867546229555
+Accuracy predicting Neuroticism: 0.86675897187
+Accuracy predicting Openness to Experience: 0.875281584086
+
+Ridge with sigmoid activation (alpha = 0.01 (?)):
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Using Theano backend.
+Couldn't import dot_parser, loading of dot files will not be possible.
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.1035     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.1008     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.1008     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.1008     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.1008     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.1008     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.1008     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.1008     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.1009     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.1009     
+Model Trained. Prediction in progress
+OLD
+[ 0.44  0.48  0.43 ...,  0.46  0.54  0.49]
+NEW
+[ 0.42  0.47  0.41 ...,  0.45  0.53  0.48]
+SUPPOSED to be
+[ 0.42  0.42  0.42 ...,  0.29  0.29  0.29]
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+[ -7.58e-06  -9.45e-06  -1.10e-01 ...,  -2.66e-03  -1.87e-03   0.00e+00]
+4.01628648099
+-2.8052063302
+0.000682334090026
+Currently training the 1 th regressor
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.0994     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.0969     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.0969     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.0969     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.0970     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.0969     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.0970     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.0970     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.0970     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.0970     
+Model Trained. Prediction in progress
+OLD
+[ 0.5   0.52  0.52 ...,  0.52  0.59  0.56]
+NEW
+[ 0.49  0.51  0.51 ...,  0.51  0.57  0.54]
+SUPPOSED to be
+[ 0.45  0.45  0.45 ...,  0.38  0.38  0.38]
+[[ 1.    0.32]
+ [ 0.32  1.  ]]
+[ -9.00e-06  -4.74e-06  -3.22e-01 ...,  -1.95e-03  -1.76e-03   0.00e+00]
+2.84373525991
+-2.25970549854
+0.00730714654005
+Currently training the 2 th regressor
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.1095     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.1069     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.1069     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.1068     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.1068     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.1068     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.1068     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.1068     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.1068     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.1068     
+Model Trained. Prediction in progress
+OLD
+[ 0.44  0.4   0.43 ...,  0.51  0.59  0.53]
+NEW
+[ 0.42  0.38  0.41 ...,  0.5   0.59  0.52]
+SUPPOSED to be
+[ 0.64  0.64  0.64 ...,  0.43  0.43  0.43]
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+[ -2.93e-07  -2.47e-06  -2.51e-01 ...,  -7.54e-04  -3.74e-03   0.00e+00]
+2.4844987053
+-3.16534289
+-0.00169345110819
+Currently training the 3 th regressor
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.1048     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.1021     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.1021     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.1020     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.1021     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.1021     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.1020     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.1021     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.1020     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.1021     
+Model Trained. Prediction in progress
+OLD
+[ 0.46  0.45  0.42 ...,  0.45  0.55  0.5 ]
+NEW
+[ 0.45  0.44  0.41 ...,  0.44  0.54  0.49]
+SUPPOSED to be
+[ 0.54  0.54  0.54 ...,  0.41  0.41  0.41]
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+[ -4.59e-06  -4.55e-06  -1.03e-01 ...,  -2.44e-03  -1.39e-03   0.00e+00]
+2.33217456371
+-4.12162833326
+-0.000658259169403
+Currently training the 4 th regressor
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.1009     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.0984     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.0985     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.0984     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.0984     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.0984     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.0983     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.0984     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.0984     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.0984     
+Model Trained. Prediction in progress
+OLD
+[ 0.49  0.52  0.46 ...,  0.56  0.63  0.59]
+NEW
+[ 0.48  0.51  0.45 ...,  0.56  0.62  0.59]
+SUPPOSED to be
+[ 0.49  0.49  0.49 ...,  0.37  0.37  0.37]
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+[ -6.33e-06  -6.14e-06  -1.20e-01 ...,  -3.94e-03  -3.29e-03   0.00e+00]
+2.4506859543
+-2.78302744882
+-0.00919941480924
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.42  0.49  0.42  0.45  0.48]
+ [ 0.47  0.51  0.38  0.44  0.51]
+ [ 0.41  0.51  0.41  0.41  0.45]
+ ..., 
+ [ 0.45  0.51  0.5   0.44  0.56]
+ [ 0.53  0.57  0.59  0.54  0.62]
+ [ 0.48  0.54  0.52  0.49  0.59]]
+[ 0.77  0.71  0.8   0.81  0.8 ]
+[ 0.16  0.2   0.11  0.13  0.16]
+[ 0.47  0.54  0.52  0.52  0.56]
+
+Average accuracy of 0.890499642157: 
+Accuracy predicting Extraversion: 0.88524541045
+Accuracy predicting Agreeableness: 0.894527602327
+Accuracy predicting Conscientiousness: 0.885890735281
+Accuracy predicting Neuroticism: 0.890743900937
+Accuracy predicting Openness to Experience: 0.89609056179
+
+
+Ridge with sigmoid activation (alpha = 0.1):
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Using Theano backend.
+Couldn't import dot_parser, loading of dot files will not be possible.
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.1038     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.1009     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.1010     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.1009     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.1010     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.1010     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.1010     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.1010     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.1010     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.1010     
+Model Trained. Prediction in progress
+OLD
+[ 0.43  0.48  0.43 ...,  0.46  0.53  0.49]
+NEW
+[ 0.44  0.48  0.44 ...,  0.47  0.55  0.5 ]
+SUPPOSED to be
+[ 0.42  0.42  0.42 ...,  0.29  0.29  0.29]
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+[ -7.47e-06  -9.43e-06  -9.53e-02 ...,  -2.27e-03  -1.92e-03   0.00e+00]
+1.2931069169
+-1.0715063808
+0.00103872880838
+Currently training the 1 th regressor
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.0996     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.0971     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.0971     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.0971     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.0971     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.0971     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.0972     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.0971     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.0971     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.0971     
+Model Trained. Prediction in progress
+OLD
+[ 0.5   0.52  0.52 ...,  0.52  0.58  0.55]
+NEW
+[ 0.52  0.53  0.54 ...,  0.54  0.6   0.57]
+SUPPOSED to be
+[ 0.45  0.45  0.45 ...,  0.38  0.38  0.38]
+[[ 1.    0.32]
+ [ 0.32  1.  ]]
+[ -9.05e-06  -4.59e-06  -3.02e-01 ...,  -1.54e-03  -1.78e-03   0.00e+00]
+0.930085151047
+-0.870183942115
+0.00334431463325
+Currently training the 2 th regressor
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.1097     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.1071     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.1070     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.1071     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.1071     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.1070     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.1070     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.1071     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.1071     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.1071     
+Model Trained. Prediction in progress
+OLD
+[ 0.43  0.39  0.43 ...,  0.51  0.59  0.52]
+NEW
+[ 0.45  0.41  0.45 ...,  0.54  0.62  0.55]
+SUPPOSED to be
+[ 0.64  0.64  0.64 ...,  0.43  0.43  0.43]
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+[ -2.94e-07  -2.59e-06  -2.36e-01 ...,  -6.00e-05  -3.72e-03   0.00e+00]
+0.853202304952
+-0.990867751854
+0.000184595818298
+Currently training the 3 th regressor
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.1049     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.1022     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.1022     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.1022     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.1021     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.1022     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.1022     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.1022     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.1022     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.1022     
+Model Trained. Prediction in progress
+OLD
+[ 0.46  0.45  0.43 ...,  0.45  0.54  0.5 ]
+NEW
+[ 0.45  0.44  0.42 ...,  0.44  0.54  0.49]
+SUPPOSED to be
+[ 0.54  0.54  0.54 ...,  0.41  0.41  0.41]
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+[ -4.35e-06  -4.57e-06  -1.03e-01 ...,  -2.01e-03  -1.45e-03   0.00e+00]
+0.865361900903
+-1.45450471865
+-0.000171724303693
+Currently training the 4 th regressor
+NN model compiled. Training now...
+Epoch 1/10
+62176/62176 [==============================] - 0s - loss: 0.1011     
+Epoch 2/10
+62176/62176 [==============================] - 0s - loss: 0.0986     
+Epoch 3/10
+62176/62176 [==============================] - 0s - loss: 0.0986     
+Epoch 4/10
+62176/62176 [==============================] - 0s - loss: 0.0986     
+Epoch 5/10
+62176/62176 [==============================] - 0s - loss: 0.0986     
+Epoch 6/10
+62176/62176 [==============================] - 0s - loss: 0.0985     
+Epoch 7/10
+62176/62176 [==============================] - 0s - loss: 0.0985     
+Epoch 8/10
+62176/62176 [==============================] - 0s - loss: 0.0985     
+Epoch 9/10
+62176/62176 [==============================] - 0s - loss: 0.0986     
+Epoch 10/10
+62176/62176 [==============================] - 0s - loss: 0.0986     
+Model Trained. Prediction in progress
+OLD
+[ 0.49  0.51  0.47 ...,  0.56  0.62  0.59]
+NEW
+[ 0.48  0.5   0.45 ...,  0.55  0.61  0.59]
+SUPPOSED to be
+[ 0.49  0.49  0.49 ...,  0.37  0.37  0.37]
+[[ 1.    0.44]
+ [ 0.44  1.  ]]
+[ -6.32e-06  -6.20e-06  -1.03e-01 ...,  -3.26e-03  -3.27e-03   0.00e+00]
+0.89898093756
+-1.37610680001
+-0.0024374698357
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.44  0.52  0.45  0.45  0.48]
+ [ 0.48  0.53  0.41  0.44  0.5 ]
+ [ 0.44  0.54  0.45  0.42  0.45]
+ ..., 
+ [ 0.47  0.54  0.54  0.44  0.55]
+ [ 0.55  0.6   0.62  0.54  0.61]
+ [ 0.5   0.57  0.55  0.49  0.59]]
+[ 0.79  0.74  0.82  0.82  0.8 ]
+[ 0.18  0.28  0.11  0.13  0.2 ]
+[ 0.49  0.57  0.55  0.52  0.56]
+
+Average accuracy of 0.890324449217: 
+Accuracy predicting Extraversion: 0.886063694812
+Accuracy predicting Agreeableness: 0.894440147198
+Accuracy predicting Conscientiousness: 0.883763680831
+Accuracy predicting Neuroticism: 0.891208398214
+Accuracy predicting Openness to Experience: 0.896146325031
+
+Ridge (alpha = 1, unable to compute result):
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+[ -7.31e-06  -9.34e-06  -6.43e-02 ...,  -2.16e-03  -2.03e-03   0.00e+00]
+0.237196605828
+-0.371875360214
+0.000407846305893
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.    0.33]
+ [ 0.33  1.  ]]
+[ -9.34e-06  -4.26e-06  -1.86e-01 ...,  -1.40e-03  -1.88e-03   0.00e+00]
+0.252893536526
+-0.320660232925
+0.000970836096967
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+[ -5.26e-07  -2.53e-06  -1.47e-01 ...,   3.27e-04  -3.73e-03   0.00e+00]
+0.297013332366
+-0.34816603403
+-0.000281962769748
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+[ -4.07e-06  -4.45e-06  -7.11e-02 ...,  -1.89e-03  -1.59e-03   0.00e+00]
+0.259637911887
+-0.437994359394
+-8.01093329429e-05
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.    0.44]
+ [ 0.44  1.  ]]
+[ -6.35e-06  -5.92e-06  -6.66e-02 ...,  -2.96e-03  -3.39e-03   0.00e+00]
+0.218693424908
+-0.31265062615
+-0.000568911671087
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.43  0.5   0.44  0.46  0.49]
+ [ 0.47  0.51  0.4   0.45  0.51]
+ [ 0.44  0.53  0.43  0.44  0.47]
+ ..., 
+ [ 0.47  0.53  0.51  0.46  0.56]
+ [ 0.53  0.57  0.58  0.54  0.61]
+ [ 0.49  0.55  0.52  0.49  0.59]]
+[ 0.79  0.73  0.81  0.86  0.84]
+[ 0.14  0.27 -0.01  0.09  0.2 ]
+[ 0.48  0.55  0.53  0.52  0.57]
+Inputs must be values in the range [0,1]. Traits could not be evaluated.
+
+Bagging Regressor (With Ridge regressors, num = 10, alpha = 10):
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.779379220644
+0.12441523688
+0.481121516558
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.720535836325
+0.273831280532
+0.551040371612
+[[ 1.    0.33]
+ [ 0.33  1.  ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.784140991602
+0.0318308363386
+0.52609305349
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.84526987108
+0.0720979783194
+0.52527297325
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.8264379497
+0.253574872045
+0.570370824125
+[[ 1.    0.44]
+ [ 0.44  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.43  0.5   0.45  0.46  0.49]
+ [ 0.46  0.51  0.4   0.46  0.51]
+ [ 0.45  0.53  0.44  0.44  0.47]
+ ..., 
+ [ 0.47  0.54  0.51  0.47  0.55]
+ [ 0.52  0.57  0.58  0.53  0.61]
+ [ 0.48  0.55  0.51  0.5   0.58]]
+[ 0.78  0.72  0.78  0.85  0.83]
+[ 0.12  0.27  0.03  0.07  0.25]
+[ 0.48  0.55  0.53  0.53  0.57]
+
+Average accuracy of 0.891655303173: 
+Accuracy predicting Extraversion: 0.886619358277
+Accuracy predicting Agreeableness: 0.895993420928
+Accuracy predicting Conscientiousness: 0.886553716458
+Accuracy predicting Neuroticism: 0.891702660944
+Accuracy predicting Openness to Experience: 0.897407359257
+
+Bagging Regressor (Decision Trees, num = 10, no other constraints):
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.727978515625
+0.0570037841797
+0.480712236613
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.758154296875
+0.159301757812
+0.550727477572
+[[ 1.    0.32]
+ [ 0.32  1.  ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.830224609375
+0.198077392578
+0.524617827328
+[[ 1.    0.44]
+ [ 0.44  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.757275390625
+0.178137207031
+0.524149651974
+[[ 1.    0.44]
+ [ 0.44  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.8177734375
+0.2921875
+0.570677288065
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.47  0.52  0.53  0.47  0.53]
+ [ 0.47  0.54  0.47  0.44  0.58]
+ [ 0.5   0.52  0.55  0.48  0.57]
+ ..., 
+ [ 0.51  0.5   0.41  0.46  0.45]
+ [ 0.52  0.62  0.58  0.48  0.49]
+ [ 0.5   0.62  0.6   0.47  0.61]]
+[ 0.73  0.76  0.83  0.76  0.82]
+[ 0.06  0.16  0.2   0.18  0.29]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.89209628064: 
+Accuracy predicting Extraversion: 0.888060683969
+Accuracy predicting Agreeableness: 0.895458601844
+Accuracy predicting Conscientiousness: 0.887338285883
+Accuracy predicting Neuroticism: 0.891694100386
+Accuracy predicting Openness to Experience: 0.897929731116
+
+Bagging Regressor (Decision Trees, num = 300, maxDepth = 4/5, max_features=sqrt):
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.567671012948
+0.308869125478
+0.478397035948
+[[ 1.    0.41]
+ [ 0.41  1.  ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.590539673714
+0.366032952989
+0.550288686372
+[[ 1.   0.3]
+ [ 0.3  1. ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.586682297059
+0.368378561217
+0.523857160591
+[[ 1.    0.36]
+ [ 0.36  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.601696004304
+0.33063777335
+0.522353223485
+[[ 1.    0.42]
+ [ 0.42  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.652907000703
+0.397202170644
+0.568267098667
+[[ 1.    0.42]
+ [ 0.42  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.46  0.5   0.46  0.46  0.54]
+ [ 0.47  0.5   0.47  0.46  0.55]
+ [ 0.49  0.51  0.49  0.47  0.56]
+ ..., 
+ [ 0.46  0.52  0.49  0.48  0.55]
+ [ 0.49  0.56  0.53  0.51  0.57]
+ [ 0.49  0.55  0.52  0.5   0.56]]
+[ 0.57  0.59  0.59  0.6   0.65]
+[ 0.31  0.37  0.37  0.33  0.4 ]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.889619692019: 
+Accuracy predicting Extraversion: 0.885481148489
+Accuracy predicting Agreeableness: 0.895720308269
+Accuracy predicting Conscientiousness: 0.88167592759
+Accuracy predicting Neuroticism: 0.889393211813
+Accuracy predicting Openness to Experience: 0.895827863935
+
+Bagging Regressor (Decision Trees, num = 70, maxDepth = 6):
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.6310717375
+0.273622881578
+0.478933824362
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.604815786171
+0.339130235341
+0.550626213387
+[[ 1.    0.33]
+ [ 0.33  1.  ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.629548998618
+0.333687982215
+0.524218520808
+[[ 1.    0.41]
+ [ 0.41  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.659820647005
+0.289803808654
+0.522786301868
+[[ 1.    0.44]
+ [ 0.44  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.702462155522
+0.335486295294
+0.568497766343
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.47  0.49  0.51  0.44  0.52]
+ [ 0.48  0.5   0.49  0.45  0.58]
+ [ 0.49  0.5   0.5   0.44  0.59]
+ ..., 
+ [ 0.47  0.5   0.46  0.46  0.55]
+ [ 0.48  0.55  0.56  0.49  0.57]
+ [ 0.48  0.55  0.52  0.48  0.57]]
+[ 0.63  0.6   0.63  0.66  0.7 ]
+[ 0.27  0.34  0.33  0.29  0.34]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.891943554743: 
+Accuracy predicting Extraversion: 0.888072858935
+Accuracy predicting Agreeableness: 0.89692916873
+Accuracy predicting Conscientiousness: 0.884493076627
+Accuracy predicting Neuroticism: 0.891367975766
+Accuracy predicting Openness to Experience: 0.898854693656
+
+Bagging Regressor (Decision Trees, num = 30):
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.708756510417
+0.148906453451
+0.480459423571
+[[ 1.    0.49]
+ [ 0.49  1.  ]]
+Currently training the 1 th regressor
+^[[A
+Model Trained. Prediction in progress
+0.719327799479
+0.189705403646
+0.550419025251
+[[ 1.    0.37]
+ [ 0.37  1.  ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.779663085938
+0.210036214193
+0.523969496895
+[[ 1.    0.49]
+ [ 0.49  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.737784830729
+0.219101969401
+0.524390957504
+[[ 1.    0.49]
+ [ 0.49  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.797265625
+0.314473470052
+0.570718210548
+[[ 1.    0.49]
+ [ 0.49  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.44  0.5   0.55  0.44  0.53]
+ [ 0.45  0.56  0.49  0.41  0.56]
+ [ 0.41  0.49  0.48  0.51  0.56]
+ ..., 
+ [ 0.47  0.5   0.45  0.42  0.53]
+ [ 0.49  0.55  0.54  0.53  0.58]
+ [ 0.45  0.57  0.54  0.48  0.57]]
+[ 0.71  0.72  0.78  0.74  0.8 ]
+[ 0.15  0.19  0.21  0.22  0.31]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.895204020325: 
+Accuracy predicting Extraversion: 0.891011073059
+Accuracy predicting Agreeableness: 0.898650068107
+Accuracy predicting Conscientiousness: 0.890495973074
+Accuracy predicting Neuroticism: 0.894508059948
+Accuracy predicting Openness to Experience: 0.901354927439
+
+Bagging Regressor (Decision Trees, num = 50):
+
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.722612304688
+0.182054443359
+0.481082395843
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.7113671875
+0.246533203125
+0.550623966094
+[[ 1.    0.39]
+ [ 0.39  1.  ]]
+Currently training the 2 th regressor
+^[[A
+Model Trained. Prediction in progress
+0.836782226563
+0.199606933594
+0.525143202115
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.726635742188
+0.234810791016
+0.52392534621
+[[ 1.    0.49]
+ [ 0.49  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.831416015625
+0.314245605469
+0.570173255472
+[[ 1.    0.51]
+ [ 0.51  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.47  0.54  0.5   0.42  0.48]
+ [ 0.47  0.53  0.51  0.45  0.51]
+ [ 0.45  0.46  0.53  0.47  0.55]
+ ..., 
+ [ 0.45  0.48  0.49  0.43  0.55]
+ [ 0.48  0.53  0.62  0.47  0.56]
+ [ 0.46  0.56  0.56  0.46  0.55]]
+[ 0.72  0.71  0.84  0.73  0.83]
+[ 0.18  0.25  0.2   0.23  0.31]
+[ 0.48  0.55  0.53  0.52  0.57]
+
+Average accuracy of 0.895911163308: 
+Accuracy predicting Extraversion: 0.891309281099
+Accuracy predicting Agreeableness: 0.899689882418
+Accuracy predicting Conscientiousness: 0.891025376861
+Accuracy predicting Neuroticism: 0.895250046395
+Accuracy predicting Openness to Experience: 0.902281229765
+
+Bagging Regressor (Decision Trees, num = 100):
+62176
+(62176, 1582) (62176, 5)
+(6829, 1582) (6829, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.713195800781
+0.15008972168
+0.48120258085
+[[ 1.    0.51]
+ [ 0.51  1.  ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.706088867187
+0.233798828125
+0.55072374271
+[[ 1.   0.4]
+ [ 0.4  1. ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.800029296875
+0.218248901367
+0.524984324493
+[[ 1.    0.52]
+ [ 0.52  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.731850585937
+0.227909545898
+0.52404184788
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.78921875
+0.319432373047
+0.569845927746
+[[ 1.    0.51]
+ [ 0.51  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.47  0.51  0.54  0.46  0.5 ]
+ [ 0.43  0.52  0.5   0.43  0.54]
+ [ 0.46  0.53  0.52  0.47  0.55]
+ ..., 
+ [ 0.45  0.5   0.45  0.44  0.53]
+ [ 0.45  0.56  0.56  0.49  0.59]
+ [ 0.45  0.55  0.54  0.47  0.54]]
+[ 0.71  0.71  0.8   0.73  0.79]
+[ 0.15  0.23  0.22  0.23  0.32]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.896386453391: 
+Accuracy predicting Extraversion: 0.891918640181
+Accuracy predicting Agreeableness: 0.899882518273
+Accuracy predicting Conscientiousness: 0.891725260938
+Accuracy predicting Neuroticism: 0.895907201618
+Accuracy predicting Openness to Experience: 0.902498645947
+
+Merge Score from visualFetC using Ridge (alpha = 5):
+
+(5, 5351, 15) (5351, 5)
+(5, 592, 15) (592, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[ 0.04721717  0.07820296  0.0875904   0.09386038  0.0934441   0.09061684
+  0.09595525  0.09570474  0.09560519  0.09332996  0.09575893  0.09298312
+  0.13004027  0.12400843  0.12044356]
+[[ 1.          0.57166202]
+ [ 0.57166202  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[ 0.09604956  0.10800265  0.09562478  0.09553579  0.10466003  0.10722279
+  0.10961272  0.11071301  0.10948172  0.10256112  0.09966341  0.11107533
+  0.1208553   0.14258923  0.1471075 ]
+[[ 1.          0.44271894]
+ [ 0.44271894  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[ 0.06432788  0.063152    0.07713788  0.079501    0.09694806  0.09943252
+  0.10129382  0.10097596  0.0984017   0.09162146  0.10378676  0.1242446
+  0.1539458   0.14819191  0.11258696]
+[[ 1.          0.54706102]
+ [ 0.54706102  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[ 0.07384233  0.09696017  0.0768181   0.08872573  0.09141092  0.09848853
+  0.09995905  0.10145159  0.09985175  0.09371723  0.09727623  0.10378166
+  0.13452383  0.14344504  0.12120043]
+[[ 1.          0.53181482]
+ [ 0.53181482  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[ 0.05579081  0.07188452  0.08020405  0.09476862  0.10817961  0.09522734
+  0.09434913  0.0960557   0.09540417  0.09055657  0.08153504  0.10181408
+  0.12295192  0.13998234  0.11259591]
+[[ 1.          0.51881283]
+ [ 0.51881283  1.        ]]
+[ 0.47969822  0.55072706  0.52185144  0.52180807  0.56896599]
+
+Average accuracy of 0.899821868248: 
+Accuracy predicting Extraversion: 0.89806508461
+Accuracy predicting Agreeableness: 0.901714942332
+Accuracy predicting Conscientiousness: 0.898188507609
+Accuracy predicting Neuroticism: 0.897664124636
+Accuracy predicting Openness to Experience: 0.903476682053
+
+
+Merge Score from visualFetC using Bagging Regressor (num = 50):
+
+(5, 5351, 15) (5351, 5)
+(5, 592, 15) (592, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.706728971963
+0.148598130841
+0.480777027027
+[[ 1.          0.56485833]
+ [ 0.56485833  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.76
+0.27010989011
+0.550091698842
+[[ 1.          0.42759493]
+ [ 0.42759493  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.801553398058
+0.232233009709
+0.520353581737
+[[ 1.          0.53010556]
+ [ 0.53010556  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.7525
+0.194583333333
+0.523453336149
+[[ 1.          0.52498888]
+ [ 0.52498888  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.788666666667
+0.281333333333
+0.569550675676
+[[ 1.          0.49043958]
+ [ 0.49043958  1.        ]]
+[ 0.48077703  0.5500917   0.52035358  0.52345334  0.56955068]
+
+Average accuracy of 0.897983088496: 
+Accuracy predicting Extraversion: 0.897144165193
+Accuracy predicting Agreeableness: 0.89877004752
+Accuracy predicting Conscientiousness: 0.896158488586
+Accuracy predicting Neuroticism: 0.897021044482
+Accuracy predicting Openness to Experience: 0.900821696697
+
+Merge Score from visualFetC using Bagging Regressor (num = 100):
+Average accuracy of 0.898001511954: 
+Accuracy predicting Extraversion: 0.896120863855
+Accuracy predicting Agreeableness: 0.899516075141
+Accuracy predicting Conscientiousness: 0.89671723301
+Accuracy predicting Neuroticism: 0.897079814189
+Accuracy predicting Openness to Experience: 0.900573573574
+
+Visual FetB (Ridge, alpha = 0.05):
+
+0.998330550918 part reading completed (64074, 136) (64074, 5)
+(7148, 136) (7148, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.39884419]
+ [ 0.39884419  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.26666856]
+ [ 0.26666856  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.39583405]
+ [ 0.39583405  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.37036178]
+ [ 0.37036178  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.39056166]
+ [ 0.39056166  1.        ]]
+[[ 0.44848633  0.43945312  0.54345703  0.38549805  0.36669922]
+ [ 0.44848633  0.43945312  0.54345703  0.38549805  0.36669922]
+ [ 0.44848633  0.43945312  0.54345703  0.38549805  0.36669922]
+ ..., 
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]]
+[[ 0.45404739  0.54591114  0.58063409  0.52128132  0.59192513]
+ [ 0.5064291   0.57992109  0.59699025  0.5623521   0.62300857]
+ [ 0.48995968  0.57261566  0.5591146   0.54475767  0.6037956 ]
+ ..., 
+ [ 0.35374459  0.44077157  0.38988992  0.40624898  0.43142495]
+ [ 0.45846465  0.53819888  0.51984633  0.52540503  0.5342029 ]
+ [ 0.45138508  0.54817754  0.5277072   0.52056403  0.54402865]]
+[ 0.69370301  0.67547835  0.73911876  0.71228594  0.75559875]
+[ 0.27225471  0.41088039  0.33397411  0.34555506  0.34735409]
+[ 0.48405944  0.55565415  0.53290086  0.52987421  0.57425693]
+
+Average accuracy of 0.886820531687: 
+Accuracy predicting Extraversion: 0.883695953545
+Accuracy predicting Agreeableness: 0.890015803141
+Accuracy predicting Conscientiousness: 0.883327690395
+Accuracy predicting Neuroticism: 0.88356258537
+Accuracy predicting Openness to Experience: 0.893500625986
+
+Visual FetB (Bagging regressor with Decision trees, numEstimators = 40):
+
+0.998330550918 part reading completed (64098, 136) (64098, 5)
+(7157, 136) (7157, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.687817382813
+0.278967285156
+0.483885354317
+[[ 1.          0.30705307]
+ [ 0.30705307  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.699145507812
+0.332080078125
+0.554717159658
+[[ 1.          0.18832711]
+ [ 0.18832711  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.707385253906
+0.245846557617
+0.530706999351
+[[ 1.        0.292319]
+ [ 0.292319  1.      ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.702020263672
+0.247634887695
+0.527127555164
+[[ 1.          0.27512218]
+ [ 0.27512218  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.709197998047
+0.400567626953
+0.573222245966
+[[ 1.          0.26079545]
+ [ 0.26079545  1.        ]]
+[[ 0.44848633  0.43945312  0.54345703  0.38549805  0.36669922]
+ [ 0.44848633  0.43945312  0.54345703  0.38549805  0.36669922]
+ [ 0.44848633  0.43945312  0.54345703  0.38549805  0.36669922]
+ ..., 
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]
+ [ 0.28979492  0.38452148  0.42724609  0.40625     0.36669922]]
+[[ 0.40142822  0.51833496  0.47137756  0.52423401  0.56640625]
+ [ 0.47269745  0.54661865  0.50629883  0.46510696  0.55056763]
+ [ 0.5308815   0.54005737  0.5374115   0.50466309  0.59860229]
+ ..., 
+ [ 0.46774292  0.49331665  0.4820343   0.48463135  0.50275879]
+ [ 0.44206848  0.54829712  0.51967773  0.51483154  0.53973999]
+ [ 0.45954895  0.58565674  0.54318542  0.51404724  0.60806885]]
+[ 0.68781738  0.69914551  0.70738525  0.70202026  0.709198  ]
+[ 0.27896729  0.33208008  0.24584656  0.24763489  0.40056763]
+[ 0.48388535  0.55471716  0.530707    0.52712756  0.57322225]
+
+Average accuracy of 0.88205952916: 
+Accuracy predicting Extraversion: 0.878645439036
+Accuracy predicting Agreeableness: 0.887120677207
+Accuracy predicting Conscientiousness: 0.877097377055
+Accuracy predicting Neuroticism: 0.879165735068
+Accuracy predicting Openness to Experience: 0.888268417437
+
+
