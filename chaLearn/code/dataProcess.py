@@ -141,7 +141,7 @@ def readData(fileNames, trueVal = None, feature = 'A'):
 			sys.stdout.flush()
 	X = np.array(X, dtype = np.float16)
 	Y = np.array(Y, dtype = np.float16)
-	print X.shape, Y.shape
+	# print X.shape, Y.shape
 	return X, Y
 
 def getAudioFeatureAList(fileName, segLen = 4, overlap = 3):
@@ -212,15 +212,17 @@ def GetBGFeatures(frameList, model, numCrops = 8):
 	return fetList
 
 def evaluateTraits(p, gt):
+	# Currently allowing negative values
+
 	if (len(p) == len(gt)):
 		for i in range(len(p)):
 			if (len(p[i]) != 5) or (len(gt[i]) != 5):
 				print "Inputs must be a list of 5 values within the range [0,1]. Traits could not be evaluated."
-				return
+				# return
 			for j in range(len(p[i])):
 				if p[i][j] < 0 or p[i][j] > 1 or gt[i][j] < 0 or gt[i][j] > 1:
 					print "Inputs must be values in the range [0,1]. Traits could not be evaluated."
-					return
+					# return
 	
 	errors = np.abs(p-gt)
 	meanAccs = 1-np.mean(errors, axis=0)

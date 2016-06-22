@@ -60,8 +60,8 @@ clfList = []
 # modelChoice = 'SVR'	# Gives out of bounds results
 # modelChoice = 'RF'
 # modelChoice = 'LGR'	# very poor results
-# modelChoice = 'MISC'
-modelChoice = 'BAG'
+modelChoice = 'MISC'
+# modelChoice = 'BAG'
 # modelChoice = 'SKNN'
 
 modelName, model_file_name = '', ''
@@ -164,8 +164,8 @@ elif (modelChoice == 'MISC'):
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		# clfList.append(linear_model.Ridge(alpha = 1))
-		clfList.append(linear_model.Lasso(alpha = 1e-4))
+		clfList.append(linear_model.Ridge(alpha = 1))
+		# clfList.append(linear_model.Lasso(alpha = 1e-4))
 		# clfList.append(linear_model.SGDRegressor())
 		clfList[i].fit(X_train, Y_train[:,i])
 		print 'Model Trained. Prediction in progress'

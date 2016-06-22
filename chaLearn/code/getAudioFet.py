@@ -19,13 +19,13 @@ def getAudioFetA():
 	vidNames = os.listdir(videoPath)
 	vidNames = [x for x in vidNames if x.endswith(".wav")]
 
-	videoPath = '/home/nishant/gitrepo/prog/chaLearn/training/download_train-val/validationFilesAudio/'
-	vidNamesTest = os.listdir(videoPath)
-	vidNamesTest = [x for x in vidNamesTest if x.endswith(".wav")]
+	# videoPath = '/home/nishant/gitrepo/prog/chaLearn/training/download_train-val/validationFilesAudio/'
+	# vidNamesTest = os.listdir(videoPath)
+	# vidNamesTest = [x for x in vidNamesTest if x.endswith(".wav")]
 
 	openSmilePath = '/home/nishant/Downloads/openSMILE-2.2rc1/'
 
-	vidNames.extend(vidNamesTest)
+	# vidNames.extend(vidNamesTest)
 
 	# Initialize detectors, load it for face detection
 
