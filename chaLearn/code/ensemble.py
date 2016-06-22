@@ -3,6 +3,8 @@ import numpy as np
 import random
 from readVideo import *
 
+np.set_printoptions(precision=2)
+
 def evaluateEnsemble(pred, trueVal, weights):
 	p = np.dot(pred, weights.transpose())
 

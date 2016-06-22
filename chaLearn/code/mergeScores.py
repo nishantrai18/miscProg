@@ -56,6 +56,7 @@ for i in xrange(len(vidNames)):
 
 choice = 'C'
 splitVal = 0.9
+origVidNames = []
 vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 vidNames = vidNames[:int(splitVal*len(vidNames))]
 
@@ -72,6 +73,7 @@ for i in range(5):
 		if (i == 0):
 			# Do this only once
 			Y_train.append(trueVal[k])
+			origVidNames.append(k)
 	X_train[i] = np.array(X_train[i])
 
 X_train = np.array(X_train)
@@ -90,6 +92,7 @@ for i in range(5):
 		if (i == 0):
 			# Do this only once
 			Y_test.append(trueVal[k])
+			origVidNames.append(k)
 	X_test[i] = np.array(X_test[i])
 
 X_test = np.array(X_test)
@@ -104,13 +107,15 @@ clfList = []
 
 # modelChoice = 'NN'		# Poor performance
 # modelChoice = 'SVR'		# Comparable results to Lasso
-# modelChoice = 'LS'			# Best performer, Ridge also performs well
+modelChoice = 'LS'			# Best performer, Ridge also performs well
 # modelChoice = 'RF'
 # modelChoice = 'ADA'
 # modelChoice = 'WGT'		# Performs slightly worse than simple average
-modelChoice = 'BAG'
+# modelChoice = 'BAG'
+# modelChoice = 'EnsembleRIDGE'
 
 modelName, model_file_name = '', ''
+predFileName = ''
 
 if (modelChoice == 'LS'):
 	modelName = 'mergeScore_Fet' + choice + '_LS'
@@ -175,7 +180,7 @@ elif (modelChoice == 'BAG'):
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 100, n_jobs = 4))
+		clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4))
 		# clfList.append(BaggingRegressor(linear_model.Ridge(alpha = 5)))		
 		# clfList.append(linear_model.SGDRegressor())
 		clfList[i].fit(X_train[i], Y_train[:,i])
@@ -228,15 +233,51 @@ elif (modelChoice == 'NN'):
 		Y_pred[:,i] = model.predict(X_test[i])[:1]
 		clfList.append(model)
 
+elif (modelChoice == 'EnsembleRIDGE'):
+
+	modelName = 'mergeScore_Fet' + choice + '_LS'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_LS'
+	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + '_Ridge'
+	
+	clfList = pickle.load(open(model_file_name + '.p', 'rb'))
+	X = np.concatenate((X_train, X_test), axis = 1)
+
+	Y = np.zeros((X.shape[1], 5))
+
+	print X.shape, X_train.shape, X_test.shape
+	
+	for i in range(5):
+		print 'Currently predicting using the', i, 'th regressor'
+		Y[:,i] = clfList[i].predict(X[i])
+
+	predDict = {}
+	for i in range(len(origVidNames)):
+		fileName = origVidNames[i]
+		predDict[fileName] = Y[i]
+
 # Scale transform data, save the scaler for later use
 # Save the trained models and predictions
-pickle.dump(clfList, open(model_file_name + '.p', 'wb'))
-# pickle.dump(Y_pred, open(model_file_name, 'wb'))
+# pickle.dump(clfList, open(model_file_name + '.p', 'wb'))
 
-# print Y_test
-# print Y_pred
-# print Y_pred.max(0)
-# print Y_pred.min(0)
-print np.mean(Y_pred, axis=0)
+if (predFileName != ''):
+	pickle.dump(predDict, open(predFileName + '.p', 'wb'))
 
-evaluateTraits(Y_pred, Y_test)
+	# print Y_test
+	# print Y_pred
+	# print Y_pred.max(0)
+	# print Y_pred.min(0)
+	print np.mean(Y, axis=0)
+	Y_true = np.concatenate((Y_train, Y_test), axis = 0)
+	print Y_true
+	print Y
+	print Y.max(0)
+	print Y.min(0)
+	evaluateTraits(Y, Y_true)
+
+else:
+	# print Y_test
+	# print Y_pred
+	# print Y_pred.max(0)
+	# print Y_pred.min(0)
+	print np.mean(Y_pred, axis=0)
+	evaluateTraits(Y_pred, Y_test)
