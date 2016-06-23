@@ -119,9 +119,50 @@ def readFromFileFetC(fileName, skipLength = 2, augment = False):
 	tmpList = np.array(tmpList)
 	return tmpList
 
-def readData(fileNames, trueVal = None, feature = 'A'):
+def readFromFileFetF(fileName, poolType = 'max', numSamples = 5, numTotSamples = None, numPools = 10):
+	filePath = 'tmpData/visualFetF/'
+	fileName = filePath+fileName+'.npy'
+	if (not os.path.isfile(fileName)):
+		return []
+
+	fetList = np.load(fileName)
+	if (fetList.shape[1] == 0):
+		return []
+
+	newFetList = np.empty((0, fetList.shape[2]))
+	totCnt = 0
+
+	for j in range(fetList.shape[0]):
+		for k in range(numSamples):
+
+			tmpList = []
+			for i in range(numPools):
+				tmpList.append(random.randint(0, fetList[j].shape[0] - 1))
+
+			tmpFetList = fetList[j].take(tmpList, axis = 0)
+
+			if (poolType == 'max'):
+				tmpFetList = np.max(tmpFetList, axis = 0).reshape(1,-1)
+			elif (poolType == 'avg'):
+				tmpFetList = np.mean(tmpFetList, axis = 0).reshape(1,-1)
+
+			# print tmpFetList.shape, newFetList.shape
+			newFetList = np.concatenate((newFetList, tmpFetList), axis = 0)
+
+			totCnt += 1
+
+			if (numTotSamples is not None):
+				if (totCnt >= numTotSamples):
+					return newFetList
+
+	# print newFetList.shape
+	return newFetList
+
+def readData(fileNames, trueVal = None, feature = 'A', poolType = 'max'):
 	X = []
 	Y = []
+	X1 = []
+	X2 = []
 	# CAN BE OPTIMIZED
 	for i in xrange(len(fileNames)):
 		fileName = fileNames[i]
@@ -131,17 +172,35 @@ def readData(fileNames, trueVal = None, feature = 'A'):
 			imgList = readFromFileFetB(fileName, 2)			
 		elif (feature == 'C'):
 			imgList = readFromFileFetC(fileName, 5, augment = True)
+		elif (feature == 'F'):
+			imgList = readFromFileFetF(fileName, poolType = poolType, numSamples = 20, numPools = 10)
 		elif (feature == 'AudioA'):
 			imgList = readFromFileAudioFetA(fileName)
+		elif (feature == 'CF'):
+			imgList = readFromFileFetC(fileName, 5, augment = True)
+			vggList = readFromFileFetF(fileName, poolType = poolType, numSamples = len(imgList), numTotSamples = len(imgList), numPools = 10)
 		if (len(imgList) == 0):
 			continue
-		X.extend(imgList)
+		if (len(vggList) == 0):
+			continue
+		if (feature == 'CF'):
+			X1.extend(imgList)
+			X2.extend(vggList)
+		else:
+			X.extend(imgList)
 		if (trueVal is not None):
 			Y.extend([trueVal[fileName]]*len(imgList))
-			print '\r', (i*(1.0))/len(fileNames), 'part reading completed',
-			sys.stdout.flush()
-	X = np.array(X, dtype = np.float16)
+			# print '\r', (i*(1.0))/len(fileNames), 'part reading completed',
+			# sys.stdout.flush()
 	Y = np.array(Y, dtype = np.float16)
+	if (feature == 'CF'):
+		X1 = np.array(X1, dtype = np.float16)
+		X2 = np.array(X2, dtype = np.float16)
+		print X1.shape, X2.shape, Y.shape
+		return X1, X2, Y
+	else:
+		X = np.array(X, dtype = np.float16)
+		return X, Y
 	# print X.shape, Y.shape
 	return X, Y
 
