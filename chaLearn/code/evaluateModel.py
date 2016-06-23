@@ -29,8 +29,9 @@ def predictScore(fileName, model, merger = None, choice = 'A'):
 			Y_pred.fill(0.5)
 			# print Y_pred
 			return Y_pred
-		for i in range(5):
-			Y_pred[:,i] = model[i].predict(X)
+		else:
+			for i in range(5):
+				Y_pred[:,i] = model[i].predict(X)
 	else:
 		Y_pred = model.predict(X)
 
@@ -38,7 +39,8 @@ def predictScore(fileName, model, merger = None, choice = 'A'):
 	if (merger is None):
 		finalScore = np.mean(Y_pred, axis=0)
 	elif (len(Y_pred) == 0):
-		finalScore = np.array([0.5]*5)
+		finalScore = np.zeros((1, 5))
+		finalScore.fill(0.5)
 	elif (type(merger[0]).__module__ == 'numpy'):
 		for i in range(5):
 			x = getSortedFeatures(Y_pred[:,i])
@@ -102,8 +104,9 @@ def predictScoreList(fileName, model, choice = 'A'):
 			Y_pred.fill(0.5)
 			# print Y_pred
 			return Y_pred
-		for i in range(5):
-			Y_pred[:,i] = model[i].predict(X)
+		else:
+			for i in range(5):
+				Y_pred[:,i] = model[i].predict(X)
 	else:
 		Y_pred = model.predict(X)
 
@@ -117,26 +120,10 @@ def predictVideos(fileList, modelName, model, choice = 'A', append = 'test'):
 		predVal[fileName] = predictScoreList(fileName, model, choice)
 		print '\r', (i*(1.0))/len(fileList), 'part completed',
 		sys.stdout.flush()
-	pickle.dump(predVal, open('tmpData/predictions/predList' + modelName +'_' + append +'.p', 'wb'))
+	f = open('tmpData/predictions/predList' + modelName +'_' + append +'.p', 'wb')
+	pickle.dump(predVal, f)
+	f.close()
 	return predVal
-
-def generatePredFile(p, subset='validation'):
-	vnames = []
-	with open('../training/'+subset+'_gt.csv', 'rb') as csvfile:
-		reader = csv.reader(csvfile, delimiter=',')
-		next(reader, None)
-		for row in reader:
-			vnames.append(row[0])
-	csvfile.close()
-	with open('tmpData/predictions/predictions.csv', 'wb') as csvfile:
-		gtwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-		gtwriter.writerow(['VideoName', 'ValueExtraversion', 'ValueAgreeableness', 'ValueConscientiousness', 'ValueNeurotisicm','ValueOpenness'])
-		for i in range(0,len(vnames)):
-			vnames[i] = vnames[i].strip('.mp4')
-			if (isinstance(p[vnames[i]], np.float64)):
-				p[vnames[i]] = [0.5]*5
-			gtwriter.writerow([vnames[i]+'.mp4', p[vnames[i]][0], p[vnames[i]][1], p[vnames[i]][2], p[vnames[i]][3], p[vnames[i]][4]])
-	csvfile.close()
 
 if __name__ == "__main__":
 	videoPath = '../training/download_train-val/trainFiles/'
@@ -154,9 +141,9 @@ if __name__ == "__main__":
 	vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 	vidNames = vidNames[:int(splitVal*len(vidNames))]
 
-	choice = 'C'
+	# choice = 'C'
 	# choice = 'B'
-	# choice = 'AudioA'
+	choice = 'AudioA'
 	action = 'genSubmit'
 	# action = 'getPredList'
 
@@ -164,10 +151,12 @@ if __name__ == "__main__":
 	# model_file_name = 'tmpData/models/visualFetA_BasicConv_16_32_256'
 	# modelName = 'visualFetA_BasicConv_Augmented_32_64_256'
 	# model_file_name = 'tmpData/models/visualFetA_BasicConv_Augmented_32_64_256'
-	modelName = 'visualFetC_Conv_Augmented_32_64_256'
-	model_file_name = 'tmpData/models/visualFetC_Conv_Augmented_32_64_256'
+	# modelName = 'visualFetC_Conv_Augmented_32_64_256'
+	# model_file_name = 'tmpData/models/visualFetC_Conv_Augmented_32_64_256'
 	# modelName = 'audioFetA_BAG_n50'
 	# model_file_name = 'tmpData/models/audioFetA_BAG_n50'
+	modelName = 'audioFetA_BAG_n50'
+	model_file_name = 'tmpData/models/audioFetA_BAG_n50'
 	# modelName = 'visualFetB_MISC'
 	# model_file_name = 'tmpData/models/visualFetB_MISC'
 
@@ -203,7 +192,7 @@ if __name__ == "__main__":
 		print 'Model Loaded. Prediction in progress'
 
 		# Also change this line for test/train
-		predictVideos([(x) for x in vidNamesTest], modelName, model, choice, 'test' + str(splitVal))
+		predictVideos([(x) for x in vidNames], modelName, model, choice, 'train' + str(splitVal))
 
 	elif (action == 'getTestScore'):
 
@@ -228,7 +217,8 @@ if __name__ == "__main__":
 
 	elif (action == 'genSubmit'):
 		mergeName = '_WGT'
-		merger = pickle.load(open('tmpData/models/mergeScore_FetC_WGT.p', 'rb'))
+		# merger = pickle.load(open('tmpData/models/mergeScore_FetC_LS.p', 'rb'))
+		merger = pickle.load(open('tmpData/models/mergeScore_FetAudioA_BAG_WGT.p', 'rb'))
 
 		if ('Conv' in modelName):
 
@@ -240,9 +230,13 @@ if __name__ == "__main__":
 
 		else:
 			model = pickle.load(open(model_file_name + '.p', 'rb'))
-
+			# print 'Model Loaded. Prediction in progress'
+		
 		print 'Model Loaded. Prediction in progress'
-		generatePredFile(evaluateValidation(model, merger, modelName + mergeName, 'C'))
+		generatePredFile(evaluateValidation(model, merger, modelName + mergeName, choice))
+		# f = open('tmpData/predictions/valPredictionaudioFetA_BAG_n50_LS.p', 'rb')
+		# generatePredFile(pickle.load(f))
+		# f.close()
 	
 	# p = pickle.load(open('tmpData/predictions/predA.p', 'rb'))
 	# generatePredFile(p)

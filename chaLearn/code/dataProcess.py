@@ -8,6 +8,7 @@ import subprocess
 import arff
 import os, sys
 import cPickle as pickle
+import csv
 
 def equalizeImgList(imgList, row = 100, col = 100):
 	'''
@@ -238,3 +239,25 @@ def evaluateTraits(p, gt):
 	print "\n"
 		
 	return meanAccs
+
+def generatePredFile(p, subset='validation'):
+	vnames = []
+	with open('../training/'+subset+'_gt.csv', 'rb') as csvfile:
+		reader = csv.reader(csvfile, delimiter=',')
+		next(reader, None)
+		for row in reader:
+			vnames.append(row[0])
+	csvfile.close()
+	with open('tmpData/predictions/predictions.csv', 'wb') as csvfile:
+		gtwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+		gtwriter.writerow(['VideoName', 'ValueExtraversion', 'ValueAgreeableness', 'ValueConscientiousness', 'ValueNeurotisicm','ValueOpenness'])
+		for i in range(0,len(vnames)):
+			vnames[i] = vnames[i].strip('.mp4')
+			if (isinstance(p[vnames[i]], np.float64)):
+				p[vnames[i]] = [0.5]*5
+			# print vnames[i]
+			# print p[vnames[i]]
+			if (len(p[vnames[i]]) == 1):
+				p[vnames[i]] = p[vnames[i]][0]
+			gtwriter.writerow([vnames[i]+'.mp4', p[vnames[i]][0], p[vnames[i]][1], p[vnames[i]][2], p[vnames[i]][3], p[vnames[i]][4]])
+	csvfile.close()

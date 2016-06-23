@@ -64,7 +64,7 @@ vidNames = vidNames[:int(splitVal*len(vidNames))]
 
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_train.p', 'rb'))
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_train' + str(splitVal) +'.p', 'rb'))
-trainData = pickle.load(open('tmpData/predictions/predListaudioFetA_MISC_train' + str(splitVal) +'.p', 'rb'))
+trainData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_train' + str(splitVal) +'.p', 'rb'))
 X_train, Y_train = [], []
 
 for i in range(5):
@@ -86,7 +86,7 @@ Y_train = np.array(Y_train)
 
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_test.p', 'rb'))
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_test' + str(splitVal) +'.p', 'rb'))
-testData = pickle.load(open('tmpData/predictions/predListaudioFetA_MISC_test' + str(splitVal) +'.p', 'rb'))
+testData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_test' + str(splitVal) +'.p', 'rb'))
 X_test, Y_test = [], []
 
 for i in range(5):
@@ -113,20 +113,21 @@ clfList = []
 
 # modelChoice = 'NN'		# Poor performance
 # modelChoice = 'SVR'		# Comparable results to Lasso
-# modelChoice = 'LS'			# Best performer, Ridge also performs well
+modelChoice = 'LS'			# Best performer, Ridge also performs well
 # modelChoice = 'RF'
 # modelChoice = 'ADA'
 # modelChoice = 'WGT'		# Performs slightly worse than simple average
 # modelChoice = 'BAG'
 # modelChoice = 'Ensemble_LS'
-modelChoice = 'Ensemble_WGT'
+# modelChoice = 'Ensemble_WGT'
 
+append = '_BAG'
 modelName, model_file_name = '', ''
 predFileName = ''
 
 if (modelChoice == 'LS'):
-	modelName = 'mergeScore_Fet' + choice + '_LS'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_LS'
+	modelName = 'mergeScore_Fet' + choice + append + '_LS'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_LS'
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
@@ -141,8 +142,8 @@ if (modelChoice == 'LS'):
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'SVR'):
-	modelName = 'mergeScore_Fet' + choice + '_SVR'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_SVR'
+	modelName = 'mergeScore_Fet' + choice + append + '_SVR'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_SVR'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
@@ -155,8 +156,8 @@ elif (modelChoice == 'SVR'):
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'RF'):
-	modelName = 'mergeScore_Fet' + choice + '_RF'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_RF'
+	modelName = 'mergeScore_Fet' + choice + append + '_RF'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_RF'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
@@ -168,8 +169,8 @@ elif (modelChoice == 'RF'):
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'ADA'):
-	modelName = 'mergeScore_Fet' + choice + '_ADA'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_ADA'
+	modelName = 'mergeScore_Fet' + choice + append + '_ADA'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_ADA'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
@@ -181,8 +182,8 @@ elif (modelChoice == 'ADA'):
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'BAG'):
-	modelName = 'mergeScore_Fet' + choice + '_BAG'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_BAG'
+	modelName = 'mergeScore_Fet' + choice + append + '_BAG'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_BAG'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
@@ -199,8 +200,8 @@ elif (modelChoice == 'BAG'):
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'WGT'):
-	modelName = 'mergeScore_Fet' + choice + '_WGT'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_WGT'
+	modelName = 'mergeScore_Fet' + choice + append + '_WGT'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_WGT'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
@@ -211,8 +212,8 @@ elif (modelChoice == 'WGT'):
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'NN'):
-	modelName = 'mergeScore_Fet' + choice + '_NN'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_NN'
+	modelName = 'mergeScore_Fet' + choice + append + '_NN'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_NN'
 		
 	from keras.models import Sequential
 	from keras.layers import Dense, Dropout, Activation
@@ -242,9 +243,9 @@ elif (modelChoice == 'NN'):
 
 elif (modelChoice == 'Ensemble_WGT'):
 
-	modelName = 'mergeScore_Fet' + choice + '_WGT'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + '_WGT'
-	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + '_WGT'
+	modelName = 'mergeScore_Fet' + choice + append + '_WGT'
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_WGT'
+	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + append +'_WGT'
 	
 	clfList = pickle.load(open(model_file_name + '.p', 'rb'))
 	X = X_test
@@ -264,9 +265,9 @@ elif (modelChoice == 'Ensemble_WGT'):
 
 elif ('Ensemble' in modelChoice):
 
-	modelName = 'mergeScore_Fet' + choice + modelChoice.strip('Ensemble')
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + modelChoice.strip('Ensemble')
-	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + modelChoice.strip('Ensemble')
+	modelName = 'mergeScore_Fet' + choice + append + modelChoice.strip('Ensemble')
+	model_file_name = 'tmpData/models/mergeScore_Fet' + choice +  append + modelChoice.strip('Ensemble')
+	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + append + modelChoice.strip('Ensemble')
 	
 	clfList = pickle.load(open(model_file_name + '.p', 'rb'))
 
