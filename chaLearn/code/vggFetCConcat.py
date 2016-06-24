@@ -1,5 +1,5 @@
-from keras.models import Sequential, Graph
-from keras.layers import Dense, Dropout, Activation, Flatten
+from keras.models import Sequential, Graph, Model
+from keras.layers import Dense, Input, Dropout, Activation, Flatten, merge
 from keras.layers import Convolution2D, MaxPooling2D
 from keras.optimizers import SGD
 from keras.utils import np_utils, generic_utils
@@ -103,27 +103,25 @@ model_file_name = 'tmpData/models/VGG_FetC_Concat_256_128_' + poolType
 vggModel = vggFetF()
 convModel = convFetC()
 
-print vggModel.input_shape
-print vggModel.output_shape
+# print vggModel.input_shape
+# print vggModel.output_shape
+# print convModel.input_shape
+# print convModel.output_shape
 
-print convModel.input_shape
-print convModel.output_shape
+imgInput = Input(shape=(1, row, col), name = 'imgInput')
+imgRep = convModel(imgInput)
 
-tmpmodel = Sequential()
-# # input: 4096 dimension vectors.
-tmpmodel.add(Dense(128, input_dim = 4096, init='uniform'))
-tmpmodel.add(Activation('relu'))
-tmpmodel.add(Dropout(0.25))
+vggInput = Input(shape=(4096, ), name = 'vggInput')
+vggRep = vggModel(vggInput)
 
-model = Graph()
-model.add_input(name='convInput', input_shape = (1, row, col))
-model.add_input(name='vggInput', input_shape = (4096,))
-model.add_node(convModel, name='conv', input='convInput')
-model.add_node(vggModel, name='vgg', input='vggInput')
+merged = merge([imgRep, vggRep], mode='concat')
+final = Dropout(0.25)(merged)
 
 # Can add another hidden layer in between
-model.add_node(Dense(5, init='uniform', activation = 'sigmoid'), name='final', inputs=['conv', 'vgg'], merge_mode='concat')
-model.add_output(name='output', input='final')
+output = Dense(5, activation ='sigmoid', name = 'output')(final)
+
+# this is our final model:
+model = Model(input=[imgInput, vggInput], output=output)
 
 model.compile(loss = {'output': 'mean_absolute_error'}, optimizer = 'rmsprop')
 # Prefer mean_absolute_error, since that is the one used for the challenge
@@ -158,7 +156,7 @@ for k in range(num_epochs):
 		# print 'Finished reading the batch'
 
 		# print 'Training on Batch'
-		loss = model.train_on_batch({'convInput': X_batch_conv, 'vggInput': X_batch_vgg, 'output': Y_batch})
+		loss = model.train_on_batch({'imgInput': X_batch_conv, 'vggInput': X_batch_vgg}, {'output': Y_batch})
 		# Train the model
 		# print 'Finished training on Batch'
 
