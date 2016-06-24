@@ -119,7 +119,7 @@ def readFromFileFetC(fileName, skipLength = 2, augment = False):
 	tmpList = np.array(tmpList)
 	return tmpList
 
-def readFromFileFetF(fileName, poolType = 'max', numSamples = 5, numTotSamples = None, numPools = 10, random = False):
+def readFromFileFetF(fileName, poolType = 'max', numSamples = 5, numTotSamples = None, numPools = 10, randomFlag = False):
 	filePath = 'tmpData/visualFetF/'
 	fileName = filePath+fileName+'.npy'
 	if (not os.path.isfile(fileName)):
@@ -133,7 +133,7 @@ def readFromFileFetF(fileName, poolType = 'max', numSamples = 5, numTotSamples =
 	totCnt = 0
 
 	startInd = 0
-	if (random):
+	if (randomFlag):
 		startInd = random.randint(0, fetList.shape[0] - 1)
 
 	for j in range(startInd, fetList.shape[0]):
@@ -182,7 +182,7 @@ def readData(fileNames, trueVal = None, feature = 'A', poolType = 'max'):
 			imgList = readFromFileAudioFetA(fileName)
 		elif (feature == 'CF'):
 			imgList = readFromFileFetC(fileName, 5, augment = True)
-			vggList = readFromFileFetF(fileName, poolType = poolType, numSamples = len(imgList), numTotSamples = len(imgList), numPools = 10, random = True)
+			vggList = readFromFileFetF(fileName, poolType = poolType, numSamples = len(imgList), numTotSamples = len(imgList), numPools = 10, randomFlag = True)
 			if (len(vggList) == 0):
 				continue
 		if (len(imgList) == 0):
