@@ -1,8 +1,9 @@
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Convolution2D, MaxPooling2D
+from keras.layers import Convolution2D, MaxPooling2D, AveragePooling2D
 from keras.optimizers import SGD
 from keras.utils import np_utils, generic_utils
+from keras.layers.normalization import LRN2D
 
 import numpy as np
 from readVideo import *
@@ -39,25 +40,27 @@ numBatch = (len(vidNames)/numPerBatch)
 model_save_interval = 5
 num_epochs = 100
 
-model_file_name = 'tmpData/models/visualFetC_Conv_Augmented_32_64_256'
+model_file_name = 'tmpData/models/visualFetC_ConvLRN_48_96_256'
 
 model = Sequential()
 # input: 100x100 images with 3 channels -> (3, 100, 100) tensors.
 # this applies 64 convolution filters of size 3x3 each.
 
-model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(1, row, col)))
+model.add(Convolution2D(48, 3, 3, border_mode='valid', input_shape=(1, row, col)))
 model.add(Activation('relu'))
-model.add(Convolution2D(32, 3, 3))
+model.add(Convolution2D(48, 3, 3))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+model.add(LRN2D())
+model.add(Dropout(0.5))
 
-model.add(Convolution2D(64, 3, 3, border_mode='valid'))
+model.add(Convolution2D(96, 3, 3, border_mode='valid'))
 model.add(Activation('relu'))
-model.add(Convolution2D(64, 3, 3))
+model.add(Convolution2D(96, 3, 3))
 model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+model.add(AveragePooling2D(pool_size=(2, 2)))
+model.add(LRN2D())
+model.add(Dropout(0.5))
 
 model.add(Flatten())
 # Note: Keras does automatic shape inference.
@@ -76,6 +79,8 @@ jsonString = model.to_json()
 open(model_file_name + '.json', 'w').write(jsonString)
 
 minScore = 1.0
+
+# raw_input('WAIT')
 
 print 'Training started...'
 for k in xrange(num_epochs):
