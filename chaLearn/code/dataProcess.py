@@ -119,7 +119,7 @@ def readFromFileFetC(fileName, skipLength = 2, augment = False):
 	tmpList = np.array(tmpList)
 	return tmpList
 
-def readFromFileFetF(fileName, poolType = 'max', numSamples = 5, numTotSamples = None, numPools = 10):
+def readFromFileFetF(fileName, poolType = 'max', numSamples = 5, numTotSamples = None, numPools = 10, random = False):
 	filePath = 'tmpData/visualFetF/'
 	fileName = filePath+fileName+'.npy'
 	if (not os.path.isfile(fileName)):
@@ -132,7 +132,11 @@ def readFromFileFetF(fileName, poolType = 'max', numSamples = 5, numTotSamples =
 	newFetList = np.empty((0, fetList.shape[2]))
 	totCnt = 0
 
-	for j in range(fetList.shape[0]):
+	startInd = 0
+	if (random):
+		startInd = random.randint(0, fetList.shape[0] - 1)
+
+	for j in range(startInd, fetList.shape[0]):
 		for k in range(numSamples):
 
 			tmpList = []
@@ -178,10 +182,10 @@ def readData(fileNames, trueVal = None, feature = 'A', poolType = 'max'):
 			imgList = readFromFileAudioFetA(fileName)
 		elif (feature == 'CF'):
 			imgList = readFromFileFetC(fileName, 5, augment = True)
-			vggList = readFromFileFetF(fileName, poolType = poolType, numSamples = len(imgList), numTotSamples = len(imgList), numPools = 10)
+			vggList = readFromFileFetF(fileName, poolType = poolType, numSamples = len(imgList), numTotSamples = len(imgList), numPools = 10, random = True)
+			if (len(vggList) == 0):
+				continue
 		if (len(imgList) == 0):
-			continue
-		if (len(vggList) == 0):
 			continue
 		if (feature == 'CF'):
 			X1.extend(imgList)
@@ -196,7 +200,7 @@ def readData(fileNames, trueVal = None, feature = 'A', poolType = 'max'):
 	if (feature == 'CF'):
 		X1 = np.array(X1, dtype = np.float16)
 		X2 = np.array(X2, dtype = np.float16)
-		print X1.shape, X2.shape, Y.shape
+		# print X1.shape, X2.shape, Y.shape
 		return X1, X2, Y
 	else:
 		X = np.array(X, dtype = np.float16)
