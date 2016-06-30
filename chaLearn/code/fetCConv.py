@@ -3,7 +3,7 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D, AveragePooling2D
 from keras.optimizers import SGD
 from keras.utils import np_utils, generic_utils
-from keras.layers.normalization import LRN2D
+import keras.layers.normalization
 
 import numpy as np
 from readVideo import *
@@ -40,7 +40,7 @@ numBatch = (len(vidNames)/numPerBatch)
 model_save_interval = 5
 num_epochs = 100
 
-model_file_name = 'tmpData/models/visualFetC_ConvLRN_48_96_256'
+model_file_name = 'tmpData/models/visualFetC_Conv_48_96_256'
 
 model = Sequential()
 # input: 100x100 images with 3 channels -> (3, 100, 100) tensors.
@@ -51,7 +51,7 @@ model.add(Activation('relu'))
 model.add(Convolution2D(48, 3, 3))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(LRN2D())
+# model.add(keras.layers.normalization.LRN2D())
 model.add(Dropout(0.5))
 
 model.add(Convolution2D(96, 3, 3, border_mode='valid'))
@@ -59,7 +59,7 @@ model.add(Activation('relu'))
 model.add(Convolution2D(96, 3, 3))
 model.add(Activation('relu'))
 model.add(AveragePooling2D(pool_size=(2, 2)))
-model.add(LRN2D())
+# model.add(keras.layers.normalization.LRN2D())
 model.add(Dropout(0.5))
 
 model.add(Flatten())

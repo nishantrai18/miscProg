@@ -55,8 +55,8 @@ trueVal = getTruthVal(fileName)
 for i in xrange(len(vidNames)):
 	vidNames[i] = vidNames[i].strip('.mp4')
 
-# choice = 'C'
-choice = 'AudioA'
+choice = 'C'
+# choice = 'AudioA'
 splitVal = 0.4
 origVidNames = []
 vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
@@ -64,7 +64,9 @@ vidNames = vidNames[:int(splitVal*len(vidNames))]
 
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_train.p', 'rb'))
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_train' + str(splitVal) +'.p', 'rb'))
-trainData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_train' + str(splitVal) +'.p', 'rb'))
+# trainData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_train' + str(splitVal) +'.p', 'rb'))
+# trainData = pickle.load(open('tmpData/predictions/predListvisualFetF_VGG_5_128_4096_avg_train' + str(splitVal) +'.p', 'rb'))
+trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_48_96_256_train' + str(splitVal) +'.p', 'rb'))
 X_train, Y_train = [], []
 
 for i in range(5):
@@ -86,7 +88,8 @@ Y_train = np.array(Y_train)
 
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_test.p', 'rb'))
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_test' + str(splitVal) +'.p', 'rb'))
-testData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_test' + str(splitVal) +'.p', 'rb'))
+# testData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_test' + str(splitVal) +'.p', 'rb'))
+testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_48_96_256_test' + str(splitVal) +'.p', 'rb'))
 X_test, Y_test = [], []
 
 for i in range(5):
@@ -113,15 +116,15 @@ clfList = []
 
 # modelChoice = 'NN'		# Poor performance
 # modelChoice = 'SVR'		# Comparable results to Lasso
-modelChoice = 'LS'			# Best performer, Ridge also performs well
+# modelChoice = 'LS'			# Best performer, Ridge also performs well
 # modelChoice = 'RF'
 # modelChoice = 'ADA'
 # modelChoice = 'WGT'		# Performs slightly worse than simple average
 # modelChoice = 'BAG'
-# modelChoice = 'Ensemble_LS'
+modelChoice = 'Ensemble_LS'
 # modelChoice = 'Ensemble_WGT'
 
-append = '_BAG'
+append = '_48_96'
 modelName, model_file_name = '', ''
 predFileName = ''
 
@@ -132,7 +135,7 @@ if (modelChoice == 'LS'):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
 		# clfList.append(linear_model.Ridge(alpha = 5))
-		clfList.append(linear_model.Lasso(alpha = 2e-4, positive = True, max_iter = 5000))
+		clfList.append(linear_model.Lasso(alpha = 2e-3, positive = True, max_iter = 5000))
 		# Parameter study for C
 		clfList[i].fit(X_train[i], Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
@@ -269,6 +272,8 @@ elif ('Ensemble' in modelChoice):
 	model_file_name = 'tmpData/models/mergeScore_Fet' + choice +  append + modelChoice.strip('Ensemble')
 	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + append + modelChoice.strip('Ensemble')
 	
+	print model_file_name
+
 	clfList = pickle.load(open(model_file_name + '.p', 'rb'))
 
 	# X = np.concatenate((X_train, X_test), axis = 1)

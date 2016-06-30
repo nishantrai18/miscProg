@@ -78,6 +78,540 @@ Accuracy predicting Conscientiousness: 0.887006103961
 Accuracy predicting Neuroticism: 0.88706105534
 Accuracy predicting Openness to Experience: 0.896658210674
 
+
+visualFetC, More complex Augmented Conv (64, 96, 256) (Higher variance in training set):
+
+Using Theano backend.
+Couldn't import dot_parser, loading of dot files will not be possible.
+Training started...
+5400/5400 [==============================] - 2790s - train loss: 0.1224     
+For epoch 0 ,Testing loss is 0.117898785983
+5400/5400 [==============================] - 2691s - train loss: 0.1190     
+For epoch 1 ,Testing loss is 0.11790320999
+5400/5400 [==============================] - 2688s - train loss: 0.1187     
+For epoch 2 ,Testing loss is 0.116234670303
+5400/5400 [==============================] - 2693s - train loss: 0.1181     
+For epoch 3 ,Testing loss is 0.11594391501
+5400/5400 [==============================] - 2691s - train loss: 0.1171     
+For epoch 4 ,Testing loss is 0.113816822858
+5400/5400 [==============================] - 2728s - train loss: 0.1164     
+For epoch 5 ,Testing loss is 0.113626273239
+5400/5400 [==============================] - 2711s - train loss: 0.1158     
+For epoch 6 ,Testing loss is 0.113422722707
+5400/5400 [==============================] - 2708s - train loss: 0.1152     
+For epoch 7 ,Testing loss is 0.112647888279
+5400/5400 [==============================] - 2693s - train loss: 0.1145     
+For epoch 8 ,Testing loss is 0.111781812986
+5400/5400 [==============================] - 2683s - train loss: 0.1140     
+For epoch 9 ,Testing loss is 0.111707495887
+5400/5400 [==============================] - 2684s - train loss: 0.1138     
+For epoch 10 ,Testing loss is 0.110799518583
+5400/5400 [==============================] - 2681s - train loss: 0.1130     
+For epoch 11 ,Testing loss is 0.111397127486
+5400/5400 [==============================] - 2689s - train loss: 0.1131     
+For epoch 12 ,Testing loss is 0.110789376649
+5400/5400 [==============================] - 2696s - train loss: 0.1127     
+For epoch 13 ,Testing loss is 0.110998491619
+5400/5400 [==============================] - 2694s - train loss: 0.1122     
+For epoch 14 ,Testing loss is 0.109821244581
+5400/5400 [==============================] - 2689s - train loss: 0.1119     
+For epoch 15 ,Testing loss is 0.110897885348
+5400/5400 [==============================] - 2835s - train loss: 0.1116     
+For epoch 16 ,Testing loss is 0.111786227319
+5400/5400 [==============================] - 3475s - train loss: 0.1113     
+For epoch 17 ,Testing loss is 0.110161433865
+5400/5400 [==============================] - 3342s - train loss: 0.1107     
+For epoch 18 ,Testing loss is 0.110434549441
+5400/5400 [==============================] - 3331s - train loss: 0.1106     
+For epoch 19 ,Testing loss is 0.110580001528
+5400/5400 [==============================] - 3229s - train loss: 0.1103     
+For epoch 20 ,Testing loss is 0.11117408805
+5400/5400 [==============================] - 2847s - train loss: 0.1101     
+For epoch 21 ,Testing loss is 0.108589272631
+5400/5400 [==============================] - 2738s - train loss: 0.1097     
+For epoch 22 ,Testing loss is 0.109343982823
+5400/5400 [==============================] - 2744s - train loss: 0.1093     
+For epoch 23 ,Testing loss is 0.109686990803
+5400/5400 [==============================] - 2749s - train loss: 0.1094     
+For epoch 24 ,Testing loss is 0.109474609143
+5400/5400 [==============================] - 2752s - train loss: 0.1092     
+For epoch 25 ,Testing loss is 0.108398811496
+5400/5400 [==============================] - 2754s - train loss: 0.1087     
+For epoch 26 ,Testing loss is 0.10895241123
+5400/5400 [==============================] - 2756s - train loss: 0.1086     
+For epoch 27 ,Testing loss is 0.10856692376
+5400/5400 [==============================] - 2763s - train loss: 0.1082     
+For epoch 28 ,Testing loss is 0.109102266118
+5400/5400 [==============================] - 2769s - train loss: 0.1079     
+For epoch 29 ,Testing loss is 0.108585436146
+5400/5400 [==============================] - 2773s - train loss: 0.1080     
+For epoch 30 ,Testing loss is 0.108776357116
+5400/5400 [==============================] - 2782s - train loss: 0.1075     
+For epoch 31 ,Testing loss is 0.108034364102
+5400/5400 [==============================] - 2781s - train loss: 0.1076     
+For epoch 32 ,Testing loss is 0.108328594516
+5400/5400 [==============================] - 2783s - train loss: 0.1071     
+For epoch 33 ,Testing loss is 0.107749133494
+5400/5400 [==============================] - 2791s - train loss: 0.1071     
+For epoch 34 ,Testing loss is 0.107058927699
+5400/5400 [==============================] - 2718s - train loss: 0.1065     
+For epoch 35 ,Testing loss is 0.11363694958
+5400/5400 [==============================] - 2711s - train loss: 0.1070     
+For epoch 36 ,Testing loss is 0.109124288531
+5400/5400 [==============================] - 2711s - train loss: 0.1066     
+For epoch 37 ,Testing loss is 0.108568583573
+5400/5400 [==============================] - 2714s - train loss: 0.1062     
+For epoch 38 ,Testing loss is 0.10950210505
+5400/5400 [==============================] - 2728s - train loss: 0.1060     
+For epoch 39 ,Testing loss is 0.107431008224
+5400/5400 [==============================] - 2723s - train loss: 0.1059     
+For epoch 40 ,Testing loss is 0.108034207061
+5400/5400 [==============================] - 2711s - train loss: 0.1056     
+For epoch 41 ,Testing loss is 0.107535220005
+5400/5400 [==============================] - 2707s - train loss: 0.1053     
+For epoch 42 ,Testing loss is 0.108361306395
+5400/5400 [==============================] - 2709s - train loss: 0.1053     
+For epoch 43 ,Testing loss is 0.108199603024
+5400/5400 [==============================] - 2711s - train loss: 0.1051     
+For epoch 44 ,Testing loss is 0.107383347009
+5400/5400 [==============================] - 2706s - train loss: 0.1049     
+For epoch 45 ,Testing loss is 0.107603741788
+5400/5400 [==============================] - 2712s - train loss: 0.1047     
+For epoch 46 ,Testing loss is 0.106968992235
+5400/5400 [==============================] - 2709s - train loss: 0.1044     
+For epoch 47 ,Testing loss is 0.107823074032
+5400/5400 [==============================] - 2709s - train loss: 0.1045     
+For epoch 48 ,Testing loss is 0.106765091873
+5400/5400 [==============================] - 2706s - train loss: 0.1043     
+For epoch 49 ,Testing loss is 0.106621684036
+5400/5400 [==============================] - 2710s - train loss: 0.1037     
+For epoch 50 ,Testing loss is 0.108164840666
+5400/5400 [==============================] - 2707s - train loss: 0.1039     
+For epoch 51 ,Testing loss is 0.107327638851
+5400/5400 [==============================] - 2714s - train loss: 0.1037     
+For epoch 52 ,Testing loss is 0.107553274428
+5400/5400 [==============================] - 2709s - train loss: 0.1034     
+For epoch 53 ,Testing loss is 0.106325285059
+5400/5400 [==============================] - 2706s - train loss: 0.1034     
+For epoch 54 ,Testing loss is 0.106593060757
+5400/5400 [==============================] - 2706s - train loss: 0.1030     
+For epoch 55 ,Testing loss is 0.10643947233
+5400/5400 [==============================] - 2708s - train loss: 0.1031     
+For epoch 56 ,Testing loss is 0.106800413517
+5400/5400 [==============================] - 2710s - train loss: 0.1027     
+For epoch 57 ,Testing loss is 0.109139899699
+5400/5400 [==============================] - 2710s - train loss: 0.1029     
+For epoch 58 ,Testing loss is 0.107470158478
+5400/5400 [==============================] - 2702s - train loss: 0.1025     
+For epoch 59 ,Testing loss is 0.106048967741
+5400/5400 [==============================] - 2708s - train loss: 0.1024     
+For epoch 60 ,Testing loss is 0.107387965287
+5400/5400 [==============================] - 2711s - train loss: 0.1021     
+For epoch 61 ,Testing loss is 0.106600401381
+5400/5400 [==============================] - 2712s - train loss: 0.1018     
+For epoch 62 ,Testing loss is 0.105580573722
+5400/5400 [==============================] - 2706s - train loss: 0.1023     
+For epoch 63 ,Testing loss is 0.106488166385
+5400/5400 [==============================] - 2706s - train loss: 0.1018     
+For epoch 64 ,Testing loss is 0.107117409947
+5400/5400 [==============================] - 2708s - train loss: 0.1018     
+For epoch 65 ,Testing loss is 0.106370850559
+5400/5400 [==============================] - 2701s - train loss: 0.1020     
+For epoch 66 ,Testing loss is 0.10677525849
+5400/5400 [==============================] - 2709s - train loss: 0.1015     
+For epoch 67 ,Testing loss is 0.106060370448
+5400/5400 [==============================] - 2705s - train loss: 0.1013     
+For epoch 68 ,Testing loss is 0.106484539375
+5400/5400 [==============================] - 2707s - train loss: 0.1015     
+For epoch 69 ,Testing loss is 0.106039720568
+5400/5400 [==============================] - 2703s - train loss: 0.1015     
+For epoch 70 ,Testing loss is 0.105919322447
+5400/5400 [==============================] - 2710s - train loss: 0.1013     
+For epoch 71 ,Testing loss is 0.106730737762
+5400/5400 [==============================] - 2710s - train loss: 0.1011     
+For epoch 72 ,Testing loss is 0.107848771892
+5400/5400 [==============================] - 2711s - train loss: 0.1013     
+For epoch 73 ,Testing loss is 0.106649010658
+5400/5400 [==============================] - 2706s - train loss: 0.1008     
+For epoch 74 ,Testing loss is 0.106290826736
+5400/5400 [==============================] - 2713s - train loss: 0.1006     
+For epoch 75 ,Testing loss is 0.106018132723
+5400/5400 [==============================] - 2705s - train loss: 0.1006     
+For epoch 76 ,Testing loss is 0.106231506677
+5400/5400 [==============================] - 2704s - train loss: 0.1009     
+For epoch 77 ,Testing loss is 0.105623383979
+5400/5400 [==============================] - 2705s - train loss: 0.1002     
+For epoch 78 ,Testing loss is 0.106444702325
+5400/5400 [==============================] - 2705s - train loss: 0.1003     
+For epoch 79 ,Testing loss is 0.10600131629
+5400/5400 [==============================] - 2708s - train loss: 0.1000     
+For epoch 80 ,Testing loss is 0.105825430675
+5400/5400 [==============================] - 2701s - train loss: 0.0997     
+For epoch 81 ,Testing loss is 0.106894235446
+5400/5400 [==============================] - 2704s - train loss: 0.0997     
+For epoch 82 ,Testing loss is 0.105914399211
+5400/5400 [==============================] - 2702s - train loss: 0.0997     
+For epoch 83 ,Testing loss is 0.105994949766
+5400/5400 [==============================] - 2704s - train loss: 0.0996     
+For epoch 84 ,Testing loss is 0.106272586978
+5400/5400 [==============================] - 2701s - train loss: 0.0997     
+For epoch 85 ,Testing loss is 0.106661161859
+5400/5400 [==============================] - 2698s - train loss: 0.0994     
+For epoch 86 ,Testing loss is 0.106236655751
+5400/5400 [==============================] - 2707s - train loss: 0.0995     
+For epoch 87 ,Testing loss is 0.106400235411
+5400/5400 [==============================] - 2703s - train loss: 0.0995     
+For epoch 88 ,Testing loss is 0.105359731349
+5400/5400 [==============================] - 2710s - train loss: 0.0993     
+For epoch 89 ,Testing loss is 0.106582490287
+5400/5400 [==============================] - 2704s - train loss: 0.0992     
+For epoch 90 ,Testing loss is 0.105694768336
+5400/5400 [==============================] - 2707s - train loss: 0.0990     
+For epoch 91 ,Testing loss is 0.106411102723
+5400/5400 [==============================] - 2705s - train loss: 0.0989     
+For epoch 92 ,Testing loss is 0.106367677183
+5400/5400 [==============================] - 2707s - train loss: 0.0990     
+For epoch 93 ,Testing loss is 0.105531118484
+5400/5400 [==============================] - 2708s - train loss: 0.0991     
+For epoch 94 ,Testing loss is 0.10664658571
+5400/5400 [==============================] - 2707s - train loss: 0.0985     
+For epoch 95 ,Testing loss is 0.10606312563
+5400/5400 [==============================] - 2717s - train loss: 0.0983     
+For epoch 96 ,Testing loss is 0.105257343024
+5400/5400 [==============================] - 2761s - train loss: 0.0986     
+For epoch 97 ,Testing loss is 0.10557312441
+5400/5400 [==============================] - 2712s - train loss: 0.0985     
+For epoch 98 ,Testing loss is 0.106202254321
+5400/5400 [==============================] - 2702s - train loss: 0.0986     
+For epoch 99 ,Testing loss is 0.106115000907
+
+
+
+vggFet, MLP (128, 4096) (numSamples = 20, numPool = 10, avgPooling performed):
+
+Using Theano backend.
+Couldn't import dot_parser, loading of dot files will not be possible.
+Training started...
+5400/5400 [==============================] - 347s - train loss: 0.1891     
+For epoch 0 ,Testing loss is 0.11993908677
+5400/5400 [==============================] - 300s - train loss: 0.1190     
+For epoch 1 ,Testing loss is 0.116119169828
+5400/5400 [==============================] - 264s - train loss: 0.1173     
+For epoch 2 ,Testing loss is 0.114813323067
+5400/5400 [==============================] - 251s - train loss: 0.1168     
+For epoch 3 ,Testing loss is 0.113702253933
+5400/5400 [==============================] - 247s - train loss: 0.1165     
+For epoch 4 ,Testing loss is 0.113906878241
+5400/5400 [==============================] - 258s - train loss: 0.1162     
+For epoch 5 ,Testing loss is 0.112874853293
+5400/5400 [==============================] - 302s - train loss: 0.1164     
+For epoch 6 ,Testing loss is 0.113057847983
+5400/5400 [==============================] - 257s - train loss: 0.1157     
+For epoch 7 ,Testing loss is 0.113951400087
+5400/5400 [==============================] - 269s - train loss: 0.1158     
+For epoch 8 ,Testing loss is 0.113081777101
+5400/5400 [==============================] - 272s - train loss: 0.1155     
+For epoch 9 ,Testing loss is 0.113301928983
+5400/5400 [==============================] - 258s - train loss: 0.1153     
+For epoch 10 ,Testing loss is 0.112767454371
+5400/5400 [==============================] - 292s - train loss: 0.1152     
+For epoch 11 ,Testing loss is 0.112935492059
+5400/5400 [==============================] - 266s - train loss: 0.1151     
+For epoch 12 ,Testing loss is 0.112197747134
+5400/5400 [==============================] - 280s - train loss: 0.1147     
+For epoch 13 ,Testing loss is 0.112912102779
+5400/5400 [==============================] - 262s - train loss: 0.1150     
+For epoch 14 ,Testing loss is 0.113220891033
+5400/5400 [==============================] - 253s - train loss: 0.1146     
+For epoch 15 ,Testing loss is 0.112591775329
+5400/5400 [==============================] - 257s - train loss: 0.1147     
+For epoch 16 ,Testing loss is 0.112402926285
+5400/5400 [==============================] - 261s - train loss: 0.1147     
+For epoch 17 ,Testing loss is 0.113350469323
+5400/5400 [==============================] - 257s - train loss: 0.1144     
+For epoch 18 ,Testing loss is 0.112903906071
+5400/5400 [==============================] - 252s - train loss: 0.1145     
+For epoch 19 ,Testing loss is 0.111990983144
+5400/5400 [==============================] - 254s - train loss: 0.1142     
+For epoch 20 ,Testing loss is 0.11287815476
+5400/5400 [==============================] - 255s - train loss: 0.1143     
+For epoch 21 ,Testing loss is 0.112040246656
+5400/5400 [==============================] - 255s - train loss: 0.1140     
+For epoch 22 ,Testing loss is 0.111932240801
+5400/5400 [==============================] - 252s - train loss: 0.1140     
+For epoch 23 ,Testing loss is 0.11237614953
+5400/5400 [==============================] - 254s - train loss: 0.1140     
+For epoch 24 ,Testing loss is 0.11166808042
+5400/5400 [==============================] - 256s - train loss: 0.1139     
+For epoch 25 ,Testing loss is 0.1118820286
+5400/5400 [==============================] - 252s - train loss: 0.1137     
+For epoch 26 ,Testing loss is 0.111575317591
+5400/5400 [==============================] - 281s - train loss: 0.1137     
+For epoch 27 ,Testing loss is 0.11246568229
+5400/5400 [==============================] - 251s - train loss: 0.1134     
+For epoch 28 ,Testing loss is 0.112332241818
+5400/5400 [==============================] - 252s - train loss: 0.1136     
+For epoch 29 ,Testing loss is 0.111202648121
+5400/5400 [==============================] - 255s - train loss: 0.1134     
+For epoch 30 ,Testing loss is 0.112067996162
+5400/5400 [==============================] - 254s - train loss: 0.1132     
+For epoch 31 ,Testing loss is 0.111128588024
+5400/5400 [==============================] - 257s - train loss: 0.1132     
+For epoch 32 ,Testing loss is 0.111276483187
+5400/5400 [==============================] - 253s - train loss: 0.1131     
+For epoch 33 ,Testing loss is 0.111818412925
+5400/5400 [==============================] - 252s - train loss: 0.1133     
+For epoch 34 ,Testing loss is 0.111651624963
+5400/5400 [==============================] - 249s - train loss: 0.1129     
+For epoch 35 ,Testing loss is 0.112499196095
+5400/5400 [==============================] - 250s - train loss: 0.1132     
+For epoch 36 ,Testing loss is 0.111038276357
+5400/5400 [==============================] - 255s - train loss: 0.1128     
+For epoch 37 ,Testing loss is 0.112372512878
+5400/5400 [==============================] - 255s - train loss: 0.1128     
+For epoch 38 ,Testing loss is 0.112350764732
+5400/5400 [==============================] - 251s - train loss: 0.1129     
+For epoch 39 ,Testing loss is 0.112232902268
+5400/5400 [==============================] - 250s - train loss: 0.1126     
+For epoch 40 ,Testing loss is 0.111142004583
+5400/5400 [==============================] - 268s - train loss: 0.1127     
+For epoch 41 ,Testing loss is 0.112993152655
+5400/5400 [==============================] - 255s - train loss: 0.1126     
+For epoch 42 ,Testing loss is 0.112013299088
+5400/5400 [==============================] - 257s - train loss: 0.1125     
+For epoch 43 ,Testing loss is 0.111168439287
+5400/5400 [==============================] - 248s - train loss: 0.1124     
+For epoch 44 ,Testing loss is 0.111352363438
+5400/5400 [==============================] - 251s - train loss: 0.1127     
+For epoch 45 ,Testing loss is 0.110873256575
+5400/5400 [==============================] - 251s - train loss: 0.1123     
+For epoch 46 ,Testing loss is 0.112158615487
+5400/5400 [==============================] - 249s - train loss: 0.1124     
+For epoch 47 ,Testing loss is 0.110621231994
+5400/5400 [==============================] - 258s - train loss: 0.1122     
+For epoch 48 ,Testing loss is 0.111827988333
+5400/5400 [==============================] - 254s - train loss: 0.1121     
+For epoch 49 ,Testing loss is 0.112363227604
+Training started...
+5400/5400 [==============================] - 448s - train loss: 0.1121     
+For epoch 50 ,Testing loss is 0.111628226369
+5400/5400 [==============================] - 401s - train loss: 0.1123     
+For epoch 51 ,Testing loss is 0.112999349756
+5400/5400 [==============================] - 375s - train loss: 0.1121     
+For epoch 52 ,Testing loss is 0.11307131927
+5400/5400 [==============================] - 366s - train loss: 0.1120     
+For epoch 53 ,Testing loss is 0.111515968417
+5400/5400 [==============================] - 365s - train loss: 0.1122     
+For epoch 54 ,Testing loss is 0.111471607976
+5400/5400 [==============================] - 358s - train loss: 0.1120     
+For epoch 55 ,Testing loss is 0.111079840002
+5400/5400 [==============================] - 363s - train loss: 0.1119     
+For epoch 56 ,Testing loss is 0.110826228669
+5400/5400 [==============================] - 368s - train loss: 0.1119     
+For epoch 57 ,Testing loss is 0.111567066237
+5400/5400 [==============================] - 375s - train loss: 0.1118     
+For epoch 58 ,Testing loss is 0.111543498247
+5400/5400 [==============================] - 370s - train loss: 0.1119     
+For epoch 59 ,Testing loss is 0.111662974327
+5400/5400 [==============================] - 385s - train loss: 0.1117     
+For epoch 60 ,Testing loss is 0.110816464194
+5400/5400 [==============================] - 359s - train loss: 0.1117     
+For epoch 61 ,Testing loss is 0.111370978331
+5400/5400 [==============================] - 362s - train loss: 0.1115     
+For epoch 62 ,Testing loss is 0.112127540333
+5400/5400 [==============================] - 369s - train loss: 0.1117     
+For epoch 63 ,Testing loss is 0.11046535889
+5400/5400 [==============================] - 386s - train loss: 0.1114     
+For epoch 64 ,Testing loss is 0.110898342296
+5400/5400 [==============================] - 364s - train loss: 0.1115     
+For epoch 65 ,Testing loss is 0.112850709702
+5400/5400 [==============================] - 385s - train loss: 0.1115     
+For epoch 66 ,Testing loss is 0.112591778818
+5400/5400 [==============================] - 430s - train loss: 0.1115     
+For epoch 67 ,Testing loss is 0.113151643992
+5400/5400 [==============================] - 386s - train loss: 0.1115     
+For epoch 68 ,Testing loss is 0.110585508826
+5400/5400 [==============================] - 353s - train loss: 0.1114     
+For epoch 69 ,Testing loss is 0.111239022829
+5400/5400 [==============================] - 373s - train loss: 0.1114
+
+vggFet, MLP (5, 4096) (numSamples = 20, numPool = 10, avgPooling performed):
+
+Using Theano backend.
+Couldn't import dot_parser, loading of dot files will not be possible.
+Training started...
+5400/5400 [==============================] - 393s - train loss: 0.1967      
+For epoch 0 ,Testing loss is 0.209790691158
+5400/5400 [==============================] - 419s - train loss: 0.1818     
+For epoch 1 ,Testing loss is 0.1954755939
+
+vggFetC_Concat, MLP (5, 128, 256_128) (numSamples = 20, numPool = 10, avgPooling performed, no randomness in fetF):
+
+Training started...
+5400/5400 [==============================] - 524s - train loss: 0.1186     
+For epoch 0 ,Testing loss is 0.114137284055
+5400/5400 [==============================] - 521s - train loss: 0.1153     
+For epoch 1 ,Testing loss is 0.113882564227
+5400/5400 [==============================] - 520s - train loss: 0.1137     
+For epoch 2 ,Testing loss is 0.113603800773
+5400/5400 [==============================] - 536s - train loss: 0.1119     
+For epoch 3 ,Testing loss is 0.112315972582
+5400/5400 [==============================] - 526s - train loss: 0.1098     
+For epoch 4 ,Testing loss is 0.115843351597
+5400/5400 [==============================] - 514s - train loss: 0.1076     
+For epoch 5 ,Testing loss is 0.129761820085
+5400/5400 [==============================] - 542s - train loss: 0.1058     
+For epoch 6 ,Testing loss is 0.129983336433
+5400/5400 [==============================] - 541s - train loss: 0.1043     
+For epoch 7 ,Testing loss is 0.139201329621
+
+
+vggFetC_Concat, MLP (5, 32, 256_128) (numSamples = 20, numPool = 10, avgPooling performed, randomness in fetF):
+
+tmpData/models/visualFetF_VGGExtSamples_5_128_4096_avg
+vggFetF Model loading complete!
+tmpData/models/visualFetC_Conv_Augmented_32_64_256
+convFetC Model loading complete!
+Training started...
+5400/5400 [==============================] - 528s - train loss: 0.1228     
+For epoch 0 ,Testing loss is 0.115611158577
+5400/5400 [==============================] - 636s - train loss: 0.1176     
+For epoch 1 ,Testing loss is 0.115584427051
+5400/5400 [==============================] - 546s - train loss: 0.1165     
+For epoch 2 ,Testing loss is 0.115012739758
+5400/5400 [==============================] - 539s - train loss: 0.1155     
+For epoch 3 ,Testing loss is 0.115465193915
+5400/5400 [==============================] - 494s - train loss: 0.1145     
+For epoch 4 ,Testing loss is 0.114738313343
+5400/5400 [==============================] - 489s - train loss: 0.1133     
+For epoch 5 ,Testing loss is 0.115787152382
+5400/5400 [==============================] - 487s - train loss: 0.1127     
+For epoch 6 ,Testing loss is 0.115736093794
+5400/5400 [==============================] - 495s - train loss: 0.1117     
+For epoch 7 ,Testing loss is 0.117662337943
+5400/5400 [==============================] - 504s - train loss: 0.1111     
+For epoch 8 ,Testing loss is 0.115246597448
+5400/5400 [==============================] - 488s - train loss: 0.1101     
+For epoch 9 ,Testing loss is 0.119224600229
+5400/5400 [==============================] - 492s - train loss: 0.1092     
+For epoch 10 ,Testing loss is 0.119686963682
+5400/5400 [==============================] - 487s - train loss: 0.1085     
+For epoch 11 ,Testing loss is 0.118712129041
+5400/5400 [==============================] - 495s - train loss: 0.1078     
+For epoch 12 ,Testing loss is 0.125577324489
+5400/5400 [==============================] - 494s - train loss: 0.1069     
+For epoch 13 ,Testing loss is 0.129563408569
+
+VGG_avg pool, FetC Concat ((256_128)->5):
+
+tmpData/models/visualFetF_VGGExtSamples_5_128_4096_avg
+vggFetF Model loading complete!
+tmpData/models/visualFetC_Conv_Augmented_32_64_256
+convFetC Model loading complete!
+Training started...
+5400/5400 [==============================] - 532s - train loss: 0.1588     
+For epoch 0 ,Testing loss is 0.12015041055
+5400/5400 [==============================] - 518s - train loss: 0.1338     
+For epoch 1 ,Testing loss is 0.115491199264
+5400/5400 [==============================] - 508s - train loss: 0.1290     
+For epoch 2 ,Testing loss is 0.115288575012
+5400/5400 [==============================] - 506s - train loss: 0.1256     
+For epoch 3 ,Testing loss is 0.114921945442
+5400/5400 [==============================] - 505s - train loss: 0.1224     
+For epoch 4 ,Testing loss is 0.114524801021
+5400/5400 [==============================] - 500s - train loss: 0.1204     
+For epoch 5 ,Testing loss is 0.114339840436
+5400/5400 [==============================] - 680s - train loss: 0.1187     
+For epoch 6 ,Testing loss is 0.113946974639
+5400/5400 [==============================] - 538s - train loss: 0.1175     
+For epoch 7 ,Testing loss is 0.113843312039
+5400/5400 [==============================] - 571s - train loss: 0.1164      
+For epoch 8 ,Testing loss is 0.113595973565
+5400/5400 [==============================] - 534s - train loss: 0.1156     
+For epoch 9 ,Testing loss is 0.113434868411
+5400/5400 [==============================] - 520s - train loss: 0.1151     
+For epoch 10 ,Testing loss is 0.113197859229
+5400/5400 [==============================] - 539s - train loss: 0.1146     
+For epoch 11 ,Testing loss is 0.113071200662
+5400/5400 [==============================] - 519s - train loss: 0.1143     
+For epoch 12 ,Testing loss is 0.112949887087
+5400/5400 [==============================] - 531s - train loss: 0.1138     
+For epoch 13 ,Testing loss is 0.112740353281
+5400/5400 [==============================] - 527s - train loss: 0.1136     
+For epoch 14 ,Testing loss is 0.11258159871
+5400/5400 [==============================] - 534s - train loss: 0.1136     
+For epoch 15 ,Testing loss is 0.112506332511
+5400/5400 [==============================] - 530s - train loss: 0.1137     
+For epoch 16 ,Testing loss is 0.112370827625
+5400/5400 [==============================] - 523s - train loss: 0.1132     
+For epoch 17 ,Testing loss is 0.112326846661
+5400/5400 [==============================] - 523s - train loss: 0.1131     
+For epoch 18 ,Testing loss is 0.112172208684
+5400/5400 [==============================] - 509s - train loss: 0.1131     
+For epoch 19 ,Testing loss is 0.112011824446
+5400/5400 [==============================] - 525s - train loss: 0.1132     
+For epoch 20 ,Testing loss is 0.112027228409
+5400/5400 [==============================] - 516s - train loss: 0.1130     
+For epoch 21 ,Testing loss is 0.111936114819
+5400/5400 [==============================] - 527s - train loss: 0.1129     
+For epoch 22 ,Testing loss is 0.11177150986
+5400/5400 [==============================] - 531s - train loss: 0.1129     
+For epoch 23 ,Testing loss is 0.11167807865
+5400/5400 [==============================] - 538s - train loss: 0.1127     
+For epoch 24 ,Testing loss is 0.111600065533
+5400/5400 [==============================] - 534s - train loss: 0.1127     
+For epoch 25 ,Testing loss is 0.111648755578
+5400/5400 [==============================] - 519s - train loss: 0.1129     
+For epoch 26 ,Testing loss is 0.111582511555
+5400/5400 [==============================] - 523s - train loss: 0.1125     
+For epoch 27 ,Testing loss is 0.111506784059
+5400/5400 [==============================] - 538s - train loss: 0.1128     
+For epoch 28 ,Testing loss is 0.111419576949
+5400/5400 [==============================] - 525s - train loss: 0.1126     
+For epoch 29 ,Testing loss is 0.111312452731
+5400/5400 [==============================] - 612s - train loss: 0.1126     
+For epoch 30 ,Testing loss is 0.111277917414
+5400/5400 [==============================] - 666s - train loss: 0.1125     
+For epoch 31 ,Testing loss is 0.111147285919
+5400/5400 [==============================] - 516s - train loss: 0.1126     
+For epoch 32 ,Testing loss is 0.11122087017
+5400/5400 [==============================] - 461s - train loss: 0.1125     
+For epoch 33 ,Testing loss is 0.111079260984
+5400/5400 [==============================] - 465s - train loss: 0.1125     
+For epoch 34 ,Testing loss is 0.111137567539
+5400/5400 [==============================] - 473s - train loss: 0.1124     
+For epoch 35 ,Testing loss is 0.1110606358
+5400/5400 [==============================] - 469s - train loss: 0.1124     
+For epoch 36 ,Testing loss is 0.110926721224
+5400/5400 [==============================] - 477s - train loss: 0.1124     
+For epoch 37 ,Testing loss is 0.111124803602
+5400/5400 [==============================] - 474s - train loss: 0.1126     
+For epoch 38 ,Testing loss is 0.110820102462
+5400/5400 [==============================] - 470s - train loss: 0.1124     
+For epoch 39 ,Testing loss is 0.110865758872
+5400/5400 [==============================] - 469s - train loss: 0.1125     
+For epoch 40 ,Testing loss is 0.110966183432
+5400/5400 [==============================] - 470s - train loss: 0.1123     
+For epoch 41 ,Testing loss is 0.110776446018
+5400/5400 [==============================] - 467s - train loss: 0.1123     
+For epoch 42 ,Testing loss is 0.110695676898
+5400/5400 [==============================] - 465s - train loss: 0.1125     
+For epoch 43 ,Testing loss is 0.110638526154
+5400/5400 [==============================] - 468s - train loss: 0.1122     
+For epoch 44 ,Testing loss is 0.110749659292
+5400/5400 [==============================] - 477s - train loss: 0.1121     
+For epoch 45 ,Testing loss is 0.110546713983
+5400/5400 [==============================] - 484s - train loss: 0.1122     
+For epoch 46 ,Testing loss is 0.110613675904
+5400/5400 [==============================] - 471s - train loss: 0.1122     
+For epoch 47 ,Testing loss is 0.110509593779
+5400/5400 [==============================] - 474s - train loss: 0.1123     
+For epoch 48 ,Testing loss is 0.110572723725
+5400/5400 [==============================] - 473s - train loss: 0.1121     
+For epoch 49 ,Testing loss is 0.110533250959
+
+
+
 Merging Scores with SVR, C = 0.01:
 Sorted scores of size 15
 
@@ -1160,6 +1694,127 @@ Accuracy predicting Conscientiousness: 0.88167592759
 Accuracy predicting Neuroticism: 0.889393211813
 Accuracy predicting Openness to Experience: 0.895827863935
 
+
+VisualFetC, 48_96, RF:
+
+(5, 5400, 15) (5400, 5)
+(5, 599, 15) (599, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.56421361]
+ [ 0.56421361  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.         0.3972771]
+ [ 0.3972771  1.       ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.47827343]
+ [ 0.47827343  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.         0.5107654]
+ [ 0.5107654  1.       ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.52124079]
+ [ 0.52124079  1.        ]]
+[ 0.79439252  0.82317682  0.79435128  0.81344697  0.83434343]
+[ 0.14953271  0.24575425  0.25419241  0.18465909  0.22323232]
+[ 0.48410808  0.55199616  0.52838915  0.52541848  0.57301208]
+
+Average accuracy of 0.894368364672: 
+Accuracy predicting Extraversion: 0.89613351345
+Accuracy predicting Agreeableness: 0.895232443642
+Accuracy predicting Conscientiousness: 0.887707112065
+Accuracy predicting Neuroticism: 0.892503306113
+Accuracy predicting Openness to Experience: 0.90026544809
+
+VisualFetC, 48_96, LS:
+
+(5, 5400, 15) (5400, 5)
+(5, 599, 15) (599, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[ 0.          0.21790723  0.          0.09162172  0.          0.          0.
+  0.          0.          0.          0.          0.07793613  0.44539992
+  0.33539962  0.        ]
+[[ 1.          0.57867083]
+ [ 0.57867083  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[ 0.39968123  0.20425695  0.          0.00040697  0.          0.          0.
+  0.          0.          0.          0.          0.08205759  0.21771772
+  0.03011116  0.        ]
+[[ 1.          0.41461994]
+ [ 0.41461994  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[ 0.09410192  0.          0.          0.          0.33661928  0.          0.
+  0.          0.          0.          0.          0.17319739  0.47772289
+  0.0568396   0.03042903]
+[[ 1.          0.53056468]
+ [ 0.53056468  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[ 0.09944546  0.11764059  0.          0.37751306  0.          0.          0.
+  0.          0.          0.          0.01463135  0.          0.44164246
+  0.10523734  0.        ]
+[[ 1.          0.54212517]
+ [ 0.54212517  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[ 0.          0.21196638  0.          0.39976912  0.          0.          0.
+  0.          0.          0.          0.          0.07193066  0.14592672
+  0.24494969  0.        ]
+[[ 1.          0.53290603]
+ [ 0.53290603  1.        ]]
+[ 0.72031828  0.68952159  0.7458975   0.74216435  0.77355095]
+[ 0.15326221  0.28619934  0.22714283  0.1762453   0.26337866]
+[ 0.48099007  0.55142621  0.52495979  0.52349854  0.56932026]
+
+Average accuracy of 0.898296230252: 
+Accuracy predicting Extraversion: 0.897807835157
+Accuracy predicting Agreeableness: 0.898826572968
+Accuracy predicting Conscientiousness: 0.894736988048
+Accuracy predicting Neuroticism: 0.896695875937
+Accuracy predicting Openness to Experience: 0.903413879151
+
+VisualFetC, 48_96, SVR:
+
+(5, 5400, 15) (5400, 5)
+(5, 599, 15) (599, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.58164024]
+ [ 0.58164024  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.42134957]
+ [ 0.42134957  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.53484774]
+ [ 0.53484774  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.54460654]
+ [ 0.54460654  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.53359689]
+ [ 0.53359689  1.        ]]
+[ 0.76419973  0.80183769  0.80727933  0.80017366  0.82648811]
+[ 0.06181403  0.1598679   0.15680455  0.09773195  0.16750435]
+[ 0.48246555  0.55724757  0.52885379  0.52772202  0.57079449]
+
+Average accuracy of 0.899299873458: 
+Accuracy predicting Extraversion: 0.898937368589
+Accuracy predicting Agreeableness: 0.899735968337
+Accuracy predicting Conscientiousness: 0.89614011252
+Accuracy predicting Neuroticism: 0.89811189807
+Accuracy predicting Openness to Experience: 0.903574019774
+
 Bagging Regressor (Decision Trees, num = 70, maxDepth = 6):
 
 62176
@@ -1639,4 +2294,563 @@ Accuracy predicting Conscientiousness: 0.877097377055
 Accuracy predicting Neuroticism: 0.879165735068
 Accuracy predicting Openness to Experience: 0.888268417437
 
+Audio FetA, Bagging Regressor (num_estimator = 50):
+Merged with simple averaging
 
+(5, 2400, 15) (2400, 5)
+(5, 3599, 15) (3599, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.91359369]
+ [ 0.91359369  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.90507239]
+ [ 0.90507239  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.91854469]
+ [ 0.91854469  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.91599719]
+ [ 0.91599719  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[[ 1.          0.91783949]
+ [ 0.91783949  1.        ]]
+[ 0.80118917  0.82567424  0.87843018  0.88445089  0.90537476]
+[ 0.06909709  0.15223592  0.1302682   0.07642344  0.1311379 ]
+[ 0.47731921  0.54635463  0.52176936  0.51922853  0.56337824]
+
+Average accuracy of 0.955981224949: 
+Accuracy predicting Extraversion: 0.955935133382
+Accuracy predicting Agreeableness: 0.956723501268
+Accuracy predicting Conscientiousness: 0.953485541242
+Accuracy predicting Neuroticism: 0.955860640523
+Accuracy predicting Openness to Experience: 0.957901308329
+
+Audio FetA, Bagging Regressor (num_estimator = 50):
+Merged with Lasso (alpha = 0.0002)
+
+(5, 2400, 15) (2400, 5)
+(5, 3599, 15) (3599, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[ 0.          0.          0.          0.          0.02578706  0.          0.
+  0.          0.          0.          0.60027699  0.24873437  0.23338692
+  0.00601152  0.10493485]
+[[ 1.         0.9121332]
+ [ 0.9121332  1.       ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[ 0.12783756  0.20921074  0.22092773  0.44154299  0.          0.          0.
+  0.          0.          0.          0.27251057  0.          0.          0.
+  0.        ]
+[[ 1.          0.90649489]
+ [ 0.90649489  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[ 0.          0.07856824  0.31125048  0.          0.          0.31911321
+  0.          0.          0.          0.52182501  0.          0.02938626
+  0.          0.          0.        ]
+[[ 1.          0.91919367]
+ [ 0.91919367  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[ 0.          0.          0.          0.10603845  0.55625926  0.04703628
+  0.          0.          0.1119159   0.16614019  0.          0.20938222
+  0.03540259  0.          0.        ]
+[[ 1.          0.91610557]
+ [ 0.91610557  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[ 0.25645531  0.22544123  0.07703351  0.43426058  0.21401951  0.          0.
+  0.          0.          0.          0.          0.          0.          0.
+  0.        ]
+[[ 1.          0.91809543]
+ [ 0.91809543  1.        ]]
+[ 0.8728607   0.89694487  0.97176406  0.97445467  0.97959933]
+[-0.01891033  0.02532425  0.02574657 -0.02845713  0.00918169]
+[ 0.4770696   0.54670239  0.52160007  0.51940627  0.56386406]
+Inputs must be values in the range [0,1]. Traits could not be evaluated.
+Inputs must be values in the range [0,1]. Traits could not be evaluated.
+Inputs must be values in the range [0,1]. Traits could not be evaluated.
+
+Average accuracy of 0.966757489807: 
+Accuracy predicting Extraversion: 0.965177795224
+Accuracy predicting Agreeableness: 0.968548888088
+Accuracy predicting Conscientiousness: 0.967032995396
+Accuracy predicting Neuroticism: 0.96642168424
+Accuracy predicting Openness to Experience: 0.966606086085
+
+Audio FetA, Bagging Regressor (num_estimator = 50):
+Merged with Ridge (alpha = 5)
+
+(5, 2400, 15) (2400, 5)
+(5, 3599, 15) (3599, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+[ 0.05137553  0.06283583  0.07258695  0.07691603  0.08009382  0.08161275
+  0.0817904   0.0822063   0.08370659  0.08575     0.08944333  0.09136959
+  0.09290853  0.0933868   0.09576035]
+[[ 1.          0.91361264]
+ [ 0.91361264  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+[ 0.10172275  0.09872677  0.09596736  0.09344522  0.08991602  0.08759995
+  0.08617244  0.08574066  0.08547418  0.08459202  0.0834211   0.08012652
+  0.07477306  0.06986963  0.06196084]
+[[ 1.          0.90550803]
+ [ 0.90550803  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+[ 0.08872993  0.08994077  0.09053343  0.08872883  0.08765848  0.0874075
+  0.08567495  0.08503903  0.08510487  0.08669865  0.08506435  0.08345941
+  0.07968318  0.07612523  0.06798019]
+[[ 1.          0.91871493]
+ [ 0.91871493  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+[ 0.07792919  0.08200632  0.08362486  0.08570092  0.08706297  0.08547442
+  0.08334962  0.08277895  0.08456555  0.08501629  0.0842735   0.08421955
+  0.08282969  0.07942359  0.07230642]
+[[ 1.          0.91602323]
+ [ 0.91602323  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+[ 0.10877406  0.1026653   0.09801375  0.0950077   0.09129694  0.08638235
+  0.08257112  0.08098024  0.0808062   0.08003466  0.07699692  0.07174203
+  0.06429198  0.05328428  0.03511269]
+[[ 1.          0.91833358]
+ [ 0.91833358  1.        ]]
+[ 0.87145053  0.90478672  0.97426617  0.97276124  0.97959042]
+[-0.02227714  0.04089759  0.02535227 -0.02983297  0.03984022]
+[ 0.47539356  0.5482574   0.52235628  0.51951234  0.56614381]
+Inputs must be values in the range [0,1]. Traits could not be evaluated.
+Inputs must be values in the range [0,1]. Traits could not be evaluated.
+Inputs must be values in the range [0,1]. Traits could not be evaluated.
+Inputs must be values in the range [0,1]. Traits could not be evaluated.
+
+Average accuracy of 0.966980722695: 
+Accuracy predicting Extraversion: 0.965439870773
+Accuracy predicting Agreeableness: 0.968875818625
+Accuracy predicting Conscientiousness: 0.967059302399
+Accuracy predicting Neuroticism: 0.966351686516
+Accuracy predicting Openness to Experience: 0.967176935161
+
+AudioFetA_Avg Bagging Decision tree regressor (num_estimators = 50):
+
+5193
+(5193, 1582) (5193, 5)
+(570, 1582) (570, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.681298828125
+0.314371337891
+0.480562761809
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.6685546875
+0.351127929688
+0.550344435307
+[[ 1.    0.42]
+ [ 0.42  1.  ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.669536132813
+0.330690917969
+0.524963488127
+[[ 1.    0.48]
+ [ 0.48  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.704340820313
+0.321881103516
+0.524463704427
+[[ 1.    0.52]
+ [ 0.52  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.740874023437
+0.375541992188
+0.570699775562
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.41  0.52  0.73  0.71  0.61]
+ [ 0.47  0.41  0.46  0.44  0.66]
+ ..., 
+ [ 0.56  0.63  0.48  0.64  0.68]
+ [ 0.18  0.31  0.28  0.19  0.18]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.45  0.51  0.45  0.47  0.5 ]
+ [ 0.55  0.59  0.59  0.58  0.68]
+ [ 0.46  0.53  0.52  0.48  0.56]
+ ..., 
+ [ 0.5   0.56  0.53  0.53  0.61]
+ [ 0.46  0.55  0.54  0.53  0.53]
+ [ 0.43  0.42  0.42  0.38  0.48]]
+[ 0.68  0.67  0.67  0.7   0.74]
+[ 0.31  0.35  0.33  0.32  0.38]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.896419792416: 
+Accuracy predicting Extraversion: 0.892201285914
+Accuracy predicting Agreeableness: 0.900765607867
+Accuracy predicting Conscientiousness: 0.889029373972
+Accuracy predicting Neuroticism: 0.897860755251
+Accuracy predicting Openness to Experience: 0.902241939076
+
+AudioFetA_Avg Bagging Ridge regressor (alpha = 5) (num_estimators = 50):
+
+5193
+(5193, 1582) (5193, 5)
+(570, 1582) (570, 5)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.761481330667
+0.154455867685
+0.479492317769
+[[ 1.    0.44]
+ [ 0.44  1.  ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.755301310656
+0.291431512902
+0.549218654836
+[[ 1.    0.31]
+ [ 0.31  1.  ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.811292332746
+0.174632126609
+0.526243800223
+[[ 1.    0.48]
+ [ 0.48  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.816042815604
+0.215796671356
+0.525557135686
+[[ 1.    0.47]
+ [ 0.47  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.80167725865
+0.237817457667
+0.570654759009
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.41  0.52  0.73  0.71  0.61]
+ [ 0.47  0.41  0.46  0.44  0.66]
+ ..., 
+ [ 0.56  0.63  0.48  0.64  0.68]
+ [ 0.18  0.31  0.28  0.19  0.18]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.43  0.53  0.48  0.5   0.5 ]
+ [ 0.67  0.59  0.6   0.66  0.76]
+ [ 0.55  0.55  0.42  0.48  0.58]
+ ..., 
+ [ 0.53  0.58  0.55  0.57  0.65]
+ [ 0.4   0.55  0.62  0.45  0.53]
+ [ 0.36  0.36  0.41  0.39  0.48]]
+[ 0.76  0.76  0.81  0.82  0.8 ]
+[ 0.15  0.29  0.17  0.22  0.24]
+[ 0.48  0.55  0.53  0.53  0.57]
+
+Average accuracy of 0.891090730008: 
+Accuracy predicting Extraversion: 0.886605566879
+Accuracy predicting Agreeableness: 0.893021887779
+Accuracy predicting Conscientiousness: 0.888005887175
+Accuracy predicting Neuroticism: 0.892814972903
+Accuracy predicting Openness to Experience: 0.895005335306
+
+AudioFetA_minmax Bagging Decision tree regressor (num_estimators = 50):
+
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.682626953125
+0.268788452148
+0.480194791024
+[[ 1.    0.49]
+ [ 0.49  1.  ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.672666015625
+0.384545898437
+0.550308353893
+[[ 1.    0.39]
+ [ 0.39  1.  ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.719458007813
+0.339412841797
+0.524898030599
+[[ 1.    0.49]
+ [ 0.49  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.698120117188
+0.290826416016
+0.521904666298
+[[ 1.    0.51]
+ [ 0.51  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.743388671875
+0.350207519531
+0.569388534814
+[[ 1.    0.52]
+ [ 0.52  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.41  0.52  0.73  0.71  0.61]
+ [ 0.47  0.41  0.46  0.44  0.66]
+ ..., 
+ [ 0.56  0.63  0.48  0.64  0.68]
+ [ 0.18  0.31  0.28  0.19  0.18]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.46  0.53  0.48  0.44  0.54]
+ [ 0.52  0.62  0.57  0.63  0.68]
+ [ 0.49  0.56  0.5   0.46  0.53]
+ ..., 
+ [ 0.46  0.55  0.53  0.51  0.61]
+ [ 0.44  0.57  0.52  0.52  0.56]
+ [ 0.37  0.4   0.4   0.33  0.46]]
+[ 0.68  0.67  0.72  0.7   0.74]
+[ 0.27  0.38  0.34  0.29  0.35]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.895892015959: 
+Accuracy predicting Extraversion: 0.891337633635
+Accuracy predicting Agreeableness: 0.89927292352
+Accuracy predicting Conscientiousness: 0.890696653132
+Accuracy predicting Neuroticism: 0.895910630611
+Accuracy predicting Openness to Experience: 0.902242238898
+
+AudioFetA_minmax Gradient Boosting regressor (n_estimators=100, max_depth = 3, learning_rate=0.1, random_state=0, loss='lad'):
+
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.679528819598
+0.265555190123
+0.48038627055
+[[ 1.    0.48]
+ [ 0.48  1.  ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.643387202691
+0.36688598153
+0.556236390434
+[[ 1.    0.39]
+ [ 0.39  1.  ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.697942196527
+0.340847243616
+0.528135012721
+[[ 1.    0.48]
+ [ 0.48  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.707143350764
+0.29919226917
+0.528433641487
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.734423077948
+0.345141942659
+0.573519761378
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.41  0.52  0.73  0.71  0.61]
+ [ 0.47  0.41  0.46  0.44  0.66]
+ ..., 
+ [ 0.56  0.63  0.48  0.64  0.68]
+ [ 0.18  0.31  0.28  0.19  0.18]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.48  0.5   0.49  0.48  0.55]
+ [ 0.6   0.62  0.58  0.64  0.7 ]
+ [ 0.47  0.56  0.51  0.51  0.55]
+ ..., 
+ [ 0.5   0.57  0.47  0.54  0.59]
+ [ 0.46  0.54  0.53  0.5   0.53]
+ [ 0.38  0.45  0.4   0.36  0.44]]
+[ 0.68  0.64  0.7   0.71  0.73]
+[ 0.27  0.37  0.34  0.3   0.35]
+[ 0.48  0.56  0.53  0.53  0.57]
+
+Average accuracy of 0.89534947097: 
+Accuracy predicting Extraversion: 0.890622462981
+Accuracy predicting Agreeableness: 0.900039910146
+Accuracy predicting Conscientiousness: 0.888934372067
+Accuracy predicting Neuroticism: 0.895527704826
+Accuracy predicting Openness to Experience: 0.901622904827
+
+AudioFetA_avg_cluster_4 (Ridge, alpha= 5000):
+
+(46601, 1582) (46601, 5)
+(5119, 1582) (5119, 5)
+AudioA_avg_cluster_4 MISC
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+Predictions
+0.725088483048
+0.217551560979
+0.481371790493
+[[ 1.    0.43]
+ [ 0.43  1.  ]]
+Coefficents
+[ -8.33e-06  -3.75e-05   1.98e-04 ...,  -6.75e-04  -3.13e-03   0.00e+00]
+0.00993821152507
+-0.00729229074687
+1.41583719569e-05
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+Predictions
+0.68961426325
+0.320909228423
+0.552435293039
+[[ 1.    0.33]
+ [ 0.33  1.  ]]
+Coefficents
+[ -2.13e-05  -1.86e-05  -1.06e-03 ...,  -4.53e-04  -2.53e-03   0.00e+00]
+0.00682406389558
+-0.00514192544644
+5.03091975671e-05
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+Predictions
+0.726060879748
+0.220986656117
+0.527348497179
+[[ 1.    0.44]
+ [ 0.44  1.  ]]
+Coefficents
+[ -7.46e-06  -8.29e-06  -5.11e-04 ...,   2.53e-04  -4.54e-03   0.00e+00]
+0.0108237878818
+-0.0068999788598
+2.71036011308e-05
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+Predictions
+0.757690669397
+0.213266986891
+0.525999165984
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+Coefficents
+[ -1.22e-05  -1.60e-05   2.19e-04 ...,  -4.27e-04  -3.07e-03   0.00e+00]
+0.00891222335937
+-0.00702096011743
+6.05258281923e-05
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+Predictions
+0.796402649835
+0.290746163868
+0.570803807276
+[[ 1.    0.45]
+ [ 0.45  1.  ]]
+Coefficents
+[ -1.67e-05  -1.36e-05   4.71e-04 ...,  -9.76e-04  -5.21e-03   0.00e+00]
+0.00662765720222
+-0.00566792688222
+9.91000595842e-06
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.42  0.48  0.41  0.44  0.46]
+ [ 0.44  0.48  0.42  0.46  0.47]
+ [ 0.45  0.5   0.45  0.48  0.5 ]
+ ..., 
+ [ 0.48  0.52  0.55  0.48  0.57]
+ [ 0.5   0.55  0.58  0.5   0.59]
+ [ 0.5   0.55  0.56  0.51  0.6 ]]
+[ 0.73  0.69  0.73  0.76  0.8 ]
+[ 0.22  0.32  0.22  0.21  0.29]
+[ 0.48  0.55  0.53  0.53  0.57]
+
+Average accuracy of 0.892024405414: 
+Accuracy predicting Extraversion: 0.886553341717
+Accuracy predicting Agreeableness: 0.896414119999
+Accuracy predicting Conscientiousness: 0.886752213309
+Accuracy predicting Neuroticism: 0.892362696549
+Accuracy predicting Openness to Experience: 0.898039655498
+
+
+AudioFetA_avg_cluster_4 (Bagging regressors, n50):
+
+46601
+(46601, 1582) (46601, 5)
+(5119, 1582) (5119, 5)
+AudioA_avg_cluster_4 BAG
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.706357421875
+0.194767456055
+0.481078266338
+[[ 1.    0.51]
+ [ 0.51  1.  ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.706513671875
+0.2948828125
+0.551468978736
+[[ 1.   0.4]
+ [ 0.4  1. ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.770874023438
+0.283872070313
+0.524885102719
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.709155273437
+0.158974609375
+0.524051280572
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.770205078125
+0.335307617188
+0.570564336372
+[[ 1.    0.53]
+ [ 0.53  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.44  0.49  0.49  0.46  0.52]
+ [ 0.46  0.49  0.48  0.48  0.55]
+ [ 0.45  0.52  0.48  0.47  0.56]
+ ..., 
+ [ 0.42  0.47  0.48  0.43  0.51]
+ [ 0.41  0.55  0.48  0.48  0.54]
+ [ 0.43  0.56  0.5   0.5   0.59]]
+[ 0.71  0.71  0.77  0.71  0.77]
+[ 0.19  0.29  0.28  0.16  0.34]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.896600591661: 
+Accuracy predicting Extraversion: 0.892527242021
+Accuracy predicting Agreeableness: 0.899825349075
+Accuracy predicting Conscientiousness: 0.89051665598
+Accuracy predicting Neuroticism: 0.896257520237
+Accuracy predicting Openness to Experience: 0.90387619099

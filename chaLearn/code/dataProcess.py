@@ -50,7 +50,7 @@ def getTruthVal(fileName):
 
 	return trueMap
 
-def readFromFileAudioFetA(fileName):
+def readFromFileAudioFetA(fileName, feature, clusterSize = 4):
 	filePath = 'tmpData/audioFetA/'
 	fileName = filePath+fileName+'.p'
 	if (not os.path.isfile(fileName)):
@@ -61,6 +61,29 @@ def readFromFileAudioFetA(fileName):
 		audioFet = np.array(fetList[i]['data'][0][1:-1])
 		# The first and last values are unnecessary
 		tmpList.append(audioFet)
+
+	if (len(tmpList) == 0):
+		return []
+
+	tmpFeature = []
+	if ('minmax' in feature):
+		newList = []
+		for i in range(len(tmpList) - clusterSize + 1):
+			clusterList = np.array(tmpList[i:i+clusterSize])
+			tmpFeature = np.max(clusterList, axis = 0)
+			# print tmpFeature.shape
+			tmpFeature = np.append(tmpFeature, np.min(clusterList, axis = 0))
+			# print tmpFeature.shape
+			newList.append(tmpFeature)
+		tmpList = newList
+	elif ('avg' in feature):
+		newList = []
+		for i in range(len(tmpList) - clusterSize + 1):
+			clusterList = np.array(tmpList[i:i+clusterSize])
+			tmpFeature = np.mean(clusterList, axis = 0)
+			newList.append(tmpFeature)
+		tmpList = newList
+
 	# tmpList = np.array(tmpList)
 	# print tmpList.shape
 	return tmpList
@@ -162,7 +185,7 @@ def readFromFileFetF(fileName, poolType = 'max', numSamples = 5, numTotSamples =
 	# print newFetList.shape
 	return newFetList
 
-def readData(fileNames, trueVal = None, feature = 'A', poolType = 'max'):
+def readData(fileNames, trueVal = None, feature = 'A', poolType = 'avg', printFlag = False):
 	X = []
 	Y = []
 	X1 = []
@@ -178,8 +201,8 @@ def readData(fileNames, trueVal = None, feature = 'A', poolType = 'max'):
 			imgList = readFromFileFetC(fileName, 5, augment = True)
 		elif (feature == 'F'):
 			imgList = readFromFileFetF(fileName, poolType = poolType, numSamples = 20, numPools = 10)
-		elif (feature == 'AudioA'):
-			imgList = readFromFileAudioFetA(fileName)
+		elif ('AudioA' in feature):
+			imgList = readFromFileAudioFetA(fileName, feature)
 		elif (feature == 'CF'):
 			imgList = readFromFileFetC(fileName, 5, augment = True)
 			vggList = readFromFileFetF(fileName, poolType = poolType, numSamples = len(imgList), numTotSamples = len(imgList), numPools = 10, randomFlag = True)
@@ -194,8 +217,9 @@ def readData(fileNames, trueVal = None, feature = 'A', poolType = 'max'):
 			X.extend(imgList)
 		if (trueVal is not None):
 			Y.extend([trueVal[fileName]]*len(imgList))
-			# print '\r', (i*(1.0))/len(fileNames), 'part reading completed',
-			# sys.stdout.flush()
+			if (printFlag):
+				print '\r', (i*(1.0))/len(fileNames), 'part reading completed',
+				sys.stdout.flush()
 	Y = np.array(Y, dtype = np.float16)
 	if (feature == 'CF'):
 		X1 = np.array(X1, dtype = np.float16)
@@ -203,6 +227,8 @@ def readData(fileNames, trueVal = None, feature = 'A', poolType = 'max'):
 		# print X1.shape, X2.shape, Y.shape
 		return X1, X2, Y
 	else:
+		# print len(X)
+		# print len(X[0])
 		X = np.array(X, dtype = np.float16)
 		return X, Y
 	# print X.shape, Y.shape

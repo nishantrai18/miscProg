@@ -35,8 +35,8 @@ def vggFetF():
 
 	# print model.layers
 	# Freeze model
-	for layer in model.layers:
-	    layer.trainable = False
+	for i in range(len(model.layers)):
+	    model.layers[i].trainable = False
 
 	# Fix required for the output to be 4096D in newer versions of keras
 	# model.outputs = [model.layers[-1].output]
@@ -60,8 +60,8 @@ def convFetC():
 
 	# print newModel.layers
 	# Freeze model
-	for layer in newModel.layers:
-	    layer.trainable = False
+	for i in range(len(newModel.layers)):
+	    newModel.layers[i].trainable = False
 
 	# Fix required for the output to be 4096D in newer versions of keras
 	# newModel.outputs = [newModel.layers[-1].output]
@@ -96,9 +96,9 @@ numPerBatch = 50
 numBatch = (len(vidNames)/numPerBatch)
 
 model_save_interval = 10
-num_epochs = 50
+num_epochs = 100
 
-model_file_name = 'tmpData/models/VGG_FetC_Concat_256_128_' + poolType
+model_file_name = 'tmpData/models/VGG_FetC_Concat_(256_128)->(5)_' + poolType
 
 vggModel = vggFetF()
 convModel = convFetC()
@@ -110,15 +110,21 @@ convModel = convFetC()
 
 imgInput = Input(shape=(1, row, col), name = 'imgInput')
 imgRep = convModel(imgInput)
+imgRep.trainable = False
 
 vggInput = Input(shape=(4096, ), name = 'vggInput')
 vggRep = vggModel(vggInput)
+vggRep.trainable = False
 
 merged = merge([imgRep, vggRep], mode='concat')
-final = Dropout(0.25)(merged)
+hidDrop = Dropout(0.25)(merged)
 
 # Can add another hidden layer in between
-output = Dense(5, activation ='sigmoid', name = 'output')(final)
+# Don't add any, causes over fitting. Maybe a 32 node layer would be fine
+# hidLayer = Dense(32, activation ='relu', name = 'hidden')(hidDrop)
+# final = Dropout(0.25)(hidLayer)
+
+output = Dense(5, activation ='sigmoid', name = 'output')(hidDrop)
 
 # this is our final model:
 model = Model(input=[imgInput, vggInput], output=output)
@@ -166,7 +172,7 @@ for k in range(num_epochs):
 	if k%model_save_interval == 0:
 		model.save_weights(model_file_name + '_epoch_{:02d}.hdf5'.format(k))
 
-	score = model.evaluate({'convInput': X_test_conv, 'vggInput': X_test_vgg, 'output': Y_test}, verbose=0)
+	score = model.evaluate({'imgInput': X_test_conv, 'vggInput': X_test_vgg}, {'output': Y_test}, verbose=0)
 
 	print "For epoch", k, ",Testing loss is", score
 	if minScore > score:

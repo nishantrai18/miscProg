@@ -35,6 +35,10 @@ def predictScore(fileName, model, merger = None, choice = 'A'):
 	else:
 		Y_pred = model.predict(X)
 
+	Y_pred = np.clip(Y_pred, 0, 1)
+	# Y_pred[np.where(Y_pred < 0)] = 0
+	# Y_pred[np.where(Y_pred > 1)] = 1
+
 	finalScore = []
 	if (merger is None):
 		finalScore = np.mean(Y_pred, axis=0)
@@ -50,6 +54,10 @@ def predictScore(fileName, model, merger = None, choice = 'A'):
 		for i in range(5):
 			x = getSortedFeatures(Y_pred[:,i])
 			y = merger[i].predict([x])[0]
+			if (y < 0):
+				y = 0
+			if (y > 1):
+				y = 1
 			finalScore.append(y)
 		finalScore = np.array(finalScore)
 	return finalScore
@@ -108,7 +116,16 @@ def predictScoreList(fileName, model, choice = 'A'):
 			for i in range(5):
 				Y_pred[:,i] = model[i].predict(X)
 	else:
+		if (X.shape[0] == 0):
+			Y_pred = np.zeros((1, 5))
+			Y_pred.fill(0.5)
+			return Y_pred
 		Y_pred = model.predict(X)
+
+	Y_pred = np.clip(Y_pred, 0, 1)
+
+	# Y_pred[np.where(Y_pred < 0)] = 0
+	# Y_pred[np.where(Y_pred > 1)] = 1
 
 	return Y_pred
 
@@ -137,15 +154,16 @@ if __name__ == "__main__":
 		vidNames[i] = vidNames[i].strip('.mp4')
 
 	row, col = 50, 50
-	splitVal = 0.4
+	splitVal = 0.9
 	vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 	vidNames = vidNames[:int(splitVal*len(vidNames))]
 
-	# choice = 'C'
+	choice = 'C'
 	# choice = 'B'
-	choice = 'AudioA'
+	# choice = 'AudioAavg'
 	action = 'genSubmit'
 	# action = 'getPredList'
+	# action = 'getTestScore'
 
 	# modelName = 'visualFetA_BasicConv_16_32_256'
 	# model_file_name = 'tmpData/models/visualFetA_BasicConv_16_32_256'
@@ -153,10 +171,14 @@ if __name__ == "__main__":
 	# model_file_name = 'tmpData/models/visualFetA_BasicConv_Augmented_32_64_256'
 	# modelName = 'visualFetC_Conv_Augmented_32_64_256'
 	# model_file_name = 'tmpData/models/visualFetC_Conv_Augmented_32_64_256'
+	# modelName = 'visualFetF_VGG_5_128_4096_avg'
+	# model_file_name = 'tmpData/models/visualFetF_VGG_5_128_4096_avg'
+	modelName = 'visualFetC_Conv_48_96_256'
+	model_file_name = 'tmpData/models/visualFetC_Conv_48_96_256'
 	# modelName = 'audioFetA_BAG_n50'
 	# model_file_name = 'tmpData/models/audioFetA_BAG_n50'
-	modelName = 'audioFetA_BAG_n50'
-	model_file_name = 'tmpData/models/audioFetA_BAG_n50'
+	# modelName = 'audioFetA_BAG_n50'
+	# model_file_name = 'tmpData/models/audioFetA_BAG_n50'
 	# modelName = 'visualFetB_MISC'
 	# model_file_name = 'tmpData/models/visualFetB_MISC'
 
@@ -174,11 +196,11 @@ if __name__ == "__main__":
 
 		# X_test, Y_test = readData(vidNamesTest, trueVal, choice)
 
-		if ('Conv' in modelName):
+		if (('Conv' in modelName) or ('VGG' in modelName)):
 			# X_train = X_train.reshape(X_train.shape[0], 3, row, col)
-			X_test = X_test.reshape(X_test.shape[0], 1, row, col)
-			X_test = X_test.astype('float32')
-			X_test /= 255
+			# X_test = X_test.reshape(X_test.shape[0], 1, row, col)
+			# X_test = X_test.astype('float32')
+			# X_test /= 255
 
 			model = model_from_json(open(model_file_name + '.json').read())
 			print model_file_name
@@ -198,17 +220,18 @@ if __name__ == "__main__":
 
 		# Get the test score for the whole list of data points
 
-		X_test, Y_test = readData(vidNamesTest, trueVal, 'C')
+		X_test, Y_test = readData(vidNamesTest, trueVal, choice)
 		# X_test = X_test.reshape(X_test.shape[0], 3, row, col)
-		X_test = X_test.reshape(X_test.shape[0], 1, row, col)
-		X_test = X_test.astype('float32')
-		X_test /= 255
+		# X_test = X_test.reshape(X_test.shape[0], 1, row, col)
+		# X_test = X_test.astype('float32')
+		# X_test /= 255
 
-		model = model_from_json(open(model_file_name + '.json').read())
-		print model_file_name
-		# model.load_weights(model_file_name + '_epoch_25.hdf5')
-		model.load_weights(model_file_name + '.hdf5')
-		model.compile(loss='mean_absolute_error', optimizer='rmsprop')
+		if (('Conv' in modelName) or ('VGG' in modelName)):
+			model = model_from_json(open(model_file_name + '.json').read())
+			print model_file_name
+			# model.load_weights(model_file_name + '_epoch_25.hdf5')
+			model.load_weights(model_file_name + '.hdf5')
+			model.compile(loss='mean_absolute_error', optimizer='rmsprop')
 
 		print 'Model Loaded. Prediction in progress'
 
@@ -216,11 +239,12 @@ if __name__ == "__main__":
 		evaluateTraits(Y_pred, Y_test)
 
 	elif (action == 'genSubmit'):
-		mergeName = '_WGT'
+		mergeName = '_LS'
 		# merger = pickle.load(open('tmpData/models/mergeScore_FetC_LS.p', 'rb'))
-		merger = pickle.load(open('tmpData/models/mergeScore_FetAudioA_BAG_WGT.p', 'rb'))
+		# merger = pickle.load(open('tmpData/models/mergeScore_FetAudioA_BAG_WGT.p', 'rb'))
+		merger = pickle.load(open('tmpData/models/mergeScore_FetC_48_96_LS.p', 'rb'))
 
-		if ('Conv' in modelName):
+		if (('Conv' in modelName) or ('VGG' in modelName)):
 
 			model = model_from_json(open(model_file_name + '.json').read())
 			print model_file_name

@@ -93,6 +93,10 @@ def getVisualFetB():
 
 	for i in range(len(vidNames)):
 		fileName = vidNames[i]
+
+		if (os.path.isfile(saveFetPath+fileName.strip('.mp4')+'.npy')):
+			continue
+
 		frameList = GetFrames(videoPath+fileName, redFact = 0.5, skipLength = 5)
 		savePath = saveVidPath + fileName.strip('.mp4')
 		
@@ -240,9 +244,10 @@ def getVisualFetF():
 	vidNamesTest = os.listdir(videoPath)
 	vidNamesTest = [x for x in vidNamesTest if x.endswith(".mp4")]
 
-	videoPath = '../training/download_train-val/trainFiles/'
-	vidNames = os.listdir(videoPath)
-	vidNames = [x for x in vidNames if x.endswith(".mp4")]
+	# videoPath = '../training/download_train-val/trainFiles/'
+	# vidNames = os.listdir(videoPath)
+	# vidNames = [x for x in vidNames if x.endswith(".mp4")]
+	vidNames = []
 
 	vidNames.extend(vidNamesTest)
 
