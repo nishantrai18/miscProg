@@ -12,6 +12,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import BaggingRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import ExtraTreesRegressor
 
 # from evaluateModel import *
 
@@ -184,7 +185,7 @@ def createEnsembleUsingLR(modelNames, numModels, choice = 'Ridge'):
 
 		for i in range(5):
 			print 'Currently training the', i, 'th regressor'
-			# clfList.append(linear_model.Ridge(alpha = 10))
+			clfList.append(linear_model.Ridge(alpha = 10))
 			# clfList.append(linear_model.SGDRegressor())
 			clfList[i].fit(X_train, trueVal[:,i])
 			print 'Model Trained. Prediction in progress'
@@ -219,9 +220,45 @@ def createEnsembleUsingLR(modelNames, numModels, choice = 'Ridge'):
 			print np.mean(Y_pred[:,i])
 			print np.corrcoef(Y_pred[:,i], trueValTest[:,i])
 
+	elif (choice == 'BAG'):
+		model_file_name = 'tmpData/ensemble/ensemble' + str(numModels) + '_LR_BAG'
+
+		for i in range(5):
+			print 'Currently training the', i, 'th regressor'
+			# clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4))
+			clfList.append(BaggingRegressor(SVR(C = 30), n_estimators = 50, n_jobs = 4))
+			clfList[i].fit(X_train, trueVal[:,i])
+			print 'Model Trained. Prediction in progress'
+			Y_pred[:,i] = clfList[i].predict(X_test)
+
+			print 'Predictions'
+			print np.max(Y_pred[:,i])
+			print np.min(Y_pred[:,i])
+			print np.mean(Y_pred[:,i])
+			print np.corrcoef(Y_pred[:,i], trueValTest[:,i])
+
+	elif (choice == 'EXT'):
+		model_file_name = 'tmpData/ensemble/ensemble' + str(numModels) + '_LR_EXT'
+
+		for i in range(5):
+			print 'Currently training the', i, 'th regressor'
+			# clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4))
+			clfList.append(ExtraTreesRegressor(n_estimators = 150, n_jobs = 4))
+			clfList[i].fit(X_train, trueVal[:,i])
+			print 'Model Trained. Prediction in progress'
+			Y_pred[:,i] = clfList[i].predict(X_test)
+
+			print 'Predictions'
+			print np.max(Y_pred[:,i])
+			print np.min(Y_pred[:,i])
+			print np.mean(Y_pred[:,i])
+			print np.corrcoef(Y_pred[:,i], trueValTest[:,i])
+
+
+
 	pickle.dump(clfList, open(model_file_name + '.p', 'wb'))
 
-	evaluateTraits(Y_pred, trueValTest)
+	print evaluateTraits(Y_pred, trueValTest)
 
 def createEnsemble(modelNames, numModels, numIters = 10000):
 
@@ -308,6 +345,10 @@ def ensemblePredictUsingLR(modelNames, clfName, numModels):
 			if (len(predList[i][k]) == 1):
 				predList[i][k] = predList[i][k][0]
 
+	print 'HERE'
+
+	cnt = 0
+
 	for k in predList[0].keys():
 		fetList = []
 		for j in range(numModels):
@@ -316,6 +357,8 @@ def ensemblePredictUsingLR(modelNames, clfName, numModels):
 
 		for i in range(5):
 			predNew[k].append(clfList[i].predict([fetList])[0])
+		print '\r', (cnt*(1.0))/len(predList[0]), 'part prediction completed',
+		cnt += 1
 
 	for k in predList[0].keys():
 		predNew[k] = np.array(predNew[k])
@@ -326,9 +369,9 @@ def ensemblePredictUsingLR(modelNames, clfName, numModels):
 
 if __name__ == "__main__":
 
-	# choice = 'create'
+	choice = 'create'
 	# choice = 'use'
-	choice = 'useLR'
+	# choice = 'useLR'
 
 	if (choice == 'create'):
 
@@ -340,7 +383,8 @@ if __name__ == "__main__":
 		numModels, numIters = len(modelNames), 100000
 
 		# createEnsemble(modelNames, numModels, numIters)	
-		createEnsembleUsingLR(modelNames, numModels, choice = 'SVR')
+		createEnsembleUsingLR(modelNames, numModels, choice = 'BAG')
+		# EXT doesn't perform very well
 
 	elif (choice == 'useLR'):
 
@@ -349,7 +393,7 @@ if __name__ == "__main__":
 						'tmpData/predictions/valPredictionaudioFetA_BAG_n50_LS.p', 'tmpData/predictions/valPredictionaudioFetA_BAG_n50_WGT.p',
 						'tmpData/predictions/valPredictionvisualFetC_Conv_48_96_256_LS.p']
 
-		clfName = 'tmpData/ensemble/ensemble7_LR_SVR'
+		clfName = 'tmpData/ensemble/ensemble7_LR_BAG'
 
 		ensemblePredictUsingLR(predNames, clfName, len(predNames))
 

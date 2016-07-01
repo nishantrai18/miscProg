@@ -12,6 +12,8 @@ from sklearn.ensemble import BaggingRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 
+from dataProcess import *
+
 def getParamValList(minVal, ratio = 10, sepSize = 4, listSize = 20):
 	'''
 	minVal, maxVal : Starting value, End value
@@ -40,7 +42,7 @@ def getBaggedSet(modelName, bagAppend, dataAppend, j, paramAppend, param, bagIDA
 	# In the bagging used here, we only use consecutive parts since
 	# spatially close points are similar training sets
 
-	regName = modelName + bagAppend + '_' + dataAppend + str(j) + '_' 
+	regName = modelName + bagAppend + '_' + dataAppend + str(j) + '_' \
 						+ paramAppend + str(param) + '_' + bagIDAppend + str(k)
 
 	bagSetSize = int(bagVal * X_train.shape[0])
@@ -121,7 +123,7 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 
 					for k in range(numPerParam):
 
-						regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, j,
+						regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, j, \
 											  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
 
 						clfList = []
@@ -131,7 +133,10 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 							clfList[i].fit(X_tr, Y_tr[:,i])
 							Y_pred[:,i] = clfList[i].predict(X_test)
 
-						score = evaluateTraits(Y_pred, Y_test)
+						Y_pred[Y_pred < 0] = 0
+						Y_pred[Y_pred > 1] = 1
+
+						score = evaluateTraits(Y_pred, Y_test, printFlag = False)
 						histList.append([regName, score])
 
 						if (score > accThreshold):
@@ -151,17 +156,17 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 					param = int(param)
 					for k in range(numPerParam):
 
-						regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, j,
+						regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, j, \
 											  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
 
 						clfList = []
 						Y_pred = np.zeros((X_test.shape[0], numTargets))					
 						for i in range(numTargets):
-							clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = param, n_jobs = 3))
+							clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = param, n_jobs = 5))
 							clfList[i].fit(X_tr, Y_tr[:,i])
 							Y_pred[:,i] = clfList[i].predict(X_test)
 
-						score = evaluateTraits(Y_pred, Y_test)		
+						score = evaluateTraits(Y_pred, Y_test, printFlag = False)		
 						histList.append([regName, score])
 
 						if (score > accThreshold):
@@ -190,7 +195,7 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 							clfList[i].fit(X_tr, Y_tr[:,i])
 							Y_pred[:,i] = clfList[i].predict(X_test)
 
-						score = evaluateTraits(Y_pred, Y_test)		
+						score = evaluateTraits(Y_pred, Y_test, printFlag = False)		
 						histList.append([regName, score])
 
 						if (score > accThreshold):
@@ -219,7 +224,7 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 							clfList[i].fit(X_tr, Y_tr[:,i])
 							Y_pred[:,i] = clfList[i].predict(X_test)
 
-						score = evaluateTraits(Y_pred, Y_test)		
+						score = evaluateTraits(Y_pred, Y_test, printFlag = False)		
 						histList.append([regName, score])
 
 						if (score > accThreshold):
@@ -248,7 +253,7 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 							clfList[i].fit(X_tr, Y_tr[:,i])
 							Y_pred[:,i] = clfList[i].predict(X_test)
 
-						score = evaluateTraits(Y_pred, Y_test)		
+						score = evaluateTraits(Y_pred, Y_test, printFlag = False)		
 						histList.append([regName, score])
 
 						if (score > accThreshold):
@@ -274,11 +279,11 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 						clfList = []
 						Y_pred = np.zeros((X_test.shape[0], numTargets))					
 						for i in range(numTargets):
-							clfList.append(RandomForestRegressor(n_estimators = param, n_jobs = 3))
+							clfList.append(RandomForestRegressor(n_estimators = param, n_jobs = 5))
 							clfList[i].fit(X_tr, Y_tr[:,i])
 							Y_pred[:,i] = clfList[i].predict(X_test)
 
-						score = evaluateTraits(Y_pred, Y_test)		
+						score = evaluateTraits(Y_pred, Y_test, printFlag = False)		
 						histList.append([regName, score])
 
 						if (score > accThreshold):
@@ -308,7 +313,7 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 							clfList[i].fit(X_tr, Y_tr[:,i])
 							Y_pred[:,i] = clfList[i].predict(X_test)
 
-						score = evaluateTraits(Y_pred, Y_test)		
+						score = evaluateTraits(Y_pred, Y_test, printFlag = False)		
 						histList.append([regName, score])
 
 						if (score > accThreshold):
@@ -328,8 +333,8 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 					param = int(param)
 					for k in range(numPerParam):
 
-						regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, j,
-											  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
+						regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, j, \
+												paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
 
 						clfList = []
 						Y_pred = np.zeros((X_test.shape[0], numTargets))					
@@ -338,7 +343,7 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 20,
 							clfList[i].fit(X_tr, Y_tr[:,i])
 							Y_pred[:,i] = clfList[i].predict(X_test)
 
-						score = evaluateTraits(Y_pred, Y_test)		
+						score = evaluateTraits(Y_pred, Y_test, printFlag = False)		
 						histList.append([regName, score])
 
 						if (score > accThreshold):
@@ -379,9 +384,16 @@ if __name__ == "__main__":
 	regList = ['SVR', 'BAG', 'Ridge', 'LS', 'RF', 'ADA', 'GBR']
 
 	fetChoice = 'AudioA_avg_ClusterFull'
-	X_train, Y_train = readData(vidNames, trueVal, feature = fetChoice, printFlag = True, clusterSize = -1)
-	X_test, Y_test = readData(vidNamesTest, trueVal, feature = fetChoice, printFlag = True, clusterSize = -1)
+	# X_train, Y_train = readData(vidNames, trueVal, feature = fetChoice, printFlag = True, clusterSize = -1)
+	# print '\nReading training data complete'
+	# X_test, Y_test = readData(vidNamesTest, trueVal, feature = fetChoice, printFlag = True, clusterSize = -1)
+	# print '\nReading testing data complete'
 
-	dataList = [[[X_train, Y_train], [X_test, Y_test]]]
+	# dataList = [[[X_train, Y_train], [X_test, Y_test]]]
+	# pickle.dump(dataList, open('tmpData/ensemble/audioFetA/audioFet_' + fetChoice + '.p', 'wb'))
 
-	createRegressorArmy(5, regList, dataList, fetChoice = 'Avg_ClusterFull' numLimit = 20, numPerParam = 5, accThreshold = 0.88, bagVal = 0.65)
+	dataList = (pickle.load(open('tmpData/ensemble/audioFetA/audioFet_' + fetChoice + '.p', 'rb')))
+
+	print 'Started creating regressor army', fetChoice
+
+	createRegressorArmy(5, regList, dataList, fetChoice = 'Avg_ClusterFull', numLimit = 20, numPerParam = 5, accThreshold = 0.88, bagVal = 0.65)

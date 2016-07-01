@@ -68,20 +68,26 @@ def readFromFileAudioFetA(fileName, feature, clusterSize = 4):
 	tmpFeature = []
 	if ('minmax' in feature):
 		newList = []
-		for i in range(len(tmpList) - clusterSize + 1):
-			clusterList = np.array(tmpList[i:i+clusterSize])
-			tmpFeature = np.max(clusterList, axis = 0)
-			# print tmpFeature.shape
-			tmpFeature = np.append(tmpFeature, np.min(clusterList, axis = 0))
-			# print tmpFeature.shape
-			newList.append(tmpFeature)
+		if (clusterSize <= 0):
+			newList.append(np.max(tmpList, axis = 0))
+		else:
+			for i in range(len(tmpList) - clusterSize + 1):
+				clusterList = np.array(tmpList[i:i+clusterSize])
+				tmpFeature = np.max(clusterList, axis = 0)
+				# print tmpFeature.shape
+				tmpFeature = np.append(tmpFeature, np.min(clusterList, axis = 0))
+				# print tmpFeature.shape
+				newList.append(tmpFeature)
 		tmpList = newList
 	elif ('avg' in feature):
 		newList = []
-		for i in range(len(tmpList) - clusterSize + 1):
-			clusterList = np.array(tmpList[i:i+clusterSize])
-			tmpFeature = np.mean(clusterList, axis = 0)
-			newList.append(tmpFeature)
+		if (clusterSize <= 0):
+			newList.append(np.mean(tmpList, axis = 0))
+		else:
+			for i in range(len(tmpList) - clusterSize + 1):
+				clusterList = np.array(tmpList[i:i+clusterSize])
+				tmpFeature = np.mean(clusterList, axis = 0)
+				newList.append(tmpFeature)
 		tmpList = newList
 
 	# tmpList = np.array(tmpList)
@@ -185,7 +191,7 @@ def readFromFileFetF(fileName, poolType = 'max', numSamples = 5, numTotSamples =
 	# print newFetList.shape
 	return newFetList
 
-def readData(fileNames, trueVal = None, feature = 'A', poolType = 'avg', printFlag = False):
+def readData(fileNames, trueVal = None, feature = 'A', poolType = 'avg', printFlag = False, clusterSize = 4):
 	X = []
 	Y = []
 	X1 = []
@@ -202,7 +208,7 @@ def readData(fileNames, trueVal = None, feature = 'A', poolType = 'avg', printFl
 		elif (feature == 'F'):
 			imgList = readFromFileFetF(fileName, poolType = poolType, numSamples = 20, numPools = 10)
 		elif ('AudioA' in feature):
-			imgList = readFromFileAudioFetA(fileName, feature)
+			imgList = readFromFileAudioFetA(fileName, feature, clusterSize = clusterSize)
 		elif (feature == 'CF'):
 			imgList = readFromFileFetC(fileName, 5, augment = True)
 			vggList = readFromFileFetF(fileName, poolType = poolType, numSamples = len(imgList), numTotSamples = len(imgList), numPools = 10, randomFlag = True)
@@ -301,7 +307,7 @@ def GetBGFeatures(frameList, model, numCrops = 8):
 	# print fetList.shape
 	return fetList
 
-def evaluateTraits(p, gt):
+def evaluateTraits(p, gt, printFlag = True):
 	# Currently allowing negative values
 
 	if (len(p) == len(gt)):
@@ -311,22 +317,29 @@ def evaluateTraits(p, gt):
 				# return
 			for j in range(len(p[i])):
 				if p[i][j] < 0 or p[i][j] > 1 or gt[i][j] < 0 or gt[i][j] > 1:
-					print "Inputs must be values in the range [0,1]. Traits could not be evaluated."
-					# return
+					if printFlag:
+						print "Inputs must be values in the range [0,1]. Traits could not be evaluated."
+						# return
 	
 	errors = np.abs(p-gt)
 	meanAccs = 1-np.mean(errors, axis=0)
-	
-	print "\nAverage accuracy of "+str(np.mean(meanAccs))+": "
-	
-	# These scores are reported.
-	print "Accuracy predicting Extraversion: "+str(meanAccs[0])
-	print "Accuracy predicting Agreeableness: "+str(meanAccs[1])
-	print "Accuracy predicting Conscientiousness: "+str(meanAccs[2])
-	print "Accuracy predicting Neuroticism: "+str(meanAccs[3])
-	print "Accuracy predicting Openness to Experience: "+str(meanAccs[4])
-	print "\n"
+
+	if printFlag:
+		print "\nAverage accuracy of "+str(np.mean(meanAccs))+": "
 		
+		# These scores are reported.
+		print "Accuracy predicting Extraversion: "+str(meanAccs[0])
+		print "Accuracy predicting Agreeableness: "+str(meanAccs[1])
+		print "Accuracy predicting Conscientiousness: "+str(meanAccs[2])
+		print "Accuracy predicting Neuroticism: "+str(meanAccs[3])
+		print "Accuracy predicting Openness to Experience: "+str(meanAccs[4])
+		print "\n"
+		
+	meanAccs = np.mean(meanAccs)
+
+	if (not printFlag):
+		print meanAccs
+
 	return meanAccs
 
 def generatePredFile(p, subset='validation'):
