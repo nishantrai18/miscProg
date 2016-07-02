@@ -52,9 +52,10 @@ class MultiStageRegressor():
 		for i in range(len(trainSet)):
 			Y_pred = np.zeros((trainSet[i].shape[0], numTargets))
 			for j in range(numTargets):
-				Y_pred[:,i] = (self.regA)[i].predict(trainSet[i])
+				Y_pred[:,j] = (self.regA)[j].predict(trainSet[i])
 			while (Y_pred.shape[0] < self.regBFetSize):
-				Y_pred = np.concatenate((Y_pred, np.mean(Y_pred, axis = 0)), axis = 0)
+				tmpList = np.array([np.mean(Y_pred, axis = 0)])
+				Y_pred = np.concatenate((Y_pred, tmpList), axis = 0)
 			# Fixing the data in case there are less features than required	
 			X_train.append(Y_pred.flatten())
 		X_train = np.array(X_train)
@@ -122,6 +123,9 @@ def getParamValList(minVal, ratio = 10, sepSize = 4, listSize = 20):
 
 	paramList = []
 	baseList = []
+
+	if (sepSize == 0):
+		sepSize += 1
 
 	for i in range(sepSize):
 		baseList.append(minVal * (1.0 + ((ratio * i * 1.0)/sepSize)))
@@ -552,9 +556,9 @@ def createAudioMultiStageRegressorArmy(numTargets, regList, vidNames, vidNamesTe
 				regB = None
 
 				if (mergeList[d] == 'LS'):
-					regB = linear_model.Lasso(alpha = 1)
+					regB = linear_model.Lasso(alpha = 1e-03)
 				elif (mergeList[d] == 'LS+'):
-					regB = linear_model.Lasso(alpha = 1, positive = True)
+					regB = linear_model.Lasso(alpha = 1e-03, positive = True)
 				elif (mergeList[d] == 'Ridge'):
 					regB = linear_model.Ridge(alpha = 10)
 				elif (mergeList[d] == 'LinearSVR'):
@@ -922,10 +926,10 @@ if __name__ == "__main__":
 
 		regList = ['SVR', 'BAG', 'Ridge', 'LS', 'RF', 'ADA', 'GBR']
 		# mergeList = ['LS', 'LS+', 'Ridge', 'LinearSVR', 'BAG_SVR', 'Poly2SVR', 'Poly1SVR']
-		mergeList = ['LS+', 'Ridge','BAG_SVR', 'Poly2SVR']
+		mergeList = ['LS', 'Ridge', 'LS+', 'BAG_SVR', 'Poly2SVR']
 		fetList = ['AudioA_avg', 'AudioA_minmax']
 		segmentList = [1, 3, 5, 7, 9, 11]
 		fetChoice = 'AudioA_avg_minmax'
 
 		createAudioMultiStageRegressorArmy(5, regList, vidNames, vidNamesTest, mergeList, fetList, segmentList, fetChoice, \
-									   numLimit = 5, numPerParam = 2, accThreshold = 0.885, bagVal = 0.65)
+									   numLimit = 10, numPerParam = 4, accThreshold = 0.88, bagVal = 0.65)
