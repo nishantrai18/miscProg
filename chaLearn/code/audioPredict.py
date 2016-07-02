@@ -59,12 +59,12 @@ Y_pred = np.zeros((X_test.shape[0], 5))
 clfList = []
 
 # modelChoice = 'NN'	# Ever so slightly better than constant
-# modelChoice = 'SVR'	# Gives out of bounds results
+modelChoice = 'SVR'	# Gives out of bounds results
 # modelChoice = 'RF'
 # modelChoice = 'LGR'	# very poor results
 # modelChoice = 'MISC'
 # modelChoice = 'GBR'
-modelChoice = 'BAG'
+# modelChoice = 'BAG'
 # modelChoice = 'SKNN'
 
 modelName, model_file_name = '', ''
@@ -78,8 +78,9 @@ if (modelChoice == 'SVR'):
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
-		# clfList.append(SVR(C = 10.0, kernel = 'poly'))
-		clfList.append(LinearSVR(C = 10.0))
+		# clfList.append(SVR(C = 1000.0, kernel = 'rbf'))
+		clfList.append(SVR(C = 1.0, kernel = 'poly', degree = 2))
+		# clfList.append(LinearSVR(C = 1000.0))
 		# Parameter study for C
 		clfList[i].fit(X_train, Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
