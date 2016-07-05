@@ -3,6 +3,7 @@ import numpy as np
 import os
 import random
 import sklearn
+from copy import deepcopy
 from sklearn.svm import SVR, LinearSVR
 from sklearn import preprocessing
 from sklearn import linear_model
@@ -44,12 +45,13 @@ class MultiStageRegressor():
 		self.accA = evaluateTraits(Y_pred, Y_test, printFlag = False)
 		print 'Accuracy of stage A is', self.accA
 
-	def getFetStageB(self, numTargets, trainSet):
+	def getFetStageB(self, numTargets, trainSet, printFlag = True):
 		# Returns the features for stage B
 
 		X_train = []
 
 		for i in range(len(trainSet)):
+			# print trainSet[i].shape
 			Y_pred = np.zeros((trainSet[i].shape[0], numTargets))
 			for j in range(numTargets):
 				Y_pred[:,j] = (self.regA)[j].predict(trainSet[i])
@@ -58,11 +60,17 @@ class MultiStageRegressor():
 				Y_pred = np.concatenate((Y_pred, tmpList), axis = 0)
 			# Fixing the data in case there are less features than required	
 			X_train.append(Y_pred.flatten())
+			if (printFlag):
+				print '\r', (i*(1.0))/len(trainSet), 'part predicting completed!',
+				sys.stdout.flush()
+
+		print
+
 		X_train = np.array(X_train)
 
 		return X_train
 
-	def trainStageB(self, reg, numTargets, trainSet, Y_train):
+	def getXTrainFromSet(self, numTargets, trainSet):
 		# trainSet is a list of X_trains's, i.e. one for each sample
 
 		self.regB = []
@@ -74,20 +82,56 @@ class MultiStageRegressor():
 
 		X_train = self.getFetStageB(numTargets, trainSet)
 
+		return X_train
+
+	def trainStageB(self, reg, numTargets, X_train, Y_train):
+
+		self.regB = []
+
 		for i in range(numTargets):
 			(self.regB).append(sklearn.base.clone(reg))
+			# print (self.regB)[i].coef_
 			(self.regB)[i].fit(X_train, Y_train[:,i])
+			# print (self.regB)[i].coef_
 
-	def getStageBAcc(self, numTargets, testSet, Y_test):
-		X_test = self.getFetStageB(numTargets, testSet)
+	def getStageBAcc(self, numTargets, X_test, Y_test):
 
 		Y_pred = np.zeros((X_test.shape[0], numTargets))
 		for i in range(numTargets):
 			Y_pred[:,i] = (self.regB)[i].predict(X_test)
 
 		self.accB = evaluateTraits(Y_pred, Y_test, printFlag = False)
-		print 'Accuracy of stage B is', self.accB
+		print 'Accuracy of stage B with reg', self.name, 'is', self.accB
 
+
+def MultiStageRegressorPredict(multiStageReg, numTargets, X_stageA):
+	# X_stageA is a list of features (where features are also a group of features)
+
+	X = multiStageReg.getFetStageB(numTargets, X_stageA, printFlag = False)[0]
+	Y = np.zeros((X.shape[0], numTargets))
+	for i in range(numTargets):
+		Y[:,i] = (multiStageReg.regB)[i].predict(X)
+
+	return Y
+
+def getMultiStageDict(vidNames, trueVal, fetChoice, clusterSize, printFlag = True):
+	# Returns the feature and true value dictionary
+
+	Y = {}
+	X = {}
+
+	for i in range(len(vidNames)):
+		tmpX, tmpY = readData([vidNames[i]], trueVal, feature = fetChoice, clusterSize = clusterSize)
+		if (printFlag):
+			print '\r', (i*(1.0))/len(vidNames), 'part reading completed',
+			sys.stdout.flush()
+		if (tmpX.shape[0] == 0):
+			continue
+
+		X[vidNames[i]] = tmpX[0]
+		Y[vidNames[i]] = tmpY[0]
+
+	return X, Y
 
 def getMultiStageSet(vidNames, trueVal, fetChoice, clusterSize, printFlag = True):
 	# Returns the train and test set, as required by MultiRegressorArmy
@@ -464,6 +508,32 @@ def createRegressorArmy(numTargets, regList, dataList, fetChoice, numLimit = 10,
 
 	return histList
 
+
+def getMerger(mergeName):
+
+	reg = None
+
+	if (mergeName == 'LS'):
+		reg = linear_model.Lasso(alpha = 1e-03)
+	elif (mergeName == 'LS+'):
+		reg = linear_model.Lasso(alpha = 1e-03, positive = True)
+	elif (mergeName == 'Ridge'):
+		reg = linear_model.Ridge(alpha = 0.01)
+	elif (mergeName == 'LinearSVR'):
+		reg = LinearSVR(C = 0.1)
+	elif (mergeName == 'Poly2SVR'):
+		reg = SVR(C = 0.1, kernel = 'poly', degree = 2)
+	elif (mergeName == 'Poly1SVR'):
+		reg = SVR(C = 0.1, kernel = 'poly', degree = 1)
+	elif (mergeName == 'BAG_DecTree'):
+		reg = BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4)
+	elif (mergeName == 'BAG_SVR'):
+		reg = BaggingRegressor(LinearSVR(C = 0.1), n_estimators = 50, n_jobs = 4)
+	else:
+		print mergeName, 'not implemented yet!'
+
+	return reg
+
 def createAudioMultiStageRegressorArmy(numTargets, regList, vidNames, vidNamesTest, mergeList, fetList, segmentList, fetChoice, \
 									   numLimit = 10, numPerParam = 4, accThreshold = 0.885, bagVal = 0.5, scaleFlag = False):
 	'''
@@ -537,9 +607,9 @@ def createAudioMultiStageRegressorArmy(numTargets, regList, vidNames, vidNamesTe
 			print 'Reading data for:', fetList[j], segmentList[c]
 
 			if (not os.path.isfile(fileName)):
-				trainSet, X_train, Y_train = getMultiStageSet(vidNames, trueVal, fetChoice = fetChoice, clusterSize = segmentList[c])
+				trainSet, X_train, Y_train = getMultiStageSet(vidNames, trueVal, fetChoice = fetList[j], clusterSize = segmentList[c])
 				print '\nReading training data complete'
-				testSet, X_test, Y_test = getMultiStageSet(vidNamesTest, trueVal, fetChoice = fetChoice, clusterSize = segmentList[c])
+				testSet, X_test, Y_test = getMultiStageSet(vidNamesTest, trueVal, fetChoice = fetList[j], clusterSize = segmentList[c])
 				print '\nReading testing data complete'
 				dataList = [[trainSet, X_train, Y_train], [testSet, X_test, Y_test]]
 				pickle.dump(dataList, open(fileName, 'wb'))
@@ -551,322 +621,378 @@ def createAudioMultiStageRegressorArmy(numTargets, regList, vidNames, vidNamesTe
 				testSet, X_test, Y_test = dataList[1][0], dataList[1][1], dataList[1][2]
 				print 'Reading Done!'
 			
-			for d in range(len(mergeList)):
+			for i in range(len(regList)):
 
-				regB = None
-
-				if (mergeList[d] == 'LS'):
-					regB = linear_model.Lasso(alpha = 1e-03)
-				elif (mergeList[d] == 'LS+'):
-					regB = linear_model.Lasso(alpha = 1e-03, positive = True)
-				elif (mergeList[d] == 'Ridge'):
-					regB = linear_model.Ridge(alpha = 10)
-				elif (mergeList[d] == 'LinearSVR'):
-					regB = LinearSVR(C = 30)
-				elif (mergeList[d] == 'Poly2SVR'):
-					regB = SVR(C = 30, kernel = 'poly', degree = 2)
-				elif (mergeList[d] == 'Poly1SVR'):
-					regB = SVR(C = 30, kernel = 'poly', degree = 1)
-				elif (mergeList[d] == 'BAG_DecTree'):
-					regB = BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4)
-				elif (mergeList[d] == 'BAG_SVR'):
-					regB = BaggingRegressor(LinearSVR(C = 30), n_estimators = 50, n_jobs = 4)
-				else:
-					print mergeList[d], 'not implemented yet!'
+				if (regList[i] not in availReg):
 					continue
 
-				for i in range(len(regList)):
-
-					if (regList[i] not in availReg):
-						continue
+				if (regList[i] == 'SVR'):
+					modelName = 'LinearSVR_'
+					paramAppend = 'C_'
+					# Gives the parameters for the regressor
 
-					if (regList[i] == 'SVR'):
-						modelName = 'LinearSVR_'
-						paramAppend = 'C_'
-						# Gives the parameters for the regressor
+					paramList = getParamValList(1e-3, 10, (numLimit/5), numLimit)
 
-						paramList = getParamValList(1e-3, 10, (numLimit/5), numLimit)
+					for param in paramList:
+						
+						for k in range(numPerParam):
 
-						for param in paramList:
-							
-							for k in range(numPerParam):
+							clf = MultiStageRegressor()
+							regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
+												  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
+							regName = regName + '_' + segmentAppend + str(segmentList[c])
+							clf.setName(regName)
+							print regName
 
-								clf = MultiStageRegressor()
-								regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
-													  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
-								regName = regName + '_' + segmentAppend + str(segmentList[c]) + '_' + mergeAppend + mergeList[d]
-								clf.setName(regName)
-								print regName
+							regA = LinearSVR(C = param)
+							clf.trainStageA(regA, numTargets, X_tr, Y_tr)
+							clf.getStageAAcc(numTargets, X_test, Y_test)
+							histListStageA.append([regName, clf.accA])
 
-								regA = LinearSVR(C = param)
-								clf.trainStageA(regA, numTargets, X_tr, Y_tr)
-								clf.getStageAAcc(numTargets, X_test, Y_test)
-								histListStageA.append([regName, clf.accA])
+							if (accThreshold - clf.accA > (accThreshold/25)):
+								break
+							elif (clf.accA < accThreshold):
+								continue
 
-								if (accThreshold - clf.accA > (accThreshold/100)):
-									break
-								elif (clf.accA < accThreshold):
-									continue
+							X_trn = clf.getXTrainFromSet(numTargets, trainSet)
+							X_tst = clf.getFetStageB(numTargets, testSet)
 
-								clf.trainStageB(regB, numTargets, trainSet, Y_train)
-								clf.getStageBAcc(numTargets, testSet, Y_test)
-								histListStageB.append([regName, clf.accB])
+							for d in range(len(mergeList)):
+								clfNew = deepcopy(clf)
+								regNameTmp = regName + '_' + mergeAppend + mergeList[d]
+								clfNew.setName(regNameTmp)
 
-								if (clf.accB > accThreshold):
-									pickle.dump(clf, open(savePath + regName + '.p', 'wb'))
+								regB = getMerger(mergeList[d])
 
-					elif (regList[i] == 'BAG'):
-						modelName = 'BAG_DecTree_'
-						paramAppend = 'N_'
-						# Gives the number of estimators
+								clfNew.trainStageB(regB, numTargets, X_trn, Y_train)
+								clfNew.getStageBAcc(numTargets, X_tst, Y_test)
+								histListStageB.append([regNameTmp, clfNew.accB])
 
-						paramList = getParamValList(10, 10, 4, 4)
+								if (clfNew.accB > accThreshold + 0.01):
+									pickle.dump(clfNew, open(savePath + regNameTmp + '.p', 'wb'))
 
-						for param in paramList:
+				elif (regList[i] == 'BAG'):
+					modelName = 'BAG_DecTree_'
+					paramAppend = 'N_'
+					# Gives the number of estimators
 
-							param = int(param)
-							for k in range(numPerParam):
+					paramList = getParamValList(10, 20, 4, 4)
 
-								clf = MultiStageRegressor()
-								regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
-													  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
-								regName = regName + '_' + segmentAppend + str(segmentList[c]) + '_' + mergeAppend + mergeList[d]
-								print regName
+					for param in paramList:
 
-								regA = BaggingRegressor(DecisionTreeRegressor(), n_estimators = param, n_jobs = 5)
-								clf.trainStageA(regA, numTargets, X_tr, Y_tr)
-								clf.getStageAAcc(numTargets, X_test, Y_test)
-								histListStageA.append([regName, clf.accA])
+						param = int(param)
+						for k in range(numPerParam):
 
-								if (accThreshold - clf.accA > (accThreshold/100)):
-									break
-								elif (clf.accA < accThreshold):
-									continue
+							clf = MultiStageRegressor()
+							regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
+												  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
+							regName = regName + '_' + segmentAppend + str(segmentList[c])
+							print regName
 
-								clf.trainStageB(regB, numTargets, trainSet, Y_train)
-								clf.getStageBAcc(numTargets, testSet, Y_test)
-								histListStageB.append([regName, clf.accB])
+							regA = BaggingRegressor(DecisionTreeRegressor(), n_estimators = param, n_jobs = 5)
+							clf.trainStageA(regA, numTargets, X_tr, Y_tr)
+							clf.getStageAAcc(numTargets, X_test, Y_test)
+							histListStageA.append([regName, clf.accA])
 
-								if (clf.accB > accThreshold):
-									pickle.dump(clf, open(savePath + regName + '.p', 'wb'))
+							if (accThreshold - clf.accA > (accThreshold/100)):
+								break
+							elif (clf.accA < accThreshold):
+								continue
 
-					elif (regList[i] == 'Ridge'):
-						modelName = 'Ridge_'
-						paramAppend = 'Alpha_'
-						# Gives the parameters for the regressor
+							X_trn = clf.getXTrainFromSet(numTargets, trainSet)
+							X_tst = clf.getFetStageB(numTargets, testSet)
 
-						paramList = getParamValList(1e-3, 10, (numLimit/10), numLimit)
+							for d in range(len(mergeList)):
+								clfNew = deepcopy(clf)
+								regNameTmp = regName + '_' + mergeAppend + mergeList[d]
+								clfNew.setName(regNameTmp)
 
-						for param in paramList:
+								regB = getMerger(mergeList[d])
 
-							for k in range(numPerParam):
+								clfNew.trainStageB(regB, numTargets, X_trn, Y_train)
+								clfNew.getStageBAcc(numTargets, X_tst, Y_test)
+								histListStageB.append([regNameTmp, clfNew.accB])
 
-								clf = MultiStageRegressor()
-								regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
-													  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
-								regName = regName + '_' + segmentAppend + str(segmentList[c]) + '_' + mergeAppend + mergeList[d]
-								print regName
+								if (clfNew.accB > accThreshold + 0.01):
+									pickle.dump(clfNew, open(savePath + regNameTmp + '.p', 'wb'))
 
-								regA = linear_model.Ridge(alpha = param)
-								clf.trainStageA(regA, numTargets, X_tr, Y_tr)
-								clf.getStageAAcc(numTargets, X_test, Y_test)
-								histListStageA.append([regName, clf.accA])
+				elif (regList[i] == 'Ridge'):
+					modelName = 'Ridge_'
+					paramAppend = 'Alpha_'
+					# Gives the parameters for the regressor
 
-								if (accThreshold - clf.accA > (accThreshold/100)):
-									break
-								elif (clf.accA < accThreshold):
-									continue
+					paramList = getParamValList(1e-3, 10, (numLimit/5), numLimit)
 
-								clf.trainStageB(regB, numTargets, trainSet, Y_train)
-								clf.getStageBAcc(numTargets, testSet, Y_test)
-								histListStageB.append([regName, clf.accB])
+					for param in paramList:
 
-								if (clf.accB > accThreshold):
-									pickle.dump(clf, open(savePath + regName + '.p', 'wb'))
+						for k in range(numPerParam):
 
-					elif (regList[i] == 'LS'):
-						modelName = 'LS_'
-						paramAppend = 'Alpha_'
-						# Gives the parameters for the regressor
+							clf = MultiStageRegressor()
+							regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
+												  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
+							regName = regName + '_' + segmentAppend + str(segmentList[c])
+							print regName
 
-						paramList = getParamValList(1e-3, 10, (numLimit/10), numLimit)
+							regA = linear_model.Ridge(alpha = param)
+							clf.trainStageA(regA, numTargets, X_tr, Y_tr)
+							clf.getStageAAcc(numTargets, X_test, Y_test)
+							histListStageA.append([regName, clf.accA])
 
-						for param in paramList:
+							if (accThreshold - clf.accA > (accThreshold/50)):
+								break
+							elif (clf.accA < accThreshold):
+								continue
 
-							for k in range(numPerParam):
+							X_trn = clf.getXTrainFromSet(numTargets, trainSet)
+							X_tst = clf.getFetStageB(numTargets, testSet)
 
-								clf = MultiStageRegressor()
-								regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
-													  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
-								regName = regName + '_' + segmentAppend + str(segmentList[c]) + '_' + mergeAppend + mergeList[d]
-								print regName
+							for d in range(len(mergeList)):
+								clfNew = deepcopy(clf)
+								regNameTmp = regName + '_' + mergeAppend + mergeList[d]
+								clfNew.setName(regNameTmp)
 
-								regA = linear_model.Lasso(alpha = param)
-								clf.trainStageA(regA, numTargets, X_tr, Y_tr)
-								clf.getStageAAcc(numTargets, X_test, Y_test)
-								histListStageA.append([regName, clf.accA])
+								regB = getMerger(mergeList[d])
 
-								if (accThreshold - clf.accA > (accThreshold/100)):
-									break
-								elif (clf.accA < accThreshold):
-									continue
+								clfNew.trainStageB(regB, numTargets, X_trn, Y_train)
+								clfNew.getStageBAcc(numTargets, X_tst, Y_test)
+								histListStageB.append([regNameTmp, clfNew.accB])
 
-								clf.trainStageB(regB, numTargets, trainSet, Y_train)
-								clf.getStageBAcc(numTargets, testSet, Y_test)
-								histListStageB.append([regName, clf.accB])
+								if (clfNew.accB > accThreshold + 0.01):
+									pickle.dump(clfNew, open(savePath + regNameTmp + '.p', 'wb'))
 
-								if (clf.accB > accThreshold):
-									pickle.dump(clf, open(savePath + regName + '.p', 'wb'))
+				elif (regList[i] == 'LS'):
+					modelName = 'LS_'
+					paramAppend = 'Alpha_'
+					# Gives the parameters for the regressor
 
-					elif (regList[i] == 'LS+'):
-						modelName = 'Lasso+_'
-						paramAppend = 'Alpha_'
-						# Gives the parameters for the regressor
+					paramList = getParamValList(1e-3, 10, (numLimit/5), numLimit)
 
-						paramList = getParamValList(1e-3, 10, (numLimit/10), numLimit)
+					for param in paramList:
 
-						for param in paramList:
+						for k in range(numPerParam):
 
-							for k in range(numPerParam):
+							clf = MultiStageRegressor()
+							regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
+												  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
+							regName = regName + '_' + segmentAppend + str(segmentList[c])
+							print regName
 
-								clf = MultiStageRegressor()
-								regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
-													  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
-								regName = regName + '_' + segmentAppend + str(segmentList[c]) + '_' + mergeAppend + mergeList[d]
-								clf.setName(regName)
-								print regName
+							regA = linear_model.Lasso(alpha = param)
+							clf.trainStageA(regA, numTargets, X_tr, Y_tr)
+							clf.getStageAAcc(numTargets, X_test, Y_test)
+							histListStageA.append([regName, clf.accA])
 
-								regA = linear_model.Lasso(alpha = param, positive = True)
-								clf.trainStageA(regA, numTargets, X_tr, Y_tr)
-								clf.getStageAAcc(numTargets, X_test, Y_test)
-								histListStageA.append([regName, clf.accA])
+							if (accThreshold - clf.accA > (accThreshold/50)):
+								break
+							elif (clf.accA < accThreshold):
+								continue
 
-								if (accThreshold - clf.accA > (accThreshold/100)):
-									break
-								elif (clf.accA < accThreshold):
-									continue
+							X_trn = clf.getXTrainFromSet(numTargets, trainSet)
+							X_tst = clf.getFetStageB(numTargets, testSet)
 
-								clf.trainStageB(regB, numTargets, trainSet, Y_train)
-								clf.getStageBAcc(numTargets, testSet, Y_test)
-								histListStageB.append([regName, clf.accB])
+							for d in range(len(mergeList)):
+								clfNew = deepcopy(clf)
+								regNameTmp = regName + '_' + mergeAppend + mergeList[d]
+								clfNew.setName(regNameTmp)
 
-								if (clf.accB > accThreshold):
-									pickle.dump(clf, open(savePath + regName + '.p', 'wb'))
+								regB = getMerger(mergeList[d])
 
-					elif (regList[i] == 'RF'):
-						modelName = 'RF_'
-						paramAppend = 'N_'
-						# Gives the parameters for the regressor
+								clfNew.trainStageB(regB, numTargets, X_trn, Y_train)
+								clfNew.getStageBAcc(numTargets, X_tst, Y_test)
+								histListStageB.append([regNameTmp, clfNew.accB])
 
-						paramList = getParamValList(10, 10, 4, 4)
+								if (clfNew.accB > accThreshold + 0.01):
+									pickle.dump(clfNew, open(savePath + regNameTmp + '.p', 'wb'))
 
-						for param in paramList:
+				elif (regList[i] == 'LS+'):
+					modelName = 'Lasso+_'
+					paramAppend = 'Alpha_'
+					# Gives the parameters for the regressor
 
-							param = int(param)
-							for k in range(numPerParam):
+					paramList = getParamValList(1e-3, 10, (numLimit/5), numLimit)
 
-								clf = MultiStageRegressor()
-								regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
-													  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
-								regName = regName + '_' + segmentAppend + str(segmentList[c]) + '_' + mergeAppend + mergeList[d]
-								clf.setName(regName)
-								print regName
+					for param in paramList:
 
-								regA = RandomForestRegressor(n_estimators = param, n_jobs = 5)
-								clf.trainStageA(regA, numTargets, X_tr, Y_tr)
-								clf.getStageAAcc(numTargets, X_test, Y_test)
-								histListStageA.append([regName, clf.accA])
+						for k in range(numPerParam):
 
-								if (accThreshold - clf.accA > (accThreshold/100)):
-									break
-								elif (clf.accA < accThreshold):
-									continue
+							clf = MultiStageRegressor()
+							regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
+												  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
+							regName = regName + '_' + segmentAppend + str(segmentList[c])
+							clf.setName(regName)
+							print regName
 
-								clf.trainStageB(regB, numTargets, trainSet, Y_train)
-								clf.getStageBAcc(numTargets, testSet, Y_test)
-								histListStageB.append([regName, clf.accB])
+							regA = linear_model.Lasso(alpha = param, positive = True)
+							clf.trainStageA(regA, numTargets, X_tr, Y_tr)
+							clf.getStageAAcc(numTargets, X_test, Y_test)
+							histListStageA.append([regName, clf.accA])
 
-								if (clf.accB > accThreshold):
-									pickle.dump(clf, open(savePath + regName + '.p', 'wb'))
+							if (accThreshold - clf.accA > (accThreshold/50)):
+								break
+							elif (clf.accA < accThreshold):
+								continue
 
-					elif (regList[i] == 'ADA'):
-						modelName = 'ADA_DecTree_'
-						paramAppend = 'N_'
-						# Gives the parameters for the regressor
+							X_trn = clf.getXTrainFromSet(numTargets, trainSet)
+							X_tst = clf.getFetStageB(numTargets, testSet)
 
-						paramList = getParamValList(10, 10, 4, 4)
+							for d in range(len(mergeList)):
+								clfNew = deepcopy(clf)
+								regNameTmp = regName + '_' + mergeAppend + mergeList[d]
+								clfNew.setName(regNameTmp)
 
-						for param in paramList:
+								regB = getMerger(mergeList[d])
 
-							param = int(param)
-							for k in range(numPerParam):
+								clfNew.trainStageB(regB, numTargets, X_trn, Y_train)
+								clfNew.getStageBAcc(numTargets, X_tst, Y_test)
+								histListStageB.append([regNameTmp, clfNew.accB])
 
-								clf = MultiStageRegressor()
-								regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
-													  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
-								regName = regName + '_' + segmentAppend + str(segmentList[c]) + '_' + mergeAppend + mergeList[d]
-								clf.setName(regName)
-								print regName
+								if (clfNew.accB > accThreshold + 0.01):
+									pickle.dump(clfNew, open(savePath + regNameTmp + '.p', 'wb'))
 
-								regA = AdaBoostRegressor(DecisionTreeRegressor(), n_estimators = param)
-								clf.trainStageA(regA, numTargets, X_tr, Y_tr)
-								clf.getStageAAcc(numTargets, X_test, Y_test)
-								histListStageA.append([regName, clf.accA])
+				elif (regList[i] == 'RF'):
+					modelName = 'RF_'
+					paramAppend = 'N_'
+					# Gives the parameters for the regressor
 
-								if (accThreshold - clf.accA > (accThreshold/100)):
-									break
-								elif (clf.accA < accThreshold):
-									continue
+					paramList = getParamValList(10, 20, 4, 4)
 
-								clf.trainStageB(regB, numTargets, trainSet, Y_train)
-								clf.getStageBAcc(numTargets, testSet, Y_test)
-								histListStageB.append([regName, clf.accB])
+					for param in paramList:
 
-								if (clf.accB > accThreshold):
-									pickle.dump(clf, open(savePath + regName + '.p', 'wb'))
+						param = int(param)
+						for k in range(numPerParam):
 
-					elif (regList[i] == 'GBR'):
-						modelName = 'GBR_'
-						paramAppend = 'N_'
-						# Gives the parameters for the regressor
+							clf = MultiStageRegressor()
+							regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
+												  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
+							regName = regName + '_' + segmentAppend + str(segmentList[c])
+							clf.setName(regName)
+							print regName
 
-						paramList = getParamValList(10, 10, 4, 4)
+							regA = RandomForestRegressor(n_estimators = param, n_jobs = 5)
+							clf.trainStageA(regA, numTargets, X_tr, Y_tr)
+							clf.getStageAAcc(numTargets, X_test, Y_test)
+							histListStageA.append([regName, clf.accA])
 
-						for param in paramList:
+							if (accThreshold - clf.accA > (accThreshold/100)):
+								break
+							elif (clf.accA < accThreshold):
+								continue
 
-							param = int(param)
-							for k in range(numPerParam):
+							X_trn = clf.getXTrainFromSet(numTargets, trainSet)
+							X_tst = clf.getFetStageB(numTargets, testSet)
 
-								clf = MultiStageRegressor()
-								regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
-													  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
-								regName = regName + '_' + segmentAppend + str(segmentList[c]) + '_' + mergeAppend + mergeList[d]
-								clf.setName(regName)
-								print regName
+							for d in range(len(mergeList)):
+								clfNew = deepcopy(clf)
+								regNameTmp = regName + '_' + mergeAppend + mergeList[d]
+								clfNew.setName(regNameTmp)
 
-								regA = GradientBoostingRegressor(n_estimators = param, loss='lad')
-								clf.trainStageA(regA, numTargets, X_tr, Y_tr)
-								clf.getStageAAcc(numTargets, X_test, Y_test)
-								histListStageA.append([regName, clf.accA])
+								regB = getMerger(mergeList[d])
 
-								if (accThreshold - clf.accA > (accThreshold/100)):
-									break
-								elif (clf.accA < accThreshold):
-									continue
+								clfNew.trainStageB(regB, numTargets, X_trn, Y_train)
+								clfNew.getStageBAcc(numTargets, X_tst, Y_test)
+								histListStageB.append([regNameTmp, clfNew.accB])
 
-								clf.trainStageB(regB, numTargets, trainSet, Y_train)
-								clf.getStageBAcc(numTargets, testSet, Y_test)
-								histListStageB.append([regName, clf.accB])
+								if (clfNew.accB > accThreshold + 0.01):
+									pickle.dump(clfNew, open(savePath + regNameTmp + '.p', 'wb'))
 
-								if (clf.accB > accThreshold):
-									pickle.dump(clf, open(savePath + regName + '.p', 'wb'))
+				elif (regList[i] == 'ADA'):
+					modelName = 'ADA_DecTree_'
+					paramAppend = 'N_'
+					# Gives the parameters for the regressor
 
-					else:
-						print regList[i], "not implemented yet!"
+					paramList = getParamValList(10, 20, 4, 4)
 
-					print i, j
-					print (histListStageA)
-					print (histListStageB)
+					for param in paramList:
+
+						param = int(param)
+						for k in range(numPerParam):
+
+							clf = MultiStageRegressor()
+							regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
+												  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
+							regName = regName + '_' + segmentAppend + str(segmentList[c])
+							clf.setName(regName)
+							print regName
+
+							regA = AdaBoostRegressor(DecisionTreeRegressor(), n_estimators = param)
+							clf.trainStageA(regA, numTargets, X_tr, Y_tr)
+							clf.getStageAAcc(numTargets, X_test, Y_test)
+							histListStageA.append([regName, clf.accA])
+
+							if (accThreshold - clf.accA > (accThreshold/100)):
+								break
+							elif (clf.accA < accThreshold):
+								continue
+
+							X_trn = clf.getXTrainFromSet(numTargets, trainSet)
+							X_tst = clf.getFetStageB(numTargets, testSet)
+
+							for d in range(len(mergeList)):
+								clfNew = deepcopy(clf)
+								regNameTmp = regName + '_' + mergeAppend + mergeList[d]
+								clfNew.setName(regNameTmp)
+
+								regB = getMerger(mergeList[d])
+
+								clfNew.trainStageB(regB, numTargets, X_trn, Y_train)
+								clfNew.getStageBAcc(numTargets, X_tst, Y_test)
+								histListStageB.append([regNameTmp, clfNew.accB])
+
+								if (clfNew.accB > accThreshold + 0.01):
+									pickle.dump(clfNew, open(savePath + regNameTmp + '.p', 'wb'))
+
+				elif (regList[i] == 'GBR'):
+					modelName = 'GBR_'
+					paramAppend = 'N_'
+					# Gives the parameters for the regressor
+
+					paramList = getParamValList(10, 20, 4, 4)
+
+					for param in paramList:
+
+						param = int(param)
+						for k in range(numPerParam):
+
+							clf = MultiStageRegressor()
+							regName, X_tr, Y_tr = getBaggedSet(modelName, bagAppend, dataAppend, fetList[j], \
+												  paramAppend, param, bagIDAppend, k, X_train, Y_train, bagVal)
+							regName = regName + '_' + segmentAppend + str(segmentList[c])
+							clf.setName(regName)
+							print regName
+
+							regA = GradientBoostingRegressor(n_estimators = param, loss='lad')
+							clf.trainStageA(regA, numTargets, X_tr, Y_tr)
+							clf.getStageAAcc(numTargets, X_test, Y_test)
+							histListStageA.append([regName, clf.accA])
+
+							if (accThreshold - clf.accA > (accThreshold/100)):
+								break
+							elif (clf.accA < accThreshold):
+								continue
+
+							X_trn = clf.getXTrainFromSet(numTargets, trainSet)
+							X_tst = clf.getFetStageB(numTargets, testSet)
+
+							for d in range(len(mergeList)):
+								clfNew = deepcopy(clf)
+								regNameTmp = regName + '_' + mergeAppend + mergeList[d]
+								clfNew.setName(regNameTmp)
+
+								regB = getMerger(mergeList[d])
+
+								clfNew.trainStageB(regB, numTargets, X_trn, Y_train)
+								clfNew.getStageBAcc(numTargets, X_tst, Y_test)
+								histListStageB.append([regNameTmp, clfNew.accB])
+
+								if (clfNew.accB > accThreshold + 0.01):
+									pickle.dump(clfNew, open(savePath + regNameTmp + '.p', 'wb'))
+
+				else:
+					print regList[i], "not implemented yet!"
+
+				print i, j
+				print len(histListStageA)
+				print len(histListStageB)
 
 	print 'The history of training is as follows,'
 
@@ -880,10 +1006,83 @@ def createAudioMultiStageRegressorArmy(numTargets, regList, vidNames, vidNamesTe
 
 	return histListStageA, histListStageB
 
+def savePredictions():
+	# Not implemented yet
+	return
+
+def saveMultiStagePredictions(numTargets, vidNamesTest, fetList, segmentList, fetChoice):
+
+	'''
+	Stores predictions for the multiStage audio regressors. Stores dictionaries with fileNames as keys.
+	Takes all the models in the given directory (Specified by fetChoice) and saves the predictions.
+	Input: numTargets, The number of variables to predict
+		   segmentList, The list of segments to consider
+		   fetList, The types of features to consider
+		   fetChoice, The choice of features selected
+	
+	Output: None
+
+	Side effects: Write output to a file (folder in ensemble)
+	'''
+
+	'''
+	Steps Involved:
+		
+		Load the fileNames in the desired folder, also load the test data with it (Argument vidNamesTest).
+		Go through fetList and segmentList one by one, load and save the dictionaries of features.
+		Go through the files (models) present and see if they match the format of the data being processed.
+		Predict the result for the test set and save it at the appropriate place (As a dictionary)
+	'''
+
+	savePath = 'tmpData/ensemble/audioFetAMultiStage/' + fetChoice + '_predictions/'
+	modelPath = 'tmpData/ensemble/audioFetAMultiStage/' + fetChoice + '/'
+
+	if not os.path.exists(savePath):
+		os.makedirs(savePath)
+
+	modelNames = os.listdir(modelPath)
+	modelNames = [x for x in modelNames if not x.startswith('AudioA_')]
+
+	for j in range(len(fetList)):
+
+		for c in range(len(segmentList)):
+			fileName = savePath + 'Dict_' + fetList[j] + '_' + str(segmentList[c]) + '.p'
+
+			print 'Reading data for:', fetList[j], segmentList[c]
+
+			if (not os.path.isfile(fileName)):
+				X_test, Y_test = getMultiStageDict(vidNamesTest, trueVal, fetChoice = fetList[j], clusterSize = segmentList[c])
+				print '\nReading testing data complete'
+				dataList = [[X_test, Y_test]]
+				pickle.dump(dataList, open(fileName, 'wb'))
+				print 'Data Dumping complete!'
+
+			else:
+				dataList = (pickle.load(open(fileName, 'rb')))
+				X_test, Y_test = dataList[0][0], dataList[0][1]
+				print 'Reading Done!'
+
+			for i in range(len(modelNames)):
+
+				if ((fetList[j] in modelNames[i]) and (('S_' + str(segmentList[c])) in modelNames[i])):
+					clf = (pickle.load(open(modelNames[i], 'rb')))
+
+					predictions = {}
+					for k in range(len(vidNamesTest)):
+						fileName = vidNamesTest[k]
+						predictions[fileName] = MultiStageRegressorPredict(clf, numTargets, [X[fileName]])[0]
+						print '\r', (k*(1.0))/len(vidNamesTest), 'part predicting completed!',
+						sys.stdout.flush()
+					print
+
+					savedFileName = 'predictDict_' + modelNames[i]
+					pickle.dump(predictions, open(savedFileName, 'wb'))
+
+					print clf.name, clf.accA, clf. accB
 
 if __name__ == "__main__":
 		
-	np.set_printoptions(precision=2)
+	np.set_printoptions(precision=3)
 
 	videoPath = '../training/download_train-val/trainFiles/'
 	vidNames = os.listdir(videoPath)
@@ -924,12 +1123,21 @@ if __name__ == "__main__":
 
 	elif (actionChoice == 2):
 
-		regList = ['SVR', 'BAG', 'Ridge', 'LS', 'RF', 'ADA', 'GBR']
+		regList = ['SVR', 'Ridge', 'LS']
 		# mergeList = ['LS', 'LS+', 'Ridge', 'LinearSVR', 'BAG_SVR', 'Poly2SVR', 'Poly1SVR']
-		mergeList = ['LS', 'Ridge', 'LS+', 'BAG_SVR', 'Poly2SVR']
+		mergeList = ['Ridge', 'LinearSVR', 'LS', 'LS+', 'BAG_SVR', 'Poly2SVR']
 		fetList = ['AudioA_avg', 'AudioA_minmax']
-		segmentList = [1, 3, 5, 7, 9, 11]
+		segmentList = [3, 5, 7, 9, 11]
 		fetChoice = 'AudioA_avg_minmax'
 
 		createAudioMultiStageRegressorArmy(5, regList, vidNames, vidNamesTest, mergeList, fetList, segmentList, fetChoice, \
 									   numLimit = 10, numPerParam = 4, accThreshold = 0.88, bagVal = 0.65)
+
+	elif (actionChoice == 3):
+
+		mergeList = ['Ridge', 'LinearSVR', 'LS', 'LS+', 'BAG_SVR', 'Poly2SVR']
+		fetList = ['AudioA_avg', 'AudioA_minmax']
+		segmentList = [1, 3, 5, 7, 9, 11]
+		fetChoice = 'AudioA_avg_minmax'
+
+		saveMultiStagePredictions(5, vidNamesTest, fetList, segmentList, fetChoice)
