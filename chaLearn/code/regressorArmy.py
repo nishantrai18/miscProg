@@ -64,8 +64,6 @@ class MultiStageRegressor():
 				print '\r', (i*(1.0))/len(trainSet), 'part predicting completed!',
 				sys.stdout.flush()
 
-		print
-
 		X_train = np.array(X_train)
 
 		return X_train
@@ -105,9 +103,14 @@ class MultiStageRegressor():
 
 
 def MultiStageRegressorPredict(multiStageReg, numTargets, X_stageA):
+
+	if (len(X_stageA) == 0):
+		return np.array([0.5]*5)
+
 	# X_stageA is a list of features (where features are also a group of features)
 
 	X = multiStageReg.getFetStageB(numTargets, X_stageA, printFlag = False)[0]
+	X = X.reshape(1, -1)
 	Y = np.zeros((X.shape[0], numTargets))
 	for i in range(numTargets):
 		Y[:,i] = (multiStageReg.regB)[i].predict(X)
@@ -128,7 +131,7 @@ def getMultiStageDict(vidNames, trueVal, fetChoice, clusterSize, printFlag = Tru
 		if (tmpX.shape[0] == 0):
 			continue
 
-		X[vidNames[i]] = tmpX[0]
+		X[vidNames[i]] = tmpX
 		Y[vidNames[i]] = tmpY[0]
 
 	return X, Y
@@ -676,7 +679,7 @@ def createAudioMultiStageRegressorArmy(numTargets, regList, vidNames, vidNamesTe
 					paramAppend = 'N_'
 					# Gives the number of estimators
 
-					paramList = getParamValList(10, 20, 4, 4)
+					paramList = getParamValList(50, 2, 2, 2)
 
 					for param in paramList:
 
@@ -946,7 +949,7 @@ def createAudioMultiStageRegressorArmy(numTargets, regList, vidNames, vidNamesTe
 					paramAppend = 'N_'
 					# Gives the parameters for the regressor
 
-					paramList = getParamValList(10, 20, 4, 4)
+					paramList = getParamValList(50, 2, 2, 2)
 
 					for param in paramList:
 
@@ -1064,19 +1067,26 @@ def saveMultiStagePredictions(numTargets, vidNamesTest, fetList, segmentList, fe
 
 			for i in range(len(modelNames)):
 
+				if ('BAG' in modelNames[i]):
+					continue
+
 				if ((fetList[j] in modelNames[i]) and (('S_' + str(segmentList[c])) in modelNames[i])):
-					clf = (pickle.load(open(modelNames[i], 'rb')))
+
+					clf = (pickle.load(open(modelPath + modelNames[i], 'rb')))
+					stats = {'name' : clf.name, 'accA' : clf.accA, 'accB' : clf.accB}
 
 					predictions = {}
 					for k in range(len(vidNamesTest)):
 						fileName = vidNamesTest[k]
-						predictions[fileName] = MultiStageRegressorPredict(clf, numTargets, [X[fileName]])[0]
+						if fileName in X_test:
+							predictions[fileName] = MultiStageRegressorPredict(clf, numTargets, [X_test[fileName]])[0]
+						else:
+							predictions[fileName] = MultiStageRegressorPredict(clf, numTargets, [])[0]
 						print '\r', (k*(1.0))/len(vidNamesTest), 'part predicting completed!',
 						sys.stdout.flush()
-					print
 
-					savedFileName = 'predictDict_' + modelNames[i]
-					pickle.dump(predictions, open(savedFileName, 'wb'))
+					savedFileName = savePath + 'predictDict_' + modelNames[i]
+					pickle.dump([stats, predictions], open(savedFileName, 'wb'))
 
 					print clf.name, clf.accA, clf. accB
 
@@ -1123,7 +1133,7 @@ if __name__ == "__main__":
 
 	elif (actionChoice == 2):
 
-		regList = ['SVR', 'Ridge', 'LS']
+		regList = ['BAG', 'GBR']
 		# mergeList = ['LS', 'LS+', 'Ridge', 'LinearSVR', 'BAG_SVR', 'Poly2SVR', 'Poly1SVR']
 		mergeList = ['Ridge', 'LinearSVR', 'LS', 'LS+', 'BAG_SVR', 'Poly2SVR']
 		fetList = ['AudioA_avg', 'AudioA_minmax']
@@ -1131,13 +1141,13 @@ if __name__ == "__main__":
 		fetChoice = 'AudioA_avg_minmax'
 
 		createAudioMultiStageRegressorArmy(5, regList, vidNames, vidNamesTest, mergeList, fetList, segmentList, fetChoice, \
-									   numLimit = 10, numPerParam = 4, accThreshold = 0.88, bagVal = 0.65)
+									   numLimit = 10, numPerParam = 1, accThreshold = 0.88, bagVal = 0.85)
 
 	elif (actionChoice == 3):
 
 		mergeList = ['Ridge', 'LinearSVR', 'LS', 'LS+', 'BAG_SVR', 'Poly2SVR']
 		fetList = ['AudioA_avg', 'AudioA_minmax']
-		segmentList = [1, 3, 5, 7, 9, 11]
+		segmentList = [3, 5, 7, 9, 11]
 		fetChoice = 'AudioA_avg_minmax'
 
 		saveMultiStagePredictions(5, vidNamesTest, fetList, segmentList, fetChoice)

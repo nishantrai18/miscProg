@@ -30,7 +30,8 @@ splitVal = 0.9
 vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 vidNames = vidNames[:int(splitVal*len(vidNames))]
 
-fetChoice = 'AudioA_avg_cluster_4'
+# fetChoice = 'AudioA_avg_cluster_4'
+fetChoice = 'AudioA'
 # X_train, Y_train = readData(vidNames, trueVal, feature = fetChoice, printFlag = True)
 # X_test, Y_test = readData(vidNamesTest, trueVal, feature = fetChoice, printFlag = True)
 

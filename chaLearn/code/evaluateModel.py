@@ -11,6 +11,37 @@ import numpy as np
 from readVideo import *
 import random, sys
 
+
+def getSortedFeatures(fetList, size = 15, sortFlag = True):
+	if (len(fetList) == 0):
+		avg = 0.5
+		fetList = np.append(fetList, ([avg]*(size-len(fetList))))
+	elif (len(fetList) < size):
+		avg = np.mean(fetList)
+		fetList = np.append(fetList, ([avg]*(size-len(fetList))))
+	elif (len(fetList) > size):
+		for i in range(len(fetList)-size):
+			fetList[-2] = (fetList[-2]+fetList[-1])/2.0
+			fetList = np.delete(fetList, -1)
+			newVal = fetList[-1]
+			fetList = np.delete(fetList, -1)
+			fetList = np.insert(fetList, 0, newVal)
+	if sortFlag:
+		sortFet = np.sort(fetList)
+	else:
+		sortFet = fetList
+	return sortFet
+
+def getCompleteSortedFeatures(fetList, numTargets = 5, size = 15, sortFlag = True):
+
+	newFet = []
+	for i in range(numTargets):
+		tmpFet = list(getSortedFeatures(fetList[:,i], size, sortFlag = sortFlag))
+		newFet.extend(tmpFet)
+
+	newFet = np.array(newFet)
+	return newFet
+
 def predictScore(fileName, model, merger = None, choice = 'A'):
 	X, _ = readData([fileName], None, choice)
 	if (choice == 'A'):
@@ -47,12 +78,14 @@ def predictScore(fileName, model, merger = None, choice = 'A'):
 		finalScore.fill(0.5)
 	elif (type(merger[0]).__module__ == 'numpy'):
 		for i in range(5):
-			x = getSortedFeatures(Y_pred[:,i])
+			# x = getSortedFeatures(Y_pred[:,i])
+			x = getCompleteSortedFeatures(Y_pred)
 			finalScore.append(x.mean(0))
 		finalScore = np.array(finalScore)
 	else:
 		for i in range(5):
-			x = getSortedFeatures(Y_pred[:,i])
+			# x = getSortedFeatures(Y_pred[:,i])
+			x = getCompleteSortedFeatures(Y_pred)
 			y = merger[i].predict([x])[0]
 			if (y < 0):
 				y = 0
@@ -61,23 +94,6 @@ def predictScore(fileName, model, merger = None, choice = 'A'):
 			finalScore.append(y)
 		finalScore = np.array(finalScore)
 	return finalScore
-
-def getSortedFeatures(fetList, size = 15):
-	if (len(fetList) == 0):
-		avg = 0.5
-		fetList = np.append(fetList, ([avg]*(size-len(fetList))))
-	elif (len(fetList) < size):
-		avg = np.mean(fetList)
-		fetList = np.append(fetList, ([avg]*(size-len(fetList))))
-	elif (len(fetList) > size):
-		for i in range(len(fetList)-size):
-			fetList[-2] = (fetList[-2]+fetList[-1])/2.0
-			fetList = np.delete(fetList, -1)
-			newVal = fetList[-1]
-			fetList = np.delete(fetList, -1)
-			fetList = np.insert(fetList, 0, newVal)
-	sortFet = np.sort(fetList)
-	return sortFet
 
 def evaluateValidation(model, merger = None, modelName = '', choice = 'A'):
 	predVal = {}
@@ -158,11 +174,12 @@ if __name__ == "__main__":
 	vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 	vidNames = vidNames[:int(splitVal*len(vidNames))]
 
-	choice = 'C'
+	# choice = 'C'
 	# choice = 'B'
+	choice = 'AudioA'
 	# choice = 'AudioAavg'
-	action = 'genSubmit'
-	# action = 'getPredList'
+	# action = 'genSubmit'
+	action = 'getPredList'
 	# action = 'getTestScore'
 
 	# modelName = 'visualFetA_BasicConv_16_32_256'
@@ -173,12 +190,10 @@ if __name__ == "__main__":
 	# model_file_name = 'tmpData/models/visualFetC_Conv_Augmented_32_64_256'
 	# modelName = 'visualFetF_VGG_5_128_4096_avg'
 	# model_file_name = 'tmpData/models/visualFetF_VGG_5_128_4096_avg'
-	modelName = 'visualFetC_Conv_48_96_256'
-	model_file_name = 'tmpData/models/visualFetC_Conv_48_96_256'
-	# modelName = 'audioFetA_BAG_n50'
-	# model_file_name = 'tmpData/models/audioFetA_BAG_n50'
-	# modelName = 'audioFetA_BAG_n50'
-	# model_file_name = 'tmpData/models/audioFetA_BAG_n50'
+	# modelName = 'visualFetC_Conv_48_96_256'
+	# model_file_name = 'tmpData/models/visualFetC_Conv_48_96_256'
+	modelName = 'audioFetA_BAG_n50'
+	model_file_name = 'tmpData/models/audioFetA_BAG_n50'
 	# modelName = 'visualFetB_MISC'
 	# model_file_name = 'tmpData/models/visualFetB_MISC'
 

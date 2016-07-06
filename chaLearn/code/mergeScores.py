@@ -1,6 +1,7 @@
 import cPickle as pickle
 import numpy as np
 from readVideo import *
+from evaluateModel import *
 import random
 import sklearn
 from sklearn import linear_model
@@ -11,23 +12,6 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import AdaBoostRegressor
 from sklearn.ensemble import BaggingRegressor
 from sklearn.tree import DecisionTreeRegressor
-
-def getSortedFeatures(fetList, size = 15):
-	if (len(fetList) == 0):
-		avg = 0.5
-		fetList = np.append(fetList, ([avg]*(size-len(fetList))))
-	elif (len(fetList) < size):
-		avg = np.mean(fetList)
-		fetList = np.append(fetList, ([avg]*(size-len(fetList))))
-	elif (len(fetList) > size):
-		for i in range(len(fetList)-size):
-			fetList[-2] = (fetList[-2]+fetList[-1])/2.0
-			fetList = np.delete(fetList, -1)
-			newVal = fetList[-1]
-			fetList = np.delete(fetList, -1)
-			fetList = np.insert(fetList, 0, newVal)
-	sortFet = np.sort(fetList)
-	return sortFet
 
 def weightedModelFit(X, Y):
 	weights = np.zeros((X.shape[1]))
@@ -56,17 +40,18 @@ for i in xrange(len(vidNames)):
 	vidNames[i] = vidNames[i].strip('.mp4')
 
 choice = 'C'
+# choice = 'A'
 # choice = 'AudioA'
-splitVal = 0.4
+splitVal = 0.9
 origVidNames = []
 vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 vidNames = vidNames[:int(splitVal*len(vidNames))]
 
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_train.p', 'rb'))
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_train' + str(splitVal) +'.p', 'rb'))
-# trainData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_train' + str(splitVal) +'.p', 'rb'))
+trainData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_train' + str(splitVal) +'.p', 'rb'))
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetF_VGG_5_128_4096_avg_train' + str(splitVal) +'.p', 'rb'))
-trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_48_96_256_train' + str(splitVal) +'.p', 'rb'))
+# trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_48_96_256_train' + str(splitVal) +'.p', 'rb'))
 X_train, Y_train = [], []
 
 for i in range(5):
@@ -75,7 +60,8 @@ for i in range(5):
 		# print trainData[k]
 		if (len(trainData[k]) == 0):
 			continue
-		X_train[i].append(getSortedFeatures(trainData[k][:,i]))
+		# X_train[i].append(getSortedFeatures(trainData[k][:,i]))
+		X_train[i].append(getCompleteSortedFeatures(trainData[k], sortFlag = True))
 		if (i == 0):
 			# Do this only once
 			Y_train.append(trueVal[k])
@@ -88,8 +74,9 @@ Y_train = np.array(Y_train)
 
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_test.p', 'rb'))
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_test' + str(splitVal) +'.p', 'rb'))
-# testData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_test' + str(splitVal) +'.p', 'rb'))
-testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_48_96_256_test' + str(splitVal) +'.p', 'rb'))
+testData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_test' + str(splitVal) +'.p', 'rb'))
+# testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_48_96_256_test' + str(splitVal) +'.p', 'rb'))
+# testData = pickle.load(open('tmpData/predictions/predListvisualFetF_VGG_5_128_4096_avg_test' + str(splitVal) +'.p', 'rb'))
 X_test, Y_test = [], []
 
 for i in range(5):
@@ -97,7 +84,8 @@ for i in range(5):
 	for k in testData.keys():
 		if (len(testData[k]) == 0):
 			continue
-		X_test[i].append(getSortedFeatures(testData[k][:,i]))
+		# X_test[i].append(getSortedFeatures(testData[k][:,i]))
+		X_test[i].append(getCompleteSortedFeatures(testData[k], sortFlag = True))
 		if (i == 0):
 			# Do this only once
 			Y_test.append(trueVal[k])
@@ -116,15 +104,17 @@ clfList = []
 
 # modelChoice = 'NN'		# Poor performance
 # modelChoice = 'SVR'		# Comparable results to Lasso
-# modelChoice = 'LS'			# Best performer, Ridge also performs well
+modelChoice = 'LS'			# Best performer, Ridge also performs well
 # modelChoice = 'RF'
 # modelChoice = 'ADA'
 # modelChoice = 'WGT'		# Performs slightly worse than simple average
 # modelChoice = 'BAG'
-modelChoice = 'Ensemble_LS'
+# modelChoice = 'Ensemble_LS'
 # modelChoice = 'Ensemble_WGT'
+# modelChoice = 'Ensemble_BAG'
 
 append = '_48_96'
+# append = '_48_96'
 modelName, model_file_name = '', ''
 predFileName = ''
 
@@ -134,8 +124,8 @@ if (modelChoice == 'LS'):
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		# clfList.append(linear_model.Ridge(alpha = 5))
-		clfList.append(linear_model.Lasso(alpha = 2e-3, positive = True, max_iter = 5000))
+		clfList.append(linear_model.Ridge(alpha = 10))
+		# clfList.append(linear_model.Lasso(alpha = 2e-3, max_iter = 5000))
 		# Parameter study for C
 		clfList[i].fit(X_train[i], Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
@@ -150,8 +140,8 @@ elif (modelChoice == 'SVR'):
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
-		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		clfList.append(LinearSVR(C = 0.01))
+		clfList.append(SVR(C = 30, kernel = 'poly', degree = 2))
+		# clfList.append(LinearSVR(C = 0.01))
 		# Parameter study for C
 		clfList[i].fit(X_train[i], Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
@@ -191,8 +181,9 @@ elif (modelChoice == 'BAG'):
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4))
-		# clfList.append(BaggingRegressor(linear_model.Ridge(alpha = 5)))		
+		# clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4))
+		# clfList.append(BaggingRegressor(SVR(C = 30), n_estimators = 50, n_jobs = 4))
+		clfList.append(BaggingRegressor(linear_model.Ridge(alpha = 5)))		
 		# clfList.append(linear_model.SGDRegressor())
 		clfList[i].fit(X_train[i], Y_train[:,i])
 		print 'Model Trained. Prediction in progress'

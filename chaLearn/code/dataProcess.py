@@ -69,7 +69,9 @@ def readFromFileAudioFetA(fileName, feature, clusterSize = 4):
 	if ('minmax' in feature):
 		newList = []
 		if (clusterSize <= 0):
-			newList.append(np.max(tmpList, axis = 0))
+			tmpFeature = np.max(tmpList, axis = 0)
+			tmpFeature = np.append(tmpFeature, np.min(tmpList, axis = 0))
+			newList.append(tmpFeature)
 		else:
 			for i in range(len(tmpList) - clusterSize + 1):
 				clusterList = np.array(tmpList[i:i+clusterSize])
@@ -337,8 +339,8 @@ def evaluateTraits(p, gt, printFlag = True):
 		
 	meanAccs = np.mean(meanAccs)
 
-	if (not printFlag):
-		print meanAccs
+	# if (not printFlag):
+	# 	print meanAccs
 
 	return meanAccs
 

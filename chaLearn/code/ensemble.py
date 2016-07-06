@@ -208,7 +208,7 @@ def createEnsembleUsingLR(modelNames, numModels, choice = 'Ridge'):
 
 		for i in range(5):
 			print 'Currently training the', i, 'th regressor'
-			clfList.append(SVR(C = 30.0, kernel = 'poly', degree = 2))
+			clfList.append(SVR(C = 30.0, kernel = 'poly', degree = 2, coef0 = 1))
 
 			clfList[i].fit(X_train, trueVal[:,i])
 			print 'Model Trained. Prediction in progress'
@@ -226,7 +226,7 @@ def createEnsembleUsingLR(modelNames, numModels, choice = 'Ridge'):
 		for i in range(5):
 			print 'Currently training the', i, 'th regressor'
 			# clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4))
-			clfList.append(BaggingRegressor(SVR(C = 30), n_estimators = 50, n_jobs = 4))
+			clfList.append(BaggingRegressor(SVR(C = 5), n_estimators = 50, n_jobs = 4))
 			clfList[i].fit(X_train, trueVal[:,i])
 			print 'Model Trained. Prediction in progress'
 			Y_pred[:,i] = clfList[i].predict(X_test)
@@ -256,7 +256,7 @@ def createEnsembleUsingLR(modelNames, numModels, choice = 'Ridge'):
 
 
 
-	pickle.dump(clfList, open(model_file_name + '.p', 'wb'))
+	# pickle.dump(clfList, open(model_file_name + '.p', 'wb'))
 
 	print evaluateTraits(Y_pred, trueValTest)
 
