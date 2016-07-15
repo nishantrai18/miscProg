@@ -1,0 +1,1 @@
+The program is a bot for the playing the classic Reversi (aka Othello). Currently, it uses risk regions along with a greedy strategy to compute the moves. Alpha beta pruning on minimax is the next target.
