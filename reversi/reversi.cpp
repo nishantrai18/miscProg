@@ -280,7 +280,6 @@ void turnOver(reversiGame& gameBoard, index ind){
 	i--;
 	while ((i >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i--;
-		gameBoard.board[i][j] = turn;
 	}
 	if ((i >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		i++;
@@ -296,7 +295,6 @@ void turnOver(reversiGame& gameBoard, index ind){
 	while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j++;
 		i++;
-		gameBoard.board[i][j] = turn;
 	}
 	if ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		j--;
@@ -313,7 +311,6 @@ void turnOver(reversiGame& gameBoard, index ind){
 	while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j--;
 		i++;
-		gameBoard.board[i][j] = turn;
 	}
 	if ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		j++;
@@ -330,7 +327,6 @@ void turnOver(reversiGame& gameBoard, index ind){
 	while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i--;
 		j++;
-		gameBoard.board[i][j] = turn;
 	}
 	if ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		i++;
@@ -347,7 +343,6 @@ void turnOver(reversiGame& gameBoard, index ind){
 	while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i--;
 		j--;
-		gameBoard.board[i][j] = turn;
 	}
 	if ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		i++;
@@ -611,7 +606,7 @@ void getRiskRegions(reversiGame gameBoard, boardGame& risk) {
 		for (j = 0; j < gameBoard.col; j++) {
 			if ((j == 0) || (j == gameBoard.col - 1)) {
 				if ((i == 0) || (i == gameBoard.row - 1)) {
-					risk[i][j] = 10;
+					risk[i][j] = 20;
 				}
 				else if ((i == 1) || (i == gameBoard.row - 2)) {
 					risk[i][j] = 0;
@@ -667,6 +662,6 @@ index getOptimalMoveMethodA(reversiGame& gameBoard, boardGame risk, double trade
 // Input : Game board, Depth limit
 index getOptimalMoveMethodB(reversiGame& gameBoard) {
 	index optInd{0, 0}, tmpInd;
-	cout <<	minimax(gameBoard, gameBoard.turn, gameBoard.row, gameBoard.col, 6, optInd) << endl;
+	cout <<	minimax(gameBoard, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd) << endl;
 	return optInd;
 }
