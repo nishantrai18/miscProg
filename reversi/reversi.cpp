@@ -11,7 +11,11 @@ struct index {
 };
 
 bool operator ==(const index& x, const index& y) {
-    return std::tie(x.x, x.y) == std::tie(y.x, y.y);
+    return ((x.x == y.x) && (x.y == y.y));
+}
+
+bool operator !=(const index& x, const index& y) {
+    return !((x.x == y.x) && (x.y == y.y));
 }
 
 bool compareIndex(const index& a, const index& b) {
@@ -20,6 +24,13 @@ bool compareIndex(const index& a, const index& b) {
     }
     return a.x < b.x;
 }
+
+index createIndex(int a, int b) {
+	index retVal {a, b};
+	return retVal;
+}
+
+int totCount = 0;
 
 struct reversiGame {
 	boardGame board;
@@ -55,6 +66,18 @@ void getBoardInput(reversiGame& gameBoard) {
 	scanf("%d", &gameBoard.turn);
 }
 
+void printGameState(reversiGame gameBoard) {
+	int i, j;
+	cout << "The game board is\n";
+	for (i = 0; i < gameBoard.row; i++) {
+		for (j = 0; j < gameBoard.col; j++) {
+			cout << gameBoard.board[i][j];
+		}
+		cout << endl;
+	}
+	cout << "The turn is of player " << gameBoard.turn << endl;
+}
+
 double getBoardScore(reversiGame gameBoard);
 reversiGame getNewState(reversiGame gameBoard, index move);
 int getTurnOver(reversiGame gameBoard, index ind);
@@ -84,102 +107,110 @@ void getCandList(reversiGame& gameBoard) {
 	vector <index> tmpCandList;
 	gameBoard.candList.clear();
 
+	for (i = 0; i < gameBoard.row; i++) {
+		for (j = 0; j < gameBoard.col; j++) {
+			if (gameBoard.board[i][j] == 3) {
+				gameBoard.board[i][j] = 0;
+			}
+		}
+	}
+
 	for (a = 0; a < gameBoard.row; a++) {
 		for (b = 0; b < gameBoard.col; b++) {
 
-			if (gameBoard.board[a][b] != gameBoard.turn) {
+			if (gameBoard.board[a][b] == (3 - gameBoard.turn)) {
 				
 				i = a, j = b;
-				if ((j >= 0) && (gameBoard.board[i][j-1] == gameBoard.turn)) {
-					tmpVal = 0, j++;
+				if ((j > 0) && (gameBoard.board[i][j-1] == gameBoard.turn)) {
+					j++;
 					while ((j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 						j++;
 					}
-					if (j < gameBoard.col) {
-						tmpCandList.push_back(index {i, j});
+					if ((j < gameBoard.col) && (gameBoard.board[i][j] == 0)) {
+						tmpCandList.push_back(createIndex(i, j));
 					}
 				}
 
 				i = a, j = b;
 				if ((j < (gameBoard.col - 1)) && (gameBoard.board[i][j+1] == gameBoard.turn)) {
-					tmpVal = 0, j--;
+					j--;
 					while ((j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 						j--;
 					}
-					if (j >= 0) {
-						tmpCandList.push_back(index {i, j});
+					if ((j >= 0) && (gameBoard.board[i][j] == 0)) {
+						tmpCandList.push_back(createIndex(i, j));
 					}
 				}
 
 				i = a, j = b;
-				if ((i >= 0) && (gameBoard.board[i-1][j] == gameBoard.turn)) {
-					tmpVal = 0, i++;
+				if ((i > 0) && (gameBoard.board[i-1][j] == gameBoard.turn)) {
+					i++;
 					while ((i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 						i++;
 					}
-					if (i < gameBoard.row) {
-						tmpCandList.push_back(index {i, j});
+					if ((i < gameBoard.row) && (gameBoard.board[i][j] == 0)) {
+						tmpCandList.push_back(createIndex(i, j));
 					}
 				}
 
 				i = a, j = b;
 				if ((i < (gameBoard.row - 1)) && (gameBoard.board[i+1][j] == gameBoard.turn)) {
-					tmpVal = 0, i--;
+					i--;
 					while ((i >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 						i--;
 					}
-					if (i >= 0) {
-						tmpCandList.push_back(index {i, j});
+					if ((i >= 0) && (gameBoard.board[i][j] == 0)) {
+						tmpCandList.push_back(createIndex(i, j));
 					}
 				}
 
 				// Diagonal gains
 
 				i = a, j = b;
-				if ((i >= 0) && (j >= 0) && (gameBoard.board[i-1][j-1] == gameBoard.turn)) {
-					tmpVal = 0, j++, i++;
+				if ((i > 0) && (j > 0) && (gameBoard.board[i-1][j-1] == gameBoard.turn)) {
+					j++, i++;
 					while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 						j++;
 						i++;
 					}
-					if ((j < gameBoard.col) && (i < gameBoard.row)) {
-						tmpCandList.push_back(index {i, j});
+					if ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == 0)) {
+						tmpCandList.push_back(createIndex(i, j));
 					}
 				}
 
 				i = a, j = b;	
-				if ((j < (gameBoard.col - 1)) && (i >= 0) && (gameBoard.board[i-1][j+1] == gameBoard.turn)) {
-					tmpVal = 0, j--, i++;
+				if ((j < (gameBoard.col - 1)) && (i > 0) && (gameBoard.board[i-1][j+1] == gameBoard.turn)) {
+					j--, i++;
 					while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 						j--;
 						i++;
 					}
-					if ((j >= 0) && (i < gameBoard.row)) {
-						tmpCandList.push_back(index {i, j});
+					if ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == 0)) {
+						tmpCandList.push_back(createIndex(i, j));
 					}
 				}
 
 				i = a, j = b;
-				if ((i < (gameBoard.row - 1)) && (j >= 0) && (gameBoard.board[i+1][j-1] == gameBoard.turn)) {
-					tmpVal = 0, i--, j++;
+				if ((i < (gameBoard.row - 1)) && (j > 0) && (gameBoard.board[i+1][j-1] == gameBoard.turn)) {
+					i--, j++;
 					while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 						i--;
 						j++;
 					}
-					if ((i >= 0) && (j < gameBoard.col)) {
-						tmpCandList.push_back(index {i, j});
+					if ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == 0)) {
+						tmpCandList.push_back(createIndex(i, j));
 					}
 				}
 
 				i = a, j = b;
 				if ((i < (gameBoard.row - 1)) && (j < (gameBoard.col - 1)) && (gameBoard.board[i+1][j+1] == gameBoard.turn)) {
-					tmpVal = 0, i--, j--;
+					i--, j--;
 					while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 						i--;
 						j--;
 					}
-					if ((i >= 0) && (j >= 0)) {
-						tmpCandList.push_back(index {i, j});
+					if ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == 0)) {
+						tmpCandList.push_back(createIndex(i, j));
 					}
 				}
 			}
@@ -187,10 +218,12 @@ void getCandList(reversiGame& gameBoard) {
 	}
 
 	sort(tmpCandList.begin(), tmpCandList.end(), compareIndex);
+
 	for (i = 0; i < tmpCandList.size(); i++) {
 		while ((i < (tmpCandList.size() - 1)) && (tmpCandList[i] == tmpCandList[i+1]))
 			i++;
 		gameBoard.candList.push_back(tmpCandList[i]);
+		gameBoard.board[tmpCandList[i].x][tmpCandList[i].y] = 3;
 	}
 }
 
@@ -199,25 +232,48 @@ void turnOver(reversiGame& gameBoard, index ind){
 	
 	// Horizontal and vertical gains
 
+	// cout << "WAS HERE\n";
+
+	i = ind.x, j = ind.y;
+	gameBoard.board[i][j] = turn;
+
 	i = ind.x, j = ind.y;
 	j++;
 	while ((j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j++;
-		gameBoard.board[i][j] = turn;
+	}
+	if ((j < gameBoard.col) && (gameBoard.board[i][j] == gameBoard.turn)) {
+		j--;
+		while (j != ind.y) {
+			gameBoard.board[i][j] = turn;
+			j--;
+		}
 	}
 
 	i = ind.x, j = ind.y;
 	j--;
 	while ((j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j--;
-		gameBoard.board[i][j] = turn;
+	}
+	if ((j >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
+		j++;
+		while (j != ind.y) {
+			gameBoard.board[i][j] = turn;
+			j++;
+		}
 	}
 	
 	i = ind.x, j = ind.y;
 	i++;
 	while ((i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i++;
-		gameBoard.board[i][j] = turn;
+	}
+	if ((i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
+		i--;
+		while (i != ind.x) {
+			gameBoard.board[i][j] = turn;
+			i--;
+		}
 	}
 	
 	i = ind.x, j = ind.y;
@@ -226,7 +282,13 @@ void turnOver(reversiGame& gameBoard, index ind){
 		i--;
 		gameBoard.board[i][j] = turn;
 	}
-	
+	if ((i >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
+		i++;
+		while (i != ind.x) {
+			gameBoard.board[i][j] = turn;
+			i++;
+		}
+	}	
 	// Diagonal gains
 
 	i = ind.x, j = ind.y;
@@ -236,6 +298,15 @@ void turnOver(reversiGame& gameBoard, index ind){
 		i++;
 		gameBoard.board[i][j] = turn;
 	}
+	if ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
+		j--;
+		i--;
+		while (j != ind.y) {
+			gameBoard.board[i][j] = turn;
+			i--;
+			j--;
+		}
+	}
 
 	i = ind.x, j = ind.y;
 	j--, i++;
@@ -243,6 +314,15 @@ void turnOver(reversiGame& gameBoard, index ind){
 		j--;
 		i++;
 		gameBoard.board[i][j] = turn;
+	}
+	if ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
+		j++;
+		i--;
+		while (j != ind.y) {
+			gameBoard.board[i][j] = turn;
+			i--;
+			j++;
+		}
 	}
 	
 	i = ind.x, j = ind.y;
@@ -252,6 +332,15 @@ void turnOver(reversiGame& gameBoard, index ind){
 		j++;
 		gameBoard.board[i][j] = turn;
 	}
+	if ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == gameBoard.turn)) {
+		i++;
+		j--;
+		while (j != ind.y) {
+			gameBoard.board[i][j] = turn;
+			i++;
+			j--;
+		}
+	}
 
 	i = ind.x, j = ind.y;
 	i--, j--;
@@ -260,18 +349,29 @@ void turnOver(reversiGame& gameBoard, index ind){
 		j--;
 		gameBoard.board[i][j] = turn;
 	}
+	if ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
+		i++;
+		j++;
+		while (j != ind.y) {
+			gameBoard.board[i][j] = turn;
+			i++;
+			j++;
+		}
+	}
+
+	// cout << "FINISHED HERE\n";
 }
 
-double getBoardScore(reversiGame gameBoard) {
-	int i, j;
+double getBoardScore(reversiGame gameBoard, int ourTurn) {
+	int i, j, a, b;
 	double score = 0;
 
 	for (a = 0; a < gameBoard.row; a++) {
 		for (b = 0; b < gameBoard.col; b++) {
-			if (gameBoard.board[i][j] == gameBoard.turn)
+			if (gameBoard.board[a][b] == ourTurn)
 				score += 1.0;
-			else if (gameBoard.board[i][j] == (3 - gameBoard.turn))
-				score -= 1.0
+			else if (gameBoard.board[a][b] == (3 - ourTurn))
+				score -= 1.0;
 		}
 	}
 
@@ -289,9 +389,20 @@ reversiGame getNewState(reversiGame gameBoard, index move) {
 		return newGame;
 	}
 
+	// cout << "Player " << gameBoard.turn << " is moving " << move.x << ", " << move.y << endl;
+
 	turnOver(newGame, move);
 	newGame.turn = 3 - newGame.turn;
+	// cout << "BEFORE!\n";
+	// printGameState(newGame);
 	getCandList(newGame);
+	// cout << "AFTER!\n";
+	// printGameState(newGame);
+	
+	// cout << "The candList\n";
+	// for (int i = 0; i < newGame.candList.size(); i++) {
+	// 	cout << newGame.candList[i].x << " with " << newGame.candList[i].y << endl;
+	// }
 
 	return newGame;
 }
@@ -315,7 +426,7 @@ reversiGame getNewState(reversiGame gameBoard, index move) {
 	// Score of the best possible result
 	// index i.e. the best move
 */
-double minimax(reversiGame gameBoard, int ourTurn, int row, int col, int depth, index &optMove, bool abPrune = false) {
+double minimax(reversiGame gameBoard, int ourTurn, int row, int col, int depth, index &optMove, bool abPrune) {
 	// Check if depth is 0, if it is, then compute the score using getScore()
 	// Traverse over the possible moves and create the new game state after performing each move
 	// Recursively call the function minimax for each state, store the min or max
@@ -323,24 +434,42 @@ double minimax(reversiGame gameBoard, int ourTurn, int row, int col, int depth, 
 	// Fooling heuristic (Probably not needed): Choose alternate moves (Only do this in intermediate stages)
 	// Finally check for the minimum or maximum value and modify the optMove variable to store the best move.
 
+	totCount++;
 	double optVal;
 	// Stores the optimal value at this node
 
 	if (depth == 0) {
-		double score = getBoardScore(gameBoard);
+		double score = getBoardScore(gameBoard, ourTurn);
+		cout << "Getting new state! " << totCount << " with score : " << score << "\n";
+		// printGameState(gameBoard);
 		return score;
 	}
 	else {
 		int i, j;
 		vector <reversiGame> gameList;
 		vector <double> scoreList;
+
+		// printGameState(gameBoard);
+		// cout << "The candList here is\n";
+		// for (int i = 0; i < gameBoard.candList.size(); i++) {
+		// 	cout << gameBoard.candList[i].x << " with " << gameBoard.candList[i].y << endl;
+		// }
+
+		// cout << "The possible moves for " << gameBoard.turn << " are\n";
 		for (i = 0; i < gameBoard.candList.size(); i++) {
-			reversiGame tmpGame = getNewState(gameBoard, candList[i]);
+			// cout << gameBoard.candList[i].x << " and " << gameBoard.candList[i].y << endl;
+			// cout << "MOVE BEFORE\n";
+			// printGameState(gameBoard);
+			reversiGame tmpGame = getNewState(gameBoard, gameBoard.candList[i]);
+			// printGameState(tmpGame);
 			gameList.push_back(tmpGame);
 		}
+
+		// cout << "ENDING GENERATING POSSIBLE MOVES\n";
+
 		if (!abPrune) {
 			for (i = 0; i < gameList.size(); i++) {
-				double tmpScore = minimax(gameList[i], ourTurn, row, col, depth, optMove, abPrune);
+				double tmpScore = minimax(gameList[i], ourTurn, row, col, depth - 1, optMove, abPrune);
 				scoreList.push_back(tmpScore);
 			}
 			if (gameBoard.turn == ourTurn) {
@@ -350,6 +479,7 @@ double minimax(reversiGame gameBoard, int ourTurn, int row, int col, int depth, 
 					if (optVal < scoreList[i]) {
 						optVal = scoreList[i];
 						optMove = gameBoard.candList[i];
+						// cout << optVal << "|";
 					}
 				}
 			}
@@ -361,6 +491,9 @@ double minimax(reversiGame gameBoard, int ourTurn, int row, int col, int depth, 
 						optVal = scoreList[i];
 						optMove = gameBoard.candList[i];
 					}
+				}
+				if (optVal >= 10000) {
+					optVal = getBoardScore(gameBoard, ourTurn);
 				}
 			}
 		}
@@ -384,7 +517,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 		j++;
 		tmpVal++;
 	}
-	if (j < gameBoard.col) {
+	if ((j < gameBoard.col) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		ans += tmpVal;
 	}
 
@@ -394,7 +527,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 		j--;
 		tmpVal++;
 	}
-	if (j >= 0) {
+	if ((j >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		ans += tmpVal;
 	}
 	
@@ -404,7 +537,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 		i++;
 		tmpVal++;
 	}
-	if (i < gameBoard.row) {
+	if ((i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		ans += tmpVal;
 	}
 
@@ -414,7 +547,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 		i--;
 		tmpVal++;
 	}
-	if (i >= 0) {
+	if ((i >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		ans += tmpVal;
 	}
 
@@ -427,7 +560,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 		i++;
 		tmpVal++;
 	}
-	if ((j < gameBoard.col) && (i < gameBoard.row)) {
+	if ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		ans += tmpVal;
 	}
 
@@ -438,7 +571,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 		i++;
 		tmpVal++;
 	}
-	if ((j >= 0) && (i < gameBoard.row)) {
+	if ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		ans += tmpVal;
 	}
 	
@@ -449,7 +582,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 		j++;
 		tmpVal++;
 	}
-	if ((i >= 0) && (j < gameBoard.col)) {
+	if ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		ans += tmpVal;
 	}
 
@@ -460,7 +593,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 		j--;
 		tmpVal++;
 	}
-	if ((i >= 0) && (j >= 0)) {
+	if ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
 		ans += tmpVal;
 	}
 
@@ -512,7 +645,7 @@ void getRiskRegions(reversiGame gameBoard, boardGame& risk) {
 
 // Gives the optimal move for the current board status
 // Method A : Greedy Strategy using a weighted sum of turnOvers and riskRegions
-index getOptimalMoveMethodA(reversiGame& gameBoard, boardGame risk, double tradeOff = 0.5) {
+index getOptimalMoveMethodA(reversiGame& gameBoard, boardGame risk, double tradeOff) {
 	index optInd{0, 0}, tmpInd;
 	int i, j, a, b;
 	double maxVal = 0, tmpVal;
@@ -534,6 +667,6 @@ index getOptimalMoveMethodA(reversiGame& gameBoard, boardGame risk, double trade
 // Input : Game board, Depth limit
 index getOptimalMoveMethodB(reversiGame& gameBoard) {
 	index optInd{0, 0}, tmpInd;
-	minimax(gameBoard, gameBoard.turn, gameBoard.row, gameBoard.col, 6, optInd);
+	cout <<	minimax(gameBoard, gameBoard.turn, gameBoard.row, gameBoard.col, 6, optInd) << endl;
 	return optInd;
 }
