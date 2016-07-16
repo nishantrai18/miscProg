@@ -86,7 +86,7 @@ void turnOver(reversiGame& gameBoard, index ind);
 void getRiskRegions(reversiGame gameBoard, boardGame& risk);
 index getOptimalMoveMethodA(reversiGame& gameBoard, double tradeOff = 0.5);
 index getOptimalMoveMethodB(reversiGame& gameBoard);
-double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth, index &optMove, bool abPrune = false);
+double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth, index &optMove, double alpha, double beta, bool abPrune = false);
 
 int main() {
 	reversiGame gameBoard;
@@ -358,16 +358,28 @@ void turnOver(reversiGame& gameBoard, index ind){
 double getBoardScore(reversiGame gameBoard, boardGame risk, int ourTurn) {
 	int i, j, a, b;
 	double score = 0;
+	int cntUs = 0, cntOpp = 0;
+
+	for (a = 0; a < gameBoard.row; a++) {
+		for (b = 0; b < gameBoard.col; b++) {
+			if (gameBoard.board[a][b] == ourTurn) {
+				cntUs++;
+			}
+			else if (gameBoard.board[a][b] == (3 - ourTurn)) {
+				cntOpp++;
+			}
+		}
+	}
 
 	for (a = 0; a < gameBoard.row; a++) {
 		for (b = 0; b < gameBoard.col; b++) {
 			if (gameBoard.board[a][b] == ourTurn) {
 				score += 1.0;
-				score += (0.1 * risk[a][b]);
+				score += ((0.4/cntUs) * risk[a][b]);
 			}
 			else if (gameBoard.board[a][b] == (3 - ourTurn)) {
 				score -= 1.0;
-				score -= (0.05 * risk[a][b]);
+				score -= ((0.1/cntOpp) * risk[a][b]);
 			}
 		}
 	}
@@ -423,13 +435,22 @@ reversiGame getNewState(reversiGame gameBoard, index move) {
 	// Score of the best possible result
 	// index i.e. the best move
 */
-double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth, index &optMove, bool abPrune) {
+double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth, index &optMove, double alpha, double beta, bool abPrune) {
 	// Check if depth is 0, if it is, then compute the score using getScore()
 	// Traverse over the possible moves and create the new game state after performing each move
 	// Recursively call the function minimax for each state, store the min or max
 	// Alpha beta pruning: Also pass variables alpha, beta for pruning.
 	// Fooling heuristic (Probably not needed): Choose alternate moves (Only do this in intermediate stages)
 	// Finally check for the minimum or maximum value and modify the optMove variable to store the best move.
+
+	if ((alpha > beta) || (abs(alpha - beta) < 0.5)) {
+		if (gameBoard.turn == ourTurn) {
+			return 10000;
+		}
+		else {
+			return -10000;
+		}
+	}
 
 	totCount++;
 	double optVal;
@@ -466,7 +487,7 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 
 		if (!abPrune) {
 			for (i = 0; i < gameList.size(); i++) {
-				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMove, abPrune);
+				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMove, alpha, beta, abPrune);
 				scoreList.push_back(tmpScore);
 			}
 			if (gameBoard.turn == ourTurn) {
@@ -495,7 +516,40 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 			}
 		}
 		else {
-			cout << "Not implemented alpha beta pruning!\n";
+			for (i = 0; i < gameList.size(); i++) {
+				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMove, alpha, beta, abPrune);
+				scoreList.push_back(tmpScore);
+				if (gameBoard.turn == ourTurn) {
+					alpha = max(alpha, tmpScore);
+				}
+				else {
+					beta = min(beta, tmpScore);
+				}
+			}
+			if (gameBoard.turn == ourTurn) {
+				// This is a max node, thus we maximize our score
+				optVal = 0;
+				for (i = 0; i < scoreList.size(); i++) {
+					if (optVal < scoreList[i]) {
+						optVal = scoreList[i];
+						optMove = gameBoard.candList[i];
+						// cout << optVal << "|";
+					}
+				}
+			}
+			else {
+				// This is a min node, thus they try to minimize our score
+				optVal = 100000;
+				for (i = 0; i < scoreList.size(); i++) {
+					if (optVal > scoreList[i]) {
+						optVal = scoreList[i];
+						optMove = gameBoard.candList[i];
+					}
+				}
+				if (optVal >= 10000) {
+					optVal = getBoardScore(gameBoard, risk, ourTurn);
+				}
+			}
 		}
 	}
 
@@ -667,7 +721,9 @@ index getOptimalMoveMethodA(reversiGame& gameBoard, double tradeOff) {
 index getOptimalMoveMethodB(reversiGame& gameBoard) {
 	index optInd{0, 0}, tmpInd;
 	boardGame risk;
+	double alpha = -1000000, beta = 1000000;
 	getRiskRegions(gameBoard, risk);	
-	cout <<	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd) << endl;
+	// cout <<	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd) << endl;
+	cout <<	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 9, optInd, alpha, beta, true) << endl;
 	return optInd;
 }
