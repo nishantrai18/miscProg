@@ -44,6 +44,202 @@ void getBoardInput(reversiGame& gameBoard) {
 	scanf("%d", &gameBoard.turn);
 }
 
+double getBoardScore(reversiGame gameBoard);
+reversiGame getNewState(reversiGame gameBoard, index move);
+int getTurnOver(reversiGame gameBoard, index ind);
+void updateCandList(reversiGame& gameBoard);
+void turnOver(reversiGame& gameBoard, index ind);
+void getRiskRegions(reversiGame gameBoard, boardGame& risk);
+index getOptimalMoveMethodA(reversiGame& gameBoard, boardGame risk, double tradeOff = 0.5);
+index getOptimalMoveMethodB(reversiGame& gameBoard);
+double minimax(reversiGame gameBoard, int ourTurn, int row, int col, int depth, index &optMove, bool abPrune = false);
+
+int main() {
+	reversiGame gameBoard;
+	initBoard(gameBoard, 10, 10);
+	getBoardInput(gameBoard);
+	boardGame risk;
+	getRiskRegions(gameBoard, risk);
+	index optMove = getOptimalMoveMethodA(gameBoard, risk, 0.5);
+	cout << optMove.x << " AND " << optMove.y << endl;
+    return 0;
+}
+
+void updateCandList(reversiGame& gameBoard) {
+	// Check each index for being a valid move and update the candList
+
+	int i, j;
+	gameBoard.candList.clear();
+	for (i)
+
+}
+
+void turnOver(reversiGame& gameBoard, index ind){
+	int i, j, turn = gameBoard.turn;
+	
+	// Horizontal and vertical gains
+
+	i = ind.x, j = ind.y;
+	j++;
+	while ((j < gameBoard.col) && (gameBoard.board[i][j] != gameBoard.turn)) {
+		j++;
+		gameBoard.board[i][j] = turn;
+	}
+
+	i = ind.x, j = ind.y;
+	j--;
+	while ((j >= 0) && (gameBoard.board[i][j] != gameBoard.turn)) {
+		j--;
+		gameBoard.board[i][j] = turn;
+	}
+	
+	i = ind.x, j = ind.y;
+	i++;
+	while ((i < gameBoard.row) && (gameBoard.board[i][j] != gameBoard.turn)) {
+		i++;
+		gameBoard.board[i][j] = turn;
+	}
+	
+	i = ind.x, j = ind.y;
+	i--;
+	while ((i >= 0) && (gameBoard.board[i][j] != gameBoard.turn)) {
+		i--;
+		gameBoard.board[i][j] = turn;
+	}
+	
+	// Diagonal gains
+
+	i = ind.x, j = ind.y;
+	j++, i++;
+	while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] != gameBoard.turn)) {
+		j++;
+		i++;
+		gameBoard.board[i][j] = turn;
+	}
+
+	i = ind.x, j = ind.y;
+	j--, i++;
+	while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] != gameBoard.turn)) {
+		j--;
+		i++;
+		gameBoard.board[i][j] = turn;
+	}
+	
+	i = ind.x, j = ind.y;
+	i--, j++;
+	while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] != gameBoard.turn)) {
+		i--;
+		j++;
+		gameBoard.board[i][j] = turn;
+	}
+
+	i = ind.x, j = ind.y;
+	i--, j--;
+	while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] != gameBoard.turn)) {
+		i--;
+		j--;
+		gameBoard.board[i][j] = turn;
+	}
+}
+
+double getBoardScore(reversiGame gameBoard) {
+	return 0;
+}
+
+reversiGame getNewState(reversiGame gameBoard, index move) {
+	// Check validity of move
+	// Copy original board, turn over the board pieces accoridingly
+	// Change the turn, compute the candidate list for the new player
+
+	reversiGame newGame = gameBoard;
+	if (gameBoard.board[move.x][move.y] != 3) {
+		cout << "ERROR: This shouldn't be printed!\n";
+		return newGame;
+	}
+
+	turnOver(newGame, move);
+	newGame.turn = 3 - newGame.turn;
+	updateCandList(newGame);
+
+	return newGame;
+}
+
+/*
+	// The minimax algorithm, traverses the tree recursively.
+	// Need to further add table lookups and alpha beta pruning
+	// Also add option for fooling the opponent (Can experiment)
+	// (Not choosing the min if reasonable options left)
+	// Also need to make another version which seeks to 
+	// maximize the average values of the top k moves.
+
+	// Input:
+	// // gameRep refers to the game board representation in form of a char array for speed
+	// // Probably faster than vectors of vectors. 
+	// turn is either 1 or 2. It refers to our turn ID, useful for deciding min or max node.
+	// gameBoard is the gameBoard being passed
+	// row, col: Size of the board
+	// Depth refers to the depth we need to traverse currently.
+	// Output:
+	// Score of the best possible result
+	// index i.e. the best move
+*/
+double minimax(reversiGame gameBoard, int ourTurn, int row, int col, int depth, index &optMove, bool abPrune = false) {
+	// Check if depth is 0, if it is, then compute the score using getScore()
+	// Traverse over the possible moves and create the new game state after performing each move
+	// Recursively call the function minimax for each state, store the min or max
+	// Alpha beta pruning: Also pass variables alpha, beta for pruning.
+	// Fooling heuristic (Probably not needed): Choose alternate moves (Only do this in intermediate stages)
+	// Finally check for the minimum or maximum value and modify the optMove variable to store the best move.
+
+	double optVal;
+	// Stores the optimal value at this node
+
+	if (depth == 0) {
+		double score = getBoardScore(gameBoard);
+		return score;
+	}
+	else {
+		int i, j;
+		vector <reversiGame> gameList;
+		vector <double> scoreList;
+		for (i = 0; i < gameBoard.candList.size(); i++) {
+			reversiGame tmpGame = getNewState(gameBoard, candList[i]);
+			gameList.push_back(tmpGame);
+		}
+		if (!abPrune) {
+			for (i = 0; i < gameList.size(); i++) {
+				double tmpScore = minimax(gameList[i], ourTurn, row, col, depth, optMove, abPrune);
+				scoreList.push_back(tmpScore);
+			}
+			if (gameBoard.turn == ourTurn) {
+				// This is a max node, thus we maximize our score
+				optVal = 0;
+				for (i = 0; i < scoreList.size(); i++) {
+					if (optVal < scoreList[i]) {
+						optVal = scoreList[i];
+						optMove = gameBoard.candList[i];
+					}
+				}
+			}
+			else {
+				// This is a min node, thus they try to minimize our score
+				optVal = 100000;
+				for (i = 0; i < scoreList.size(); i++) {
+					if (optVal > scoreList[i]) {
+						optVal = scoreList[i];
+						optMove = gameBoard.candList[i];
+					}
+				}
+			}
+		}
+		else {
+			cout << "Not implemented alpha beta pruning!\n";
+		}
+	}
+
+	return optVal;
+}
+
 // Gives the number of opponents pieces turned if positioned here (at ind)
 int getTurnOver(reversiGame gameBoard, index ind) {
 	int ans = 0, i, j, tmpVal = 0;
@@ -183,7 +379,8 @@ void getRiskRegions(reversiGame gameBoard, boardGame& risk) {
 }
 
 // Gives the optimal move for the current board status
-index getOptimalMove(reversiGame& gameBoard, boardGame risk, double tradeOff = 0.5) {
+// Method A : Greedy Strategy using a weighted sum of turnOvers and riskRegions
+index getOptimalMoveMethodA(reversiGame& gameBoard, boardGame risk, double tradeOff = 0.5) {
 	index optInd{0, 0}, tmpInd;
 	int i, j, a, b;
 	double maxVal = 0, tmpVal;
@@ -200,13 +397,9 @@ index getOptimalMove(reversiGame& gameBoard, boardGame risk, double tradeOff = 0
 	return optInd;
 }
 
-int main() {
-	reversiGame gameBoard;
-	initBoard(gameBoard, 10, 10);
-	getBoardInput(gameBoard);
-	boardGame risk;
-	getRiskRegions(gameBoard, risk);
-	index optMove = getOptimalMove(gameBoard, risk, 0.5);
-	cout << optMove.x << " AND " << optMove.y << endl;
-    return 0;
+// Gives the optimal move for the current board status
+// Method B : Minmax tree search
+// Input : Game board, Depth limit
+index getOptimalMoveMethodB(reversiGame& gameBoard) {
+	return (0,0);
 }
