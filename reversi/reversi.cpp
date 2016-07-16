@@ -10,6 +10,17 @@ struct index {
 	int x, y;
 };
 
+bool operator ==(const index& x, const index& y) {
+    return std::tie(x.x, x.y) == std::tie(y.x, y.y);
+}
+
+bool compareIndex(const index& a, const index& b) {
+    if (a.x == b.x) {
+    	return a.y < b.y;
+    }
+    return a.x < b.x;
+}
+
 struct reversiGame {
 	boardGame board;
 	// The current board status
@@ -60,18 +71,127 @@ int main() {
 	getBoardInput(gameBoard);
 	boardGame risk;
 	getRiskRegions(gameBoard, risk);
-	index optMove = getOptimalMoveMethodA(gameBoard, risk, 0.5);
+	// index optMove = getOptimalMoveMethodA(gameBoard, risk, 0.5);
+	index optMove = getOptimalMoveMethodB(gameBoard);
 	cout << optMove.x << " AND " << optMove.y << endl;
     return 0;
 }
 
-void updateCandList(reversiGame& gameBoard) {
+void getCandList(reversiGame& gameBoard) {
 	// Check each index for being a valid move and update the candList
 
-	int i, j;
+	int i, j, a, b;
+	vector <index> tmpCandList;
 	gameBoard.candList.clear();
-	for (i)
 
+	for (a = 0; a < gameBoard.row; a++) {
+		for (b = 0; b < gameBoard.col; b++) {
+
+			if (gameBoard.board[a][b] != gameBoard.turn) {
+				
+				i = a, j = b;
+				if ((j >= 0) && (gameBoard.board[i][j-1] == gameBoard.turn)) {
+					tmpVal = 0, j++;
+					while ((j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+						j++;
+					}
+					if (j < gameBoard.col) {
+						tmpCandList.push_back(index {i, j});
+					}
+				}
+
+				i = a, j = b;
+				if ((j < (gameBoard.col - 1)) && (gameBoard.board[i][j+1] == gameBoard.turn)) {
+					tmpVal = 0, j--;
+					while ((j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+						j--;
+					}
+					if (j >= 0) {
+						tmpCandList.push_back(index {i, j});
+					}
+				}
+
+				i = a, j = b;
+				if ((i >= 0) && (gameBoard.board[i-1][j] == gameBoard.turn)) {
+					tmpVal = 0, i++;
+					while ((i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+						i++;
+					}
+					if (i < gameBoard.row) {
+						tmpCandList.push_back(index {i, j});
+					}
+				}
+
+				i = a, j = b;
+				if ((i < (gameBoard.row - 1)) && (gameBoard.board[i+1][j] == gameBoard.turn)) {
+					tmpVal = 0, i--;
+					while ((i >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+						i--;
+					}
+					if (i >= 0) {
+						tmpCandList.push_back(index {i, j});
+					}
+				}
+
+				// Diagonal gains
+
+				i = a, j = b;
+				if ((i >= 0) && (j >= 0) && (gameBoard.board[i-1][j-1] == gameBoard.turn)) {
+					tmpVal = 0, j++, i++;
+					while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+						j++;
+						i++;
+					}
+					if ((j < gameBoard.col) && (i < gameBoard.row)) {
+						tmpCandList.push_back(index {i, j});
+					}
+				}
+
+				i = a, j = b;	
+				if ((j < (gameBoard.col - 1)) && (i >= 0) && (gameBoard.board[i-1][j+1] == gameBoard.turn)) {
+					tmpVal = 0, j--, i++;
+					while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+						j--;
+						i++;
+					}
+					if ((j >= 0) && (i < gameBoard.row)) {
+						tmpCandList.push_back(index {i, j});
+					}
+				}
+
+				i = a, j = b;
+				if ((i < (gameBoard.row - 1)) && (j >= 0) && (gameBoard.board[i+1][j-1] == gameBoard.turn)) {
+					tmpVal = 0, i--, j++;
+					while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+						i--;
+						j++;
+					}
+					if ((i >= 0) && (j < gameBoard.col)) {
+						tmpCandList.push_back(index {i, j});
+					}
+				}
+
+				i = a, j = b;
+				if ((i < (gameBoard.row - 1)) && (j < (gameBoard.col - 1)) && (gameBoard.board[i+1][j+1] == gameBoard.turn)) {
+					tmpVal = 0, i--, j--;
+					while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+						i--;
+						j--;
+					}
+					if ((i >= 0) && (j >= 0)) {
+						tmpCandList.push_back(index {i, j});
+					}
+				}
+			}
+		}
+	}
+
+	sort(tmpCandList.begin(), tmpCandList.end(), compareIndex);
+	for (i = 0; i < tmpCandList.size(); i++) {
+		while ((i < (tmpCandList.size() - 1)) && (tmpCandList[i] == tmpCandList[i+1]))
+			i++;
+		gameBoard.candList.push_back(tmpCandList[i]);
+	}
 }
 
 void turnOver(reversiGame& gameBoard, index ind){
@@ -81,28 +201,28 @@ void turnOver(reversiGame& gameBoard, index ind){
 
 	i = ind.x, j = ind.y;
 	j++;
-	while ((j < gameBoard.col) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j++;
 		gameBoard.board[i][j] = turn;
 	}
 
 	i = ind.x, j = ind.y;
 	j--;
-	while ((j >= 0) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j--;
 		gameBoard.board[i][j] = turn;
 	}
 	
 	i = ind.x, j = ind.y;
 	i++;
-	while ((i < gameBoard.row) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i++;
 		gameBoard.board[i][j] = turn;
 	}
 	
 	i = ind.x, j = ind.y;
 	i--;
-	while ((i >= 0) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((i >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i--;
 		gameBoard.board[i][j] = turn;
 	}
@@ -111,7 +231,7 @@ void turnOver(reversiGame& gameBoard, index ind){
 
 	i = ind.x, j = ind.y;
 	j++, i++;
-	while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j++;
 		i++;
 		gameBoard.board[i][j] = turn;
@@ -119,7 +239,7 @@ void turnOver(reversiGame& gameBoard, index ind){
 
 	i = ind.x, j = ind.y;
 	j--, i++;
-	while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j--;
 		i++;
 		gameBoard.board[i][j] = turn;
@@ -127,7 +247,7 @@ void turnOver(reversiGame& gameBoard, index ind){
 	
 	i = ind.x, j = ind.y;
 	i--, j++;
-	while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i--;
 		j++;
 		gameBoard.board[i][j] = turn;
@@ -135,7 +255,7 @@ void turnOver(reversiGame& gameBoard, index ind){
 
 	i = ind.x, j = ind.y;
 	i--, j--;
-	while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i--;
 		j--;
 		gameBoard.board[i][j] = turn;
@@ -143,7 +263,19 @@ void turnOver(reversiGame& gameBoard, index ind){
 }
 
 double getBoardScore(reversiGame gameBoard) {
-	return 0;
+	int i, j;
+	double score = 0;
+
+	for (a = 0; a < gameBoard.row; a++) {
+		for (b = 0; b < gameBoard.col; b++) {
+			if (gameBoard.board[i][j] == gameBoard.turn)
+				score += 1.0;
+			else if (gameBoard.board[i][j] == (3 - gameBoard.turn))
+				score -= 1.0
+		}
+	}
+
+	return score;
 }
 
 reversiGame getNewState(reversiGame gameBoard, index move) {
@@ -159,7 +291,7 @@ reversiGame getNewState(reversiGame gameBoard, index move) {
 
 	turnOver(newGame, move);
 	newGame.turn = 3 - newGame.turn;
-	updateCandList(newGame);
+	getCandList(newGame);
 
 	return newGame;
 }
@@ -248,7 +380,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, j++;
-	while ((j < gameBoard.col) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j++;
 		tmpVal++;
 	}
@@ -258,7 +390,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, j--;
-	while ((j >= 0) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j--;
 		tmpVal++;
 	}
@@ -268,7 +400,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 	
 	i = ind.x, j = ind.y;
 	tmpVal = 0, i++;
-	while ((i < gameBoard.row) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i++;
 		tmpVal++;
 	}
@@ -278,7 +410,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, i--;
-	while ((i >= 0) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((i >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i--;
 		tmpVal++;
 	}
@@ -290,7 +422,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, j++, i++;
-	while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j++;
 		i++;
 		tmpVal++;
@@ -301,7 +433,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, j--, i++;
-	while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		j--;
 		i++;
 		tmpVal++;
@@ -312,7 +444,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 	
 	i = ind.x, j = ind.y;
 	tmpVal = 0, i--, j++;
-	while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i--;
 		j++;
 		tmpVal++;
@@ -323,7 +455,7 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, i--, j--;
-	while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] != gameBoard.turn)) {
+	while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
 		i--;
 		j--;
 		tmpVal++;
@@ -384,7 +516,7 @@ index getOptimalMoveMethodA(reversiGame& gameBoard, boardGame risk, double trade
 	index optInd{0, 0}, tmpInd;
 	int i, j, a, b;
 	double maxVal = 0, tmpVal;
-	for (i = 0;i < gameBoard.candList.size(); i++) {
+	for (i = 0; i < gameBoard.candList.size(); i++) {
 		tmpInd = gameBoard.candList[i];
 		a = getTurnOver(gameBoard, tmpInd);
 		b = risk[gameBoard.candList[i].x][gameBoard.candList[i].y];
@@ -401,5 +533,7 @@ index getOptimalMoveMethodA(reversiGame& gameBoard, boardGame risk, double trade
 // Method B : Minmax tree search
 // Input : Game board, Depth limit
 index getOptimalMoveMethodB(reversiGame& gameBoard) {
-	return (0,0);
+	index optInd{0, 0}, tmpInd;
+	minimax(gameBoard, gameBoard.turn, gameBoard.row, gameBoard.col, 6, optInd);
+	return optInd;
 }
