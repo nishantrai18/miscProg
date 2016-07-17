@@ -2,6 +2,7 @@
 #include <vector>
 #include <cstdio>
 #include <algorithm>
+#include <map>
 using namespace std;
 
 typedef vector < vector <int> > boardGame;
@@ -30,6 +31,8 @@ index createIndex(int a, int b) {
 	return retVal;
 }
 
+map<string, double> stateMap;
+
 int totCount = 0;
 
 struct reversiGame {
@@ -39,6 +42,8 @@ struct reversiGame {
 	// The possible candidates for the current board
 	int row, col, turn;
 	// The sizes of the board
+	bool end;
+	// State of the board, whether the game has ended or not.
 };
 
 void initBoard(reversiGame& gameBoard, int row, int col) {
@@ -50,6 +55,7 @@ void initBoard(reversiGame& gameBoard, int row, int col) {
 	gameBoard.row = row;
 	gameBoard.col = col;
 	gameBoard.turn = 0;
+	gameBoard.end = false;
 }
 
 void getBoardInput(reversiGame& gameBoard) {
@@ -78,15 +84,39 @@ void printGameState(reversiGame gameBoard) {
 	cout << "The turn is of player " << gameBoard.turn << endl;
 }
 
+string getBoardString(reversiGame gameBoard) {
+	string retVal = "";
+	int i, j, a, b;
+	
+	for (a = 0; a < gameBoard.row; a++) {
+		for (b = 0; b < gameBoard.col; b++) {
+			retVal += '0' + gameBoard.board[a][b];
+		}
+	}
+
+	retVal += '0' + gameBoard.turn;
+	return retVal;
+}
+
+double getStoredState(reversiGame gameBoard) {
+	string key = getBoardString(gameBoard);
+	if (stateMap.find(key) != stateMap.end() ) {
+		return stateMap[key];
+	}
+	else {
+		return -1000000;
+	}
+}
+
 double getBoardScore(reversiGame gameBoard);
 reversiGame getNewState(reversiGame gameBoard, boardGame risk, index move);
-int getTurnOver(reversiGame gameBoard, index ind);
+int getTurnOver(reversiGame gameBoard, index ind, int turn);
 void updateCandList(reversiGame& gameBoard);
 void turnOver(reversiGame& gameBoard, index ind);
 void getRiskRegions(reversiGame gameBoard, boardGame& risk);
 index getOptimalMoveMethodA(reversiGame& gameBoard, double tradeOff = 0.5);
 index getOptimalMoveMethodB(reversiGame& gameBoard);
-double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth, index &optMove, double alpha, double beta, bool abPrune = false);
+double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth, index &optMove, double alpha, double beta, int flag = 0, bool avgPath = false);
 
 int main() {
 	reversiGame gameBoard;
@@ -94,7 +124,7 @@ int main() {
 	getBoardInput(gameBoard);
 	// index optMove = getOptimalMoveMethodA(gameBoard, 0.5);
 	index optMove = getOptimalMoveMethodB(gameBoard);
-	cout << optMove.x << " AND " << optMove.y << endl;
+	cout << optMove.x << " " << optMove.y << endl;
     return 0;
 }
 
@@ -357,8 +387,11 @@ void turnOver(reversiGame& gameBoard, index ind){
 
 double getBoardScore(reversiGame gameBoard, boardGame risk, int ourTurn) {
 	int i, j, a, b;
-	double score = 0;
+	double score = 0, turnUs = 0, turnOpp = 0;
 	int cntUs = 0, cntOpp = 0;
+	double cntTurnUs = 0, cntTurnOpp = 0;
+
+	// printGameState(gameBoard);
 
 	for (a = 0; a < gameBoard.row; a++) {
 		for (b = 0; b < gameBoard.col; b++) {
@@ -368,38 +401,83 @@ double getBoardScore(reversiGame gameBoard, boardGame risk, int ourTurn) {
 			else if (gameBoard.board[a][b] == (3 - ourTurn)) {
 				cntOpp++;
 			}
+			else {
+				// cout <<"For index " << a << ", " << b;
+				double tmpVal = getTurnOver(gameBoard, createIndex(a, b), ourTurn);
+				if (tmpVal > 0.01) cntTurnUs++;
+				// cout << " : Our turnOver, " << tmpVal;
+				turnUs += tmpVal;
+				tmpVal = getTurnOver(gameBoard, createIndex(a, b), 3 - ourTurn);
+				// cout << ", Opp turnover, " << tmpVal << endl;
+				if (tmpVal > 0.01) cntTurnOpp++;
+				turnOpp += tmpVal;
+			}
 		}
 	}
 
 	for (a = 0; a < gameBoard.row; a++) {
 		for (b = 0; b < gameBoard.col; b++) {
 			if (gameBoard.board[a][b] == ourTurn) {
-				score += 1.0;
-				score += ((0.4/cntUs) * risk[a][b]);
+				if ((cntUs + cntOpp) < 15)
+					score -= 0.5;
+				else
+					score += 1.0;
+				score += ((0.4) * risk[a][b]);
 			}
 			else if (gameBoard.board[a][b] == (3 - ourTurn)) {
-				score -= 1.0;
-				score -= ((0.1/cntOpp) * risk[a][b]);
+				if ((cntUs + cntOpp) < 15)
+					score += 0.5;
+				else
+					score -= 1.0;
+				score -= ((0.2) * risk[a][b]);
 			}
 		}
 	}
 
-	if (gameBoard.turn == ourTurn) {
-		score += (0.5 *gameBoard.candList.size());
+	for (i = 0; i < gameBoard.candList.size(); i++) {
+		if (gameBoard.turn == ourTurn) {
+			score += ((0.2) * risk[gameBoard.candList[i].x][gameBoard.candList[i].y]);
+		}
+		else {
+			score -= ((0.4) * risk[gameBoard.candList[i].x][gameBoard.candList[i].y]);
+		}		
+
 	}
-	else {
-		score -= (0.25 *gameBoard.candList.size());		
-	}
+
+	if (cntTurnUs < 0.001)
+		turnUs = 1, cntTurnUs = -0.01;
+	if (cntTurnOpp < 0.001)
+		turnOpp = 1, cntTurnOpp = 0.01;
+
+	// cout << "(turnUs/cntTurnUs) : " <<	((1.0 * (turnUs/cntTurnUs))) << endl;
+	// cout << "(turnOpp/cntTurnOpp) : " << ((0.75 * (turnOpp/cntTurnOpp))) << endl;
+	// cout << "(cntTurnUs) : " <<	(0.2*cntTurnUs) << endl;
+	// cout << "(cntTurnOpp) : " << (0.2*cntTurnOpp) << endl;
+
+	// printGameState(gameBoard);
+
+	score += ((1.0 * (turnUs/cntTurnUs)));
+	score -= ((1.0 * (turnOpp/cntTurnOpp)));
+	score += (0.2*cntTurnUs);
+	score -= (0.4*cntTurnOpp);
+
 
 	return score;
 }
 
-reversiGame getNewState(reversiGame gameBoard, index move) {
+reversiGame getNewState(reversiGame gameBoard, index move, int noMoveFlag = 0) {
 	// Check validity of move
 	// Copy original board, turn over the board pieces accoridingly
 	// Change the turn, compute the candidate list for the new player
 
 	reversiGame newGame = gameBoard;
+
+	if (noMoveFlag) {
+		newGame.turn = 3 - newGame.turn;
+		getCandList(newGame);		
+	}
+
+
 	if (gameBoard.board[move.x][move.y] != 3) {
 		cout << "ERROR: This shouldn't be printed!\n";
 		return newGame;
@@ -442,7 +520,7 @@ reversiGame getNewState(reversiGame gameBoard, index move) {
 	// Score of the best possible result
 	// index i.e. the best move
 */
-double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth, index &optMove, double alpha, double beta, bool abPrune) {
+double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth, index &optMove, double alpha, double beta, int flag, bool avgPath) {
 	// Check if depth is 0, if it is, then compute the score using getScore()
 	// Traverse over the possible moves and create the new game state after performing each move
 	// Recursively call the function minimax for each state, store the min or max
@@ -450,23 +528,29 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 	// Fooling heuristic (Probably not needed): Choose alternate moves (Only do this in intermediate stages)
 	// Finally check for the minimum or maximum value and modify the optMove variable to store the best move.
 
-	if ((!abPrune) && (alpha > beta) || (abs(alpha - beta) < 0.5)) {
+	if ((flag == 2) && ((alpha > beta) || (abs(alpha - beta) < 0.25))) {
 		if (gameBoard.turn == ourTurn) {
-			return 100000;
+			return 1000000;
 		}
 		else {
-			return -100000;
+			return -1000000;
 		}
+	}
+
+	double storeVal = getStoredState(gameBoard);
+	if (storeVal > -100000) {
+		return storeVal;
 	}
 
 	totCount++;
 	double optVal;
+	index optMoveNew;
 	// Stores the optimal value at this node
 
 	if (depth == 0) {
 		double score = getBoardScore(gameBoard, risk, ourTurn);
 		cout << "Getting new state! " << totCount << " with score : " << score << "\n";
-		cout << alpha << " and " << beta << endl;
+		// cout << alpha << " and " << beta << endl;
 		// printGameState(gameBoard);
 		return score;
 	}
@@ -491,11 +575,16 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 			gameList.push_back(tmpGame);
 		}
 
+		// if (gameBoard.candList.size() == 0) {
+		// 	reversiGame tmpGame = getNewState(gameBoard, createIndex(-1, -1), 1);
+		// 	gameList.push_back(tmpGame);
+		// }
+
 		// cout << "ENDING GENERATING POSSIBLE MOVES\n";
 
-		if (!abPrune) {
+		if (flag == 0) {
 			for (i = 0; i < gameList.size(); i++) {
-				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMove, alpha, beta, abPrune);
+				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMoveNew, alpha, beta, flag, avgPath);
 				scoreList.push_back(tmpScore);
 			}
 			if (gameBoard.turn == ourTurn) {
@@ -526,16 +615,10 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 				}
 			}
 		}
-		else {
+		else if (flag == 1) {
 			for (i = 0; i < gameList.size(); i++) {
-				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMove, alpha, beta, abPrune);
+				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMoveNew, alpha, beta, flag, avgPath);
 				scoreList.push_back(tmpScore);
-				if (gameBoard.turn == ourTurn) {
-					alpha = max(alpha, tmpScore);
-				}
-				else {
-					beta = min(beta, tmpScore);
-				}
 			}
 			if (gameBoard.turn == ourTurn) {
 				// This is a max node, thus we maximize our score
@@ -544,10 +627,18 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 					if (optVal < scoreList[i]) {
 						optVal = scoreList[i];
 						optMove = gameBoard.candList[i];
-						// cout << optVal << "|";
 					}
 				}
-				if (optVal <= -10000) {
+				sort(scoreList.begin(), scoreList.end());
+				optVal = 0;
+				int cnt = 0;
+				for (i = scoreList.size()-1; i >= max(0, (int) scoreList.size() - 3); i--) {
+					optVal += scoreList[i];
+					cnt++;
+				}
+				if (cnt)
+					optVal /= cnt;
+				if (scoreList.size() == 0) {
 					optVal = getBoardScore(gameBoard, risk, ourTurn);
 				}
 			}
@@ -560,59 +651,107 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 						optMove = gameBoard.candList[i];
 					}
 				}
-				if (optVal >= 10000) {
+				sort(scoreList.begin(), scoreList.end());
+				optVal = 0;
+				int cnt = 0;
+				for (i = 0; i < min(4, (int) scoreList.size()); i++) {
+					optVal += scoreList[i];
+					cnt++;
+				}
+				if (cnt)
+					optVal /= cnt;
+				if (scoreList.size() == 0) {
 					optVal = getBoardScore(gameBoard, risk, ourTurn);
 				}
 			}
 		}
+		else {
+			for (i = 0; i < gameList.size(); i++) {
+				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMoveNew, alpha, beta, flag, avgPath);
+				scoreList.push_back(tmpScore);
+				if (gameBoard.turn == ourTurn) {
+					if (alpha < tmpScore) {
+						alpha = tmpScore;
+						optMove = gameBoard.candList[i];
+					}
+				}
+				else {
+					if (beta > tmpScore) {
+						beta = tmpScore;
+						optMove = gameBoard.candList[i];
+					}
+				}
+			}
+			if (gameBoard.turn == ourTurn) 
+				optVal = alpha;
+			else
+				optVal = beta;
+
+			if (scoreList.size() == 0) {
+				optVal = getBoardScore(gameBoard, risk, ourTurn);
+			}
+
+			for (i = 0; i < scoreList.size(); i++) {
+				if (abs(optVal - scoreList[i]) < 0.0001)
+					optMove = gameBoard.candList[i];
+			}
+		}
 	}
+
+	if (avgPath)
+		optVal = getBoardScore(gameBoard, risk, ourTurn)*(1.0) + (optVal * 0.25);	
+
+	// cout << alpha << " and " << beta << " with " << optVal <<endl;
+
+	string key = getBoardString(gameBoard);
+	stateMap.insert(make_pair(key, optVal));
 
 	return optVal;
 }
 
-// Gives the number of opponents pieces turned if positioned here (at ind)
-int getTurnOver(reversiGame gameBoard, index ind) {
+// Gives the number of opponents pieces turned if positioned here (at ind) by player turn
+int getTurnOver(reversiGame gameBoard, index ind, int turn) {
 	int ans = 0, i, j, tmpVal = 0;
 	
 	// Horizontal and vertical gains
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, j++;
-	while ((j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+	while ((j < gameBoard.col) && (gameBoard.board[i][j] == (3 - turn))) {
 		j++;
 		tmpVal++;
 	}
-	if ((j < gameBoard.col) && (gameBoard.board[i][j] == gameBoard.turn)) {
+	if ((j < gameBoard.col) && (gameBoard.board[i][j] == turn)) {
 		ans += tmpVal;
 	}
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, j--;
-	while ((j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+	while ((j >= 0) && (gameBoard.board[i][j] == (3 - turn))) {
 		j--;
 		tmpVal++;
 	}
-	if ((j >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
+	if ((j >= 0) && (gameBoard.board[i][j] == turn)) {
 		ans += tmpVal;
 	}
 	
 	i = ind.x, j = ind.y;
 	tmpVal = 0, i++;
-	while ((i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+	while ((i < gameBoard.row) && (gameBoard.board[i][j] == (3 - turn))) {
 		i++;
 		tmpVal++;
 	}
-	if ((i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
+	if ((i < gameBoard.row) && (gameBoard.board[i][j] == turn)) {
 		ans += tmpVal;
 	}
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, i--;
-	while ((i >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+	while ((i >= 0) && (gameBoard.board[i][j] == (3 - turn))) {
 		i--;
 		tmpVal++;
 	}
-	if ((i >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
+	if ((i >= 0) && (gameBoard.board[i][j] == turn)) {
 		ans += tmpVal;
 	}
 
@@ -620,45 +759,45 @@ int getTurnOver(reversiGame gameBoard, index ind) {
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, j++, i++;
-	while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+	while ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - turn))) {
 		j++;
 		i++;
 		tmpVal++;
 	}
-	if ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
+	if ((j < gameBoard.col) && (i < gameBoard.row) && (gameBoard.board[i][j] == turn)) {
 		ans += tmpVal;
 	}
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, j--, i++;
-	while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+	while ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == (3 - turn))) {
 		j--;
 		i++;
 		tmpVal++;
 	}
-	if ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == gameBoard.turn)) {
+	if ((j >= 0) && (i < gameBoard.row) && (gameBoard.board[i][j] == turn)) {
 		ans += tmpVal;
 	}
 	
 	i = ind.x, j = ind.y;
 	tmpVal = 0, i--, j++;
-	while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+	while ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == (3 - turn))) {
 		i--;
 		j++;
 		tmpVal++;
 	}
-	if ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == gameBoard.turn)) {
+	if ((i >= 0) && (j < gameBoard.col) && (gameBoard.board[i][j] == turn)) {
 		ans += tmpVal;
 	}
 
 	i = ind.x, j = ind.y;
 	tmpVal = 0, i--, j--;
-	while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == (3 - gameBoard.turn))) {
+	while ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == (3 - turn))) {
 		i--;
 		j--;
 		tmpVal++;
 	}
-	if ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == gameBoard.turn)) {
+	if ((i >= 0) && (j >= 0) && (gameBoard.board[i][j] == turn)) {
 		ans += tmpVal;
 	}
 
@@ -679,15 +818,15 @@ void getRiskRegions(reversiGame gameBoard, boardGame& risk) {
 					risk[i][j] = 20;
 				}
 				else if ((i == 1) || (i == gameBoard.row - 2)) {
-					risk[i][j] = 0;
+					risk[i][j] = -5;
 				}
 				else {
-					risk[i][j] = 7;
+					risk[i][j] = 10;
 				}
 			} 
 			else if ((j == 1) || (j == gameBoard.col - 2)) {
 				if ((i < 2) || (i > gameBoard.row - 3)) {
-					risk[i][j] = 0;
+					risk[i][j] = -5;
 				}
 				else {
 					risk[i][j] = 2;
@@ -695,13 +834,13 @@ void getRiskRegions(reversiGame gameBoard, boardGame& risk) {
 			} 
 			else {
 				if ((i == 0) || (i == gameBoard.row - 1)) {
-					risk[i][j] = 7;
+					risk[i][j] = 0;
 				}
 				else if ((i == 1) || (i == gameBoard.row - 2)) {
-					risk[i][j] = 2;
+					risk[i][j] = 0;
 				}
 				else {
-					risk[i][j] = 5;
+					risk[i][j] = 0;
 				}
 			}
 		}
@@ -718,7 +857,7 @@ index getOptimalMoveMethodA(reversiGame& gameBoard, double tradeOff) {
 	double maxVal = 0, tmpVal;
 	for (i = 0; i < gameBoard.candList.size(); i++) {
 		tmpInd = gameBoard.candList[i];
-		a = getTurnOver(gameBoard, tmpInd);
+		a = getTurnOver(gameBoard, tmpInd, gameBoard.turn);
 		b = risk[gameBoard.candList[i].x][gameBoard.candList[i].y];
 		tmpVal = (a*(1.0) + (tradeOff*b));
 		if (tmpVal > maxVal) {
@@ -737,7 +876,9 @@ index getOptimalMoveMethodB(reversiGame& gameBoard) {
 	boardGame risk;
 	double alpha = -1000000, beta = 1000000;
 	getRiskRegions(gameBoard, risk);	
+	stateMap.clear();
 	// cout <<	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd) << endl;
-	cout <<	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 7, optInd, alpha, beta, true) << endl;
+	// cout <<	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd, alpha, beta, 2, true) << endl;
+	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 3, optInd, alpha, beta, 2, true);
 	return optInd;
 }
