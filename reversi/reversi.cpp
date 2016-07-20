@@ -43,6 +43,8 @@ struct reversiGame {
 	// The possible candidates for the current board
 	int row, col, turn;
 	// The sizes of the board
+	int cntUs, cntOpp;
+	// Counts of the pieces
 	bool end;
 	// State of the board, whether the game has ended or not.
 };
@@ -57,6 +59,8 @@ void initBoard(reversiGame& gameBoard, int row, int col) {
 	gameBoard.col = col;
 	gameBoard.turn = 0;
 	gameBoard.end = false;
+	gameBoard.cntUs = 0;
+	gameBoard.cntOpp = 0;
 }
 
 void getBoardInput(reversiGame& gameBoard) {
@@ -71,6 +75,19 @@ void getBoardInput(reversiGame& gameBoard) {
 		}
 	}
 	scanf("%d", &gameBoard.turn);
+	
+	int a, b;
+	
+	for (a = 0; a < gameBoard.row; a++) {
+		for (b = 0; b < gameBoard.col; b++) {
+			if (gameBoard.board[a][b] == gameBoard.turn) {
+				gameBoard.cntUs++;
+			}
+			else if (gameBoard.board[a][b] == (3 - gameBoard.turn)) {
+				gameBoard.cntOpp++;
+			}
+		}
+	}
 }
 
 string getBoardString(reversiGame gameBoard) {
@@ -110,6 +127,7 @@ index getOptimalMoveMethodB(reversiGame& gameBoard);
 int getStabilityMat(reversiGame gameBoard, boardGame& stableStat, int turn);
 double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth, \
 				index &optMove, double alpha, double beta, int flag = 0, bool avgPath = false, bool mapFlag = false, bool minPrune = false);
+double getDynamicRisk(reversiGame gameBoard, boardGame risk, int x, int y);
 
 int main() {
 	reversiGame gameBoard;
@@ -120,6 +138,27 @@ int main() {
 	cout << optMove.x << " " << optMove.y << endl;
     return 0;
 }
+
+double getDynamicRisk(reversiGame gameBoard, boardGame risk, int x, int y) {
+	int i = x, j = y;
+	
+	if ((i - j) == (-(gameBoard.col - 2))) {
+		return ((gameBoard.board[0][gameBoard.col - 1] != 0) ? 0 : risk[i][j]);
+	}
+	else if ((i - j) == (gameBoard.row - 2)) {
+		return ((gameBoard.board[gameBoard.row - 1][0] != 0) ? 0 : risk[i][j]);
+	}
+	else if ((i + j) == 1) {
+		return ((gameBoard.board[0][0] != 0) ? 0 : risk[i][j]);
+	}
+	else if ((i + j) == (gameBoard.row + gameBoard.col - 3)) {
+		return ((gameBoard.board[gameBoard.row - 1][gameBoard.col - 1] != 0) ? 0 : risk[i][j]);
+	}
+	else {
+		return risk[i][j];
+	}
+}
+
 
 double getBoardScore(reversiGame gameBoard, boardGame risk, int ourTurn) {
 	int i, j, a, b;
@@ -153,35 +192,52 @@ double getBoardScore(reversiGame gameBoard, boardGame risk, int ourTurn) {
 		}
 	}
 
+	int fact = 1, factB = 1;
+	if ((cntUs + cntOpp) < 15)
+		fact = 1, factB = 3;
+	else if ((cntUs + cntOpp) < 40)
+		fact = 2, factB = 3;
+	else if ((cntUs + cntOpp) < 70)
+		fact = 5, factB = 2;
+	else
+		fact = 10, factB = 2;
+
 	boardGame stableStat;
 	int unstableUs = getStabilityMat(gameBoard, stableStat, 3 - ourTurn);
+	for (a = 0; a < gameBoard.row; a++) {
+		for (b = 0; b < gameBoard.col; b++) {
+			if (gameBoard.board[a][b] == ourTurn) {
+				if (stableStat[a][b] == 0)
+					score += factB * 0.25;
+				else
+					score -= factB * 0.125;
+			}
+			else if (gameBoard.board[a][b] == (3 - ourTurn)) {
+				if (stableStat[a][b] > 0)
+					score += factB * 0.25;
+				else
+					score -= factB * 0.125;
+			}
+		}
+	}
+
 	int unstableOpp = getStabilityMat(gameBoard, stableStat, ourTurn);
 
 	// cout << unstableUs << " and " << unstableOpp << endl;
-	score -= (unstableUs*(0.6));
-	score += (unstableOpp*(0.4));
+	// score -= (unstableUs*(0.5));
+	// score += (unstableOpp*(0.4));
 
 	// cout << "Score 0 here is " << score << endl;
-
-	int fact = 1;
-	if ((cntUs + cntOpp) < 15)
-		fact = 1;
-	else if ((cntUs + cntOpp) < 40)
-		fact = 2;
-	else if ((cntUs + cntOpp) < 70)
-		fact = 5;
-	else
-		fact = 10;
 
 	for (a = 0; a < gameBoard.row; a++) {
 		for (b = 0; b < gameBoard.col; b++) {
 			if (gameBoard.board[a][b] == ourTurn) {
-				score += ((fact<6)?1.0:2.0);
-				score += ((0.05) * fact * risk[a][b]);
+				score += ((fact<6)?0.5:2.0);
+				score += ((0.05) * fact * (getDynamicRisk(gameBoard, risk, a, b)));
 			}
 			else if (gameBoard.board[a][b] == (3 - ourTurn)) {
-				score -= ((fact<6)?1.0:2.0);
-				score -= ((0.05) * fact * risk[a][b]);
+				score -= ((fact<6)?0.5:2.0);
+				score -= ((0.05) * fact * (getDynamicRisk(gameBoard, risk, a, b)));
 			}
 		}
 	}
@@ -190,10 +246,10 @@ double getBoardScore(reversiGame gameBoard, boardGame risk, int ourTurn) {
 
 	for (i = 0; i < gameBoard.candList.size(); i++) {
 		if (gameBoard.turn == ourTurn) {
-			score += ((0.025) * fact * risk[gameBoard.candList[i].x][gameBoard.candList[i].y]);
+			score += ((0.025) * fact * getDynamicRisk(gameBoard, risk, gameBoard.candList[i].x, gameBoard.candList[i].y));
 		}
 		else {
-			score -= ((0.025) * fact * risk[gameBoard.candList[i].x][gameBoard.candList[i].y]);
+			score -= ((0.025) * fact * getDynamicRisk(gameBoard, risk, gameBoard.candList[i].x, gameBoard.candList[i].y));
 		}		
 	}
 
@@ -227,14 +283,14 @@ double getBoardScore(reversiGame gameBoard, boardGame risk, int ourTurn) {
 
 	// printGameState(gameBoard, risk, ourTurn);
 
-	score += ((0.1 * (turnUs)));
-	score -= ((0.1 * (turnOpp)));
-	// score += ((1.0 * (turnUs/cntTurnUs)));
-	// score -= ((1.0 * (turnOpp/cntTurnOpp)));
-	score += (0.2 * cntTurnUs);
-	score -= (0.2 * cntTurnOpp);
-	score += (0.4 * maxTurnUs / (fact*(1.0)));
-	score -= (0.4 * maxTurnOpp / (fact*(1.0)));
+	score += ((0.025 * (turnUs)) / (fact*(1.0)));
+	score -= ((0.025 * (turnOpp)) / (fact*(1.0)));
+	score += ((0.2 * (turnUs/cntTurnUs)));
+	score -= ((0.2 * (turnOpp/cntTurnOpp)));
+	score += (0.5 * cntTurnUs * factB);
+	score -= (0.5 * cntTurnOpp * factB);
+	score += (0.4 * maxTurnUs);
+	score -= (0.4 * maxTurnOpp);
 
 	// cout << "Score 3 here is " << score << endl;
 
@@ -729,7 +785,8 @@ reversiGame getNewState(reversiGame gameBoard, index move, int noMoveFlag = 0) {
 	// index i.e. the best move
 */
 double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int col, int depth,\
-				index &optMove, double alpha, double beta, int flag, bool avgPath, bool mapFlag, bool minPrune) {
+				index &optMove, double alpha, double beta, int flag, bool avgPath, bool mapFlag, bool minPrune) 
+{
 	// Check if depth is 0, if it is, then compute the score using getScore()
 	// Traverse over the possible moves and create the new game state after performing each move
 	// Recursively call the function minimax for each state, store the min or max
@@ -737,7 +794,7 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 	// Fooling heuristic (Probably not needed): Choose alternate moves (Only do this in intermediate stages)
 	// Finally check for the minimum or maximum value and modify the optMove variable to store the best move.
 
-	if ((totCount > 20000) || ((flag == 2) && ((alpha > beta) || (abs(alpha - beta) < 0.75)))) {
+	if ((totCount > 5000) || ((flag == 2) && ((alpha > beta) || (abs(alpha - beta) < 0.75)))) {
 		if (gameBoard.turn == ourTurn) {
 			return 1000000;
 		}
@@ -756,7 +813,7 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 	if (minPrune) {
 		double tmpScore = getBoardScore(gameBoard, risk, ourTurn);
 		// cout << tmpScore << " with currVal " << currVal << endl;
-		if (tmpScore < currVal - 50) {
+		if (tmpScore < currVal * (0.8)) {
 			if (gameBoard.turn == ourTurn) {
 				return 1000000;
 			}
@@ -771,7 +828,7 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 	index optMoveNew;
 	// Stores the optimal value at this node
 
-	if (depth == 0) {
+	if (depth <= 0) {
 		double score = getBoardScore(gameBoard, risk, ourTurn);
 		// cout << "Getting new state! " << totCount << " with score : " << score << " and currVal : " << currVal << "\n";
 		// cout << alpha << " and " << beta << endl;
@@ -846,6 +903,8 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 		else if (flag == 1) {
 			for (i = 0; i < gameList.size(); i++) {
 				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMoveNew, alpha, beta, flag, avgPath, mapFlag, minPrune);
+				if (gameBoard.turn == ourTurn)
+					tmpScore += getDynamicRisk(gameBoard, risk, gameBoard.candList[i].x, gameBoard.candList[i].y)*(0.1);
 				scoreList.push_back(tmpScore);
 			}
 			if (gameBoard.turn == ourTurn) {
@@ -882,7 +941,7 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 				sort(scoreList.begin(), scoreList.end());
 				optVal = 0;
 				int cnt = 0;
-				for (i = 0; i < min(4, (int) scoreList.size()); i++) {
+				for (i = 0; i < min(3, (int) scoreList.size()); i++) {
 					optVal += scoreList[i];
 					cnt++;
 				}
@@ -897,7 +956,7 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 			for (i = 0; i < gameList.size(); i++) {
 				double tmpScore = minimax(gameList[i], risk, ourTurn, row, col, depth - 1, optMoveNew, alpha, beta, flag, avgPath, mapFlag, minPrune);
 				if (gameBoard.turn == ourTurn)
-					tmpScore += risk[gameBoard.candList[i].x][gameBoard.candList[i].y]*(0.1);
+					tmpScore += getDynamicRisk(gameBoard, risk, gameBoard.candList[i].x, gameBoard.candList[i].y)*(0.2);
 				scoreList.push_back(tmpScore);
 				if (gameBoard.turn == ourTurn) {
 					if (alpha < tmpScore) {
@@ -931,7 +990,7 @@ double minimax(reversiGame gameBoard, boardGame risk, int ourTurn, int row, int 
 	}
 
 	if (avgPath)
-		optVal = getBoardScore(gameBoard, risk, ourTurn)*(0.667) + (optVal * 0.333);
+		optVal = getBoardScore(gameBoard, risk, ourTurn)*(0.6) + (optVal * 0.4);
 
 	// printGameState(gameBoard, risk, ourTurn);
 	// cout << alpha << " and " << beta << " with " << optVal <<endl;
@@ -1048,21 +1107,21 @@ void getRiskRegions(reversiGame gameBoard, boardGame& risk) {
 	}
 
 	int stat[10][10] = {
-		100,-10,10,5,5,5,5,10,-10,100,
-		-10,-25,-2,-2,-2,-2,-2,-2,-25,-10,
+		500,-30,40,10,10,10,10,40,-30,500,
+		-30,-80,-2,-2,-2,-2,-2,-2,-80,-30,
+		40,-2,-1,-1,-1,-1,-1,-1,-2,40,
 		10,-2,-1,-1,-1,-1,-1,-1,-2,10,
-		5,-2,-1,-1,-1,-1,-1,-1,-2,5,
-		5,-2,-1,-1,-1,-1,-1,-1,-2,5,
-		5,-2,-1,-1,-1,-1,-1,-1,-2,5,
-		5,-2,-1,-1,-1,-1,-1,-1,-2,5,
 		10,-2,-1,-1,-1,-1,-1,-1,-2,10,
-		-10,-25,-2,-2,-2,-2,-2,-2,-25,-10,
-		100,-10,10,5,5,5,5,10,-10,100
+		10,-2,-1,-1,-1,-1,-1,-1,-2,10,
+		10,-2,-1,-1,-1,-1,-1,-1,-2,10,
+		40,-2,-1,-1,-1,-1,-1,-1,-2,40,
+		-30,-80,-2,-2,-2,-2,-2,-2,-80,-30,
+		500,-30,40,10,10,10,10,40,-30,500
 	};
 
 	for (i = 0; i < gameBoard.row; i++)
 		for (j = 0; j < gameBoard.col; j++)
-			risk[i][j] = stat[i][j] + 1;
+			risk[i][j] = stat[i][j];
 
 	// for (i = 0; i < gameBoard.row; i++) {
 	// 	for (j = 0; j < gameBoard.col; j++) {
@@ -1131,8 +1190,43 @@ index getOptimalMoveMethodB(reversiGame& gameBoard) {
 	getRiskRegions(gameBoard, risk);	
 	stateMap.clear();
 	currVal = getBoardScore(gameBoard, risk, gameBoard.turn);
+	// cout << currVal << endl;
+
 	// cout <<	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd) << endl;
 	// cout <<	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd, alpha, beta, 2, true) << endl;
-	minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 3, optInd, alpha, beta, 2, true, true, false);
+	if ((gameBoard.cntUs + gameBoard.cntOpp) < 15) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd, alpha, beta, 2, true, true, false);
+	}
+	else if (currVal < 40) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 4, optInd, alpha, beta, 2, true, true, false);
+	}
+	else if ((gameBoard.candList.size() < 5) && ((gameBoard.cntUs + gameBoard.cntOpp) > 90)) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 8, optInd, alpha, beta, 2, true, true, false);
+	}
+ 	else if ((gameBoard.cntUs + gameBoard.cntOpp) > 90) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 8, optInd, alpha, beta, 2, true, true, false);
+	}
+	else if ((gameBoard.candList.size() < 3) && ((gameBoard.cntUs + gameBoard.cntOpp) > 80)) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 7, optInd, alpha, beta, 2, true, true, true);
+	}
+	else if ((gameBoard.candList.size() < 5) && ((gameBoard.cntUs + gameBoard.cntOpp) > 80)) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 6, optInd, alpha, beta, 2, true, true, true);
+	}
+	else if ((gameBoard.candList.size() < 5) && ((gameBoard.cntUs + gameBoard.cntOpp) > 70)) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd, alpha, beta, 2, true, true, true);
+	}
+	else if ((gameBoard.candList.size() < 9) && ((gameBoard.cntUs + gameBoard.cntOpp) > 70)) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd, alpha, beta, 2, true, true, true);
+	}
+	else if ((gameBoard.candList.size() == 2) && ((gameBoard.cntUs + gameBoard.cntOpp) > 50)) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd, alpha, beta, 2, true, true, true);
+	}
+	else if ((gameBoard.candList.size() == 1) && ((gameBoard.cntUs + gameBoard.cntOpp) > 50)) {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 5, optInd, alpha, beta, 2, true, true, true);
+	}	
+	else {
+		minimax(gameBoard, risk, gameBoard.turn, gameBoard.row, gameBoard.col, 3, optInd, alpha, beta, 2, true, true, false);
+	}
+
 	return optInd;
 }
