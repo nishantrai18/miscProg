@@ -52,6 +52,51 @@ def getDataXY():
 
 	return X, Y
 
+def generatePredFile(buySet, clf, encoder):
+	fieldList = []
+	dataList = []
+
+	print encoder.n_values_
+
+	with open('../resources/Dataset/Solution.csv', 'rb') as csvfile:
+		reader = csv.reader(csvfile, delimiter = ',')
+		next(reader, None)
+		for row in reader:
+			fetList = []
+			for i in range(3):
+				tmpVal = formatField(row[i])
+				if (tmpVal == "IGNORE"):
+					break
+				if (tmpVal >= encoder.n_values_[i]):
+					tmpVal = encoder.n_values_[i] - 1
+				fetList.append(tmpVal)
+			if (len(fetList) < 3):
+				continue
+			fieldList.append(row)
+			fetList = np.array(fetList)
+			dataList.append(fetList)
+	csvfile.close()
+
+	X = np.array(dataList)
+	print X
+	Xt = encoder.transform(X)
+	Y_pred = clf.predict(Xt)
+	# Y_pred_Revenue = clfRevenue.predict(Xt)
+	# Y_pred_Buy = clfBuy.predict(Xt)
+
+	with open('../resources/Dataset/SolutionMine.csv', 'wb') as csvfile:
+		gtwriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
+		gtwriter.writerow(['Hospital_ID', 'District_ID', 'Instrument_ID', 'Buy_or_not', 'Revenue'])
+		for i in range(0, len(fieldList)):
+			tmpTup = (X[i][0], X[i][2])
+			buyFlag = 0
+			# print tmpTup
+			if (tmpTup in buySet):
+				# print "GOOD"
+				buyFlag = 1
+			gtwriter.writerow([fieldList[i][0], fieldList[i][1], fieldList[i][2], buyFlag, buyFlag * int(Y_pred[i])])
+	csvfile.close()
+
 def oneHot(X):
 	encoder = OneHotEncoder(sparse = False)
 	encoder.fit(X)

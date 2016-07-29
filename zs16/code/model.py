@@ -24,17 +24,23 @@ if __name__ == "__main__":
 	Xt = encoder.transform(X)
 	print Xt.shape
 
+	buySet = set()
+	for i in range(X.shape[0]):
+		tmpTup = (X[i][0], X[i][2])
+		buySet.add(tmpTup)
+	# Y_buy = [1] * Xt.shape[0]
+
 	split = 0.75
 	X_train, X_test = Xt[:(int(Xt.shape[0]*split)),:], Xt[int(Xt.shape[0]*split):, :]
 	Y_train, Y_test = Y[:(int(Y.shape[0]*split)),:], Y[int(Y.shape[0]*split):, :]
 	Y_train = Y_train.ravel()
 	Y_test = Y_test.ravel()
 
-	# clf = Ridge(alpha = 100)
+	clf = Ridge(alpha = 100)
 	# clf = SVR(C = 5.0, kernel = 'poly', degree = 2)
 	# clf = LinearSVR(C = 100.0)
 	# clf = BaggingRegressor(DecisionTreeRegressor(max_depth = 5), n_estimators = 10, n_jobs = 4)
-	clf = AdaBoostRegressor(DecisionTreeRegressor(max_depth = 5), n_estimators = 100)
+	# clf = AdaBoostRegressor(DecisionTreeRegressor(max_depth = 5), n_estimators = 100)
 	# clf = DecisionTreeRegressor()
 	
 	clf.fit(X_train, Y_train.ravel())
@@ -42,3 +48,5 @@ if __name__ == "__main__":
 	Y_pred = clf.predict(X_test)
 
 	evaluatePred(Y_pred, Y_test)
+
+	generatePredFile(buySet, clf, encoder)
