@@ -2,6 +2,7 @@ import csv
 import cPickle as pickle
 import numpy as np
 import random, sys
+from sklearn.preprocessing import OneHotEncoder
 
 def getInt(val):
 	try:
@@ -42,7 +43,8 @@ def getDataXY():
 
 	print dataList.shape
 
-	X = dataList[:,0:4]
+	X = dataList[:,[0,2,3]]
+	# Change this to modify the features chosen
 	Y = dataList[:,-1:]
 
 	print X.shape
@@ -50,5 +52,13 @@ def getDataXY():
 
 	return X, Y
 
+def oneHot(X):
+	encoder = OneHotEncoder(sparse = False)
+	encoder.fit(X)
+	return encoder
+
 if __name__ == "__main__":
-	getDataXY()
+	X, Y = getDataXY()
+	encoder = oneHot(X)
+	Xt = encoder.transform(X)
+	print Xt.shape
