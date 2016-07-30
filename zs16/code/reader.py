@@ -72,19 +72,19 @@ def getDataXY(currYearFlag = False, popFlag = False):
 					fetList[1] = 0
 				else:
 					# print tmpKey
-					fetList[0] = 100
+					fetList[0] = 0
 					fetList[1] = 1
 					# print 'OMG'
 
 			fetList = np.array(fetList)
 			dataList.append(fetList)
 	csvfile.close()
-	# dataList.extend(dataList)
-	# dataList.extend(dataList)
-	# dataList.extend(dataList)
-	dataList = np.array(dataList)
 
 	if (currYearFlag):
+
+		# dataList.extend(dataList)
+		# dataList.extend(dataList)
+		# dataList.extend(dataList)
 
 		currDataList = []
 		with open('../resources/Dataset/ProjectedRevenue.csv', 'rb') as csvfile:
@@ -122,22 +122,26 @@ def getDataXY(currYearFlag = False, popFlag = False):
 						fetList[1] = 0
 					else:
 						# print tmpKey
-						fetList[0] = 100
+						fetList[0] = 0
 						fetList[1] = 1
 						# print 'OMG'
 
 				fetList = np.array(fetList)
 				currDataList.append(fetList)
 		csvfile.close()
-		# currDataList.extend(currDataList)
-		# currDataList.extend(currDataList)
+		currDataList.extend(currDataList)
+		currDataList.extend(currDataList)
 		# currDataList.extend(currDataList)
 		currDataList = np.array(currDataList)
+
+		dataList = np.array(dataList)
 
 		print dataList.shape
 		print currDataList.shape
 
 		dataList = np.vstack((dataList, currDataList))
+
+	dataList = np.array(dataList)
 
 	print dataList.shape
 
@@ -229,7 +233,7 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 					fetList[1] = 0
 				else:
 					# print tmpKey
-					fetList[0] = 100
+					fetList[0] = 0
 					fetList[1] = 1
 
 			fieldList.append(row)
@@ -243,31 +247,32 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 
 	if popFlag:
 		Xt_rev = encRev.transform(X[:, 1:])
-		Xt_rev = np.hstack((X[:,1].reshape(-1, 1), Xt_rev))
+		Xt_rev = np.hstack((X[:,0].reshape(-1, 1), Xt_rev))
 	else:
 		Xt_rev = encRev.transform(X)
 
 	if popFlag:
 		Xt_buy = encBuy.transform(X[:, 1:])
-		Xt_buy = np.hstack((X[:,1].reshape(-1, 1), Xt_buy))
+		Xt_buy = np.hstack((X[:,0].reshape(-1, 1), Xt_buy))
 	else:
 		Xt_buy = encBuy.transform(X)
 
-	Xt_buy = scalerBuy.transform(Xt_buy)
-	Xt_rev = scalerRev.transform(Xt_rev)
+	# Xt_buy = scalerBuy.transform(Xt_buy)
+	# Xt_rev = scalerRev.transform(Xt_rev)
 
 	Y_pred_Revenue = clfRevenue.predict(Xt_rev)
 	Y_pred_Buy = clfBuy.predict_proba(Xt_buy)
+	# Y_pred_Buy = clfBuy.predict(Xt_buy)
 
-	# for t in list(Y_pred_Buy):
-	# 	print t
+	for t in list(Y_pred_Buy)[:1000]:
+		print t
 
 	with open('../resources/Dataset/SolutionMine.csv', 'wb') as csvfile:
 		gtwriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
 		gtwriter.writerow(['Hospital_ID', 'District_ID', 'Instrument_ID', 'Buy_or_not', 'Revenue'])
 		for i in range(0, len(fieldList)):
 			buyFlag = Y_pred_Buy[i][1]
-			if (buyFlag > 0.9):
+			if (buyFlag > 0.85):
 				buyFlag = 1
 			else:
 				buyFlag = 0

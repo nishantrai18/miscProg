@@ -4,16 +4,17 @@ from sklearn.utils import shuffle
 from sklearn.metrics import precision_recall_fscore_support
 
 import sklearn
-from sklearn.svm import SVR, LinearSVR
+from sklearn.svm import SVR, LinearSVR, LinearSVC, SVC
 from sklearn import preprocessing
 from sklearn import linear_model
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import BaggingRegressor
+from sklearn.ensemble import BaggingRegressor, BaggingClassifier
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import AdaBoostRegressor
+from sklearn.ensemble import RandomForestClassifier
 
 import random
 
@@ -28,13 +29,13 @@ def procedureA():
 	# Uses hard heuristic for buy_or_not
 
 	popFlag = True
-	X, Y = getDataXY(currYearFlag = False, popFlag = popFlag)
-	X, Y = shuffle(X, Y, random_state=0)
+	X, Y = getDataXY(currYearFlag = True, popFlag = popFlag)
+	X, Y = shuffle(X, Y, random_state = 0)
 
 	if popFlag:
 		encoder = oneHot(X[:, 1:])
 		Xt = encoder.transform(X[:, 1:])
-		Xt = np.hstack((X[:,1].reshape(-1, 1), Xt))
+		Xt = np.hstack((X[:,0].reshape(-1, 1), Xt))
 	else:
 		encoder = oneHot(X)
 		Xt = encoder.transform(X)
@@ -46,7 +47,7 @@ def procedureA():
 	# Y_buy = [1] * Xt.shape[0]
 
 	min_max_scaler = preprocessing.MinMaxScaler()
-	Xt = min_max_scaler.fit_transform(Xt)
+	# Xt = min_max_scaler.fit_transform(Xt)
 
 	split = 0.9
 	X_train, X_test = Xt[:(int(Xt.shape[0]*split)),:], Xt[int(Xt.shape[0]*split):, :]
@@ -121,7 +122,7 @@ def procedureB(paramC = 1.0):
 	if popFlag:
 		encoder = oneHot(X[:, 1:])
 		Xt = encoder.transform(X[:, 1:])
-		Xt = np.hstack((X[:,1].reshape(-1, 1), Xt))
+		Xt = np.hstack((X[:,0].reshape(-1, 1), Xt))
 	else:
 		encoder = oneHot(X)
 		Xt = encoder.transform(X)
@@ -140,7 +141,7 @@ def procedureB(paramC = 1.0):
 
 	if popFlag:
 		negXt = encoder.transform(negX[:, 1:])
-		negXt = np.hstack((negX[:,1].reshape(-1, 1), negXt))
+		negXt = np.hstack((negX[:,0].reshape(-1, 1), negXt))
 	else:
 		negXt = encoder.transform(negX)
 
@@ -156,7 +157,7 @@ def procedureB(paramC = 1.0):
 	print Y.shape
 
 	min_max_scaler = preprocessing.MinMaxScaler()
-	Xt = min_max_scaler.fit_transform(Xt)
+	# Xt = min_max_scaler.fit_transform(Xt)
 
 	split = 0.9
 	X_train, X_test = Xt[:(int(Xt.shape[0]*split)),:], Xt[int(Xt.shape[0]*split):, :]
@@ -167,11 +168,12 @@ def procedureB(paramC = 1.0):
 	print X_train.shape
 	print X_test.shape
 
-	# clf = LogisticRegression(C = paramC, class_weight = {0:1, 1:25}, random_state = 0)
+	# clf = LogisticRegression(C = paramC, class_weight = {0:1, 1:10}, random_state = 0)
+	clf = RandomForestClassifier(class_weight = {0:1, 1:7}, random_state = 0, n_estimators = 100, n_jobs = 4)	
 	# clf = Ridge(alpha = 100)
 	# clf = SVR(C = 10.0, kernel = 'poly', degree = 2)
-	# clf = LinearSVR(C = 1.0)
-	clf = BaggingRegressor(LogisticRegression(C = paramC, class_weight = {0:1, 1:25}, random_state = 0), n_estimators = 100, n_jobs = 4)
+	# clf = LinearSVC(C = 1.0, class_weight = {0:1, 1:7}, random_state = 0)
+	# clf = BaggingClassifier(LogisticRegression(C = paramC, class_weight = {0:1, 1:10}, random_state = 0), n_estimators = 50, n_jobs = 4)
 	# clf = AdaBoostRegressor(DecisionTreeRegressor(), n_estimators = 100)
 	# clf = DecisionTreeRegressor()
 	# clf = RandomForestRegressor(random_state = 0, n_estimators = 200, n_jobs = 4)
@@ -179,14 +181,14 @@ def procedureB(paramC = 1.0):
 
 	Y_pred = clf.predict(X_test)
 
-		# for t in zip(clf.predict_proba(X_test), Y_test):
-		# 	print t
+	# for t in zip(clf.predict_proba(X_test), Y_test):
+	# 	print t
 
 	print clf.score(X_test, Y_test)
 
 	print precision_recall_fscore_support(Y_test, Y_pred, average = 'binary')
 
-	print clf.coef_
+	# print clf.coef_
 
 	evaluatePred(Y_pred, Y_test)
 
@@ -195,7 +197,7 @@ def procedureB(paramC = 1.0):
 
 def procedureC():
 	clfRevenue, encRev, scalerRev = procedureA()
-	clfBuy, encBuy, scalerBuy = procedureB(paramC = 1000.0)
+	clfBuy, encBuy, scalerBuy = procedureB(paramC = 0.1)
 	generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev)
 
 
@@ -226,4 +228,4 @@ if __name__ == "__main__":
 
 	# for c in [0.1, 1, 10, 100, 1000, 10000]:
 	# 	procedureB(c)
-	# visualize()
+	# # visualize()
