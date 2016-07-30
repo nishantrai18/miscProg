@@ -33,9 +33,9 @@ def procedureA():
 	X, Y = shuffle(X, Y, random_state = 0)
 
 	if popFlag:
-		encoder = oneHot(X[:, 1:])
-		Xt = encoder.transform(X[:, 1:])
-		Xt = np.hstack((X[:,0].reshape(-1, 1), Xt))
+		encoder = oneHot(X[:, 2:])
+		Xt = encoder.transform(X[:, 2:])
+		Xt = np.hstack((X[:,:2].reshape(-1, 1), Xt))
 	else:
 		encoder = oneHot(X)
 		Xt = encoder.transform(X)
@@ -120,12 +120,15 @@ def procedureB(paramC = 1.0):
 	Y = Y.reshape(-1, 1)
 
 	if popFlag:
-		encoder = oneHot(X[:, 1:])
-		Xt = encoder.transform(X[:, 1:])
-		Xt = np.hstack((X[:,0].reshape(-1, 1), Xt))
+		encoder = oneHot(X[:, 2:])
+		Xt = encoder.transform(X[:, 2:])
+		Xt = np.hstack((X[:,:2].reshape(-1, 1), Xt))
 	else:
 		encoder = oneHot(X)
 		Xt = encoder.transform(X)
+
+	# Golden features
+	# Xt = getGoldenX(Xt, 2, 2 + encoder.n_values_[0], 2 + encoder.n_values_[0], 2 + encoder.n_values_[0] + encoder.n_values_[1])
 
 	tX, tY = getDataXY(currYearFlag = True, popFlag = False)
 	# To get the index of the hospitals
@@ -140,8 +143,8 @@ def procedureB(paramC = 1.0):
 	negX, negY = getNegativeSamples(maxList, popList, buySet, encoder)
 
 	if popFlag:
-		negXt = encoder.transform(negX[:, 1:])
-		negXt = np.hstack((negX[:,0].reshape(-1, 1), negXt))
+		negXt = encoder.transform(negX[:, 2:])
+		negXt = np.hstack((negX[:,:2].reshape(-1, 1), negXt))
 	else:
 		negXt = encoder.transform(negX)
 

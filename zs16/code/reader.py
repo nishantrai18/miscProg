@@ -22,6 +22,21 @@ def formatField(val):
 		val = val.strip('Instrument ')
 	return getInt(val)
 
+def getGoldenFet(fetList, leftA, rightA, leftB, rightB):
+	newFetList = list(fetList)
+	for i in range(leftA, rightA):
+		for j in range(leftB, rightB):
+			newFetList.extend(fetList[i]*fetList[j])
+	newFetList = np.array(fetList)
+	return newFetList
+
+def getGoldenX(X, leftA, rightA, leftB, rightB):
+	Xn = []
+	for i in range(X.shape[0]):
+		Xn.append(getGoldenFet(X[i], leftA, rightA, leftB, rightB))
+	Xn = np.array(Xn)
+	return Xn
+
 def getHospitalProfile():
 	popList = {}
 	with open('../resources/Dataset/HospitalProfiling.csv', 'rb') as csvfile:
@@ -309,6 +324,9 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 	if popFlag:
 		popList = getHospitalProfile()
 
+	if newHeuristic:
+		saleListDetailed, saleListRough = getHospitalSales()
+
 	with open('../resources/Dataset/Solution.csv', 'rb') as csvfile:
 		reader = csv.reader(csvfile, delimiter = ',')
 		next(reader, None)
@@ -343,14 +361,14 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 	print X
 
 	if popFlag:
-		Xt_rev = encRev.transform(X[:, 1:])
-		Xt_rev = np.hstack((X[:,0].reshape(-1, 1), Xt_rev))
+		Xt_rev = encRev.transform(X[:, 2:])
+		Xt_rev = np.hstack((X[:,:2].reshape(-1, 1), Xt_rev))
 	else:
 		Xt_rev = encRev.transform(X)
 
 	if popFlag:
-		Xt_buy = encBuy.transform(X[:, 1:])
-		Xt_buy = np.hstack((X[:,0].reshape(-1, 1), Xt_buy))
+		Xt_buy = encBuy.transform(X[:, 2:])
+		Xt_buy = np.hstack((X[:,:2].reshape(-1, 1), Xt_buy))
 	else:
 		Xt_buy = encBuy.transform(X)
 
@@ -388,7 +406,6 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 				buyFlag = 0
 			gtwriter.writerow([fieldList[i][0], fieldList[i][1], fieldList[i][2], buyFlag, int( buyFlag * int(Y_pred_Revenue[i]))])
 	csvfile.close()
-
 
 def oneHot(X):
 	encoder = OneHotEncoder(sparse = False)
