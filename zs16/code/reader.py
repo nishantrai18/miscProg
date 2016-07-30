@@ -50,18 +50,19 @@ def getHospitalSales():
 
 	popList = getHospitalProfile()
 
-	dataList = []
+	saleListDetailed = set()
+	saleListRough = set()
 	with open('../resources/Dataset/HospitalRevenue.csv', 'rb') as csvfile:
 		reader = csv.reader(csvfile, delimiter = ',')
 		next(reader, None)
 		for row in reader:
 			fetList = []
-			for i in range(17):
+			for i in range(4):
 				tmpVal = formatField(row[i])
 				if (tmpVal == "IGNORE"):
 					break
 				fetList.append(tmpVal)
-			if (len(fetList) < 16):
+			if (len(fetList) < 4):
 				continue
 
 			if (popFlag):
@@ -73,24 +74,17 @@ def getHospitalSales():
 					fetList[0] = 0
 					fetList[1] = 1
 
-			fetList = np.array(fetList)
-			dataList.append(fetList)
+			tmpTupDetailed = (fetList[0], fetList[1], fetList[2], fetList[3])
+			tmpTupRough = (fetList[0], fetList[1], fetList[3])
+
+			saleListRough.add(tmpTupRough)
+			saleListDetailed.add(tmpTupDetailed)
+
 	csvfile.close()
-	dataList = np.array(dataList)
 
-	print dataList.shape
+	return saleListDetailed, saleListRough
 
-	X = dataList[:,[0,1,2,3]]
-
-	# Change this to modify the features chosen
-	Y = dataList[:,-1:]
-
-	print X.shape
-	print Y.shape
-
-	return X, Y
-
-def getTestSet(clf, enc, popFlag = True):
+def getTestSetAcc(clf, enc, popFlag = True):
 
 	if popFlag:
 		popList = getHospitalProfile()
@@ -306,7 +300,7 @@ def generatePredFile(buySet, clf, encoder):
 			gtwriter.writerow([fieldList[i][0], fieldList[i][1], fieldList[i][2], buyFlag, ((i%2) or (buyFlag)) * int(Y_pred[i])])
 	csvfile.close()
 
-def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, popFlag = True):
+def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, popFlag = True, newHeuristic = False):
 	fieldList = []
 	dataList = []
 
@@ -375,7 +369,20 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 		gtwriter.writerow(['Hospital_ID', 'District_ID', 'Instrument_ID', 'Buy_or_not', 'Revenue'])
 		for i in range(0, len(fieldList)):
 			buyFlag = Y_pred_Buy[i][1]
-			if (buyFlag > 0.895):
+			band = 0.3
+
+			if (newHeuristic):
+				band = 0
+				tmpTupDetailed = (X[i][0], X[i][1], X[i][2], X[i][3])
+				tmpTupRough = (X[i][0], X[i][1], X[i][3])
+				if (tmpTupDetailed in saleListDetailed):
+					band += 0.15
+				elif (tmpTupRough in saleListRough):
+					band -= 0.3
+				else:
+					band += 0.3
+
+			if (buyFlag > 0.6 + band):
 				buyFlag = 1
 			else:
 				buyFlag = 0
