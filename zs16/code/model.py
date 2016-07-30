@@ -1,7 +1,6 @@
 from sklearn.linear_model import Ridge
 from reader import *
 from sklearn.utils import shuffle
-from sklearn.metrics import precision_recall_fscore_support
 
 import sklearn
 from sklearn.svm import SVR, LinearSVR, LinearSVC, SVC
@@ -35,7 +34,7 @@ def procedureA():
 	if popFlag:
 		encoder = oneHot(X[:, 2:])
 		Xt = encoder.transform(X[:, 2:])
-		Xt = np.hstack((X[:,:2].reshape(-1, 1), Xt))
+		Xt = np.hstack((X[:,:2], Xt))
 	else:
 		encoder = oneHot(X)
 		Xt = encoder.transform(X)
@@ -61,7 +60,7 @@ def procedureA():
 	# clf = Ridge(alpha = 100)
 	# clf = SVR(C = 10.0, kernel = 'poly', degree = 2)
 	# clf = LinearSVR(C = 1.0)
-	clf = BaggingRegressor(DecisionTreeRegressor(), n_estimators = 125, n_jobs = 4)
+	clf = BaggingRegressor(DecisionTreeRegressor(), n_estimators = 125, n_jobs = 4, random_state = 0)
 	# clf = AdaBoostRegressor(DecisionTreeRegressor(), n_estimators = 100)
 	# clf = DecisionTreeRegressor()
 	# clf = RandomForestRegressor(random_state = 0, n_estimators = 200, n_jobs = 4)
@@ -122,13 +121,10 @@ def procedureB(paramC = 1.0):
 	if popFlag:
 		encoder = oneHot(X[:, 2:])
 		Xt = encoder.transform(X[:, 2:])
-		Xt = np.hstack((X[:,:2].reshape(-1, 1), Xt))
+		Xt = np.hstack((X[:,:2], Xt))
 	else:
 		encoder = oneHot(X)
 		Xt = encoder.transform(X)
-
-	# Golden features
-	# Xt = getGoldenX(Xt, 2, 2 + encoder.n_values_[0], 2 + encoder.n_values_[0], 2 + encoder.n_values_[0] + encoder.n_values_[1])
 
 	tX, tY = getDataXY(currYearFlag = True, popFlag = False)
 	# To get the index of the hospitals
@@ -144,9 +140,17 @@ def procedureB(paramC = 1.0):
 
 	if popFlag:
 		negXt = encoder.transform(negX[:, 2:])
-		negXt = np.hstack((negX[:,:2].reshape(-1, 1), negXt))
+		negXt = np.hstack((negX[:,:2], negXt))
 	else:
 		negXt = encoder.transform(negX)
+
+	# print encoder.n_values_
+	# print Xt.shape
+
+	# Golden features
+	# Use something else instead of n_values_
+	# Xt = getGoldenX(Xt, 2, 2 + encoder.n_values_[0], 2 + encoder.n_values_[0], 2 + encoder.n_values_[0] + encoder.n_values_[1])
+	# negXt = getGoldenX(negXt, 2, 2 + encoder.n_values_[0], 2 + encoder.n_values_[0], 2 + encoder.n_values_[0] + encoder.n_values_[1])
 
 	Xt = np.vstack((Xt, negXt))
 
@@ -172,8 +176,8 @@ def procedureB(paramC = 1.0):
 	print X_test.shape
 
 	# clf = LogisticRegression(C = paramC, class_weight = {0:1, 1:10}, random_state = 0)
-	# clf = RandomForestClassifier(class_weight = {0:1, 1:50}, random_state = 0, n_estimators = 125, n_jobs = 4)
-	clf = RandomForestClassifier(class_weight = 'auto', random_state = 0, n_estimators = 125, n_jobs = 4)
+	clf = RandomForestClassifier(class_weight = {0:1, 1:50}, random_state = 0, n_estimators = 50, n_jobs = 4)
+	# clf = RandomForestClassifier(class_weight = 'auto', random_state = 0, n_estimators = 50, n_jobs = 4)
 	# clf = Ridge(alpha = 100)
 	# clf = SVR(C = 10.0, kernel = 'poly', degree = 2)
 	# clf = LinearSVC(C = 1.0, class_weight = {0:1, 1:7}, random_state = 0)
@@ -195,6 +199,8 @@ def procedureB(paramC = 1.0):
 	# print clf.coef_
 
 	evaluatePred(Y_pred, Y_test)
+
+	getTestSetAcc(clf, encoder, popFlag = popFlag)
 
 	# generatePredFile(buySet, clf, encoder)
 	return clf, encoder, min_max_scaler
@@ -228,7 +234,8 @@ if __name__ == "__main__":
 	random.seed(0)
 	# For reproducibility
 
-	procedureC()
+	procedureB()
+	# procedureC()
 
 	# for c in [0.1, 1, 10, 100, 1000, 10000]:
 	# 	procedureB(c)

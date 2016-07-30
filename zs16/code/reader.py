@@ -3,6 +3,7 @@ import cPickle as pickle
 import numpy as np
 import random, sys
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.metrics import precision_recall_fscore_support
 
 def getInt(val):
 	try:
@@ -26,7 +27,7 @@ def getGoldenFet(fetList, leftA, rightA, leftB, rightB):
 	newFetList = list(fetList)
 	for i in range(leftA, rightA):
 		for j in range(leftB, rightB):
-			newFetList.extend(fetList[i]*fetList[j])
+			newFetList.append(fetList[i] * fetList[j])
 	newFetList = np.array(fetList)
 	return newFetList
 
@@ -104,6 +105,7 @@ def getTestSetAcc(clf, enc, popFlag = True):
 	if popFlag:
 		popList = getHospitalProfile()
 
+	dataList = []
 	with open('../resources/Dataset/ProjectedRevenue.csv', 'rb') as csvfile:
 		reader = csv.reader(csvfile, delimiter = ',')
 		next(reader, None)
@@ -113,8 +115,9 @@ def getTestSetAcc(clf, enc, popFlag = True):
 				tmpVal = formatField(row[i])
 				if (tmpVal == "IGNORE"):
 					break
-				if (tmpVal >= encRev.n_values_[i]):
-					tmpVal = encRev.n_values_[i] - 1
+				if (i > 0):
+					if (tmpVal >= enc.n_values_[i - 1]):
+						tmpVal = enc.n_values_[i - 1] - 1
 				fetList.append(tmpVal)
 			if (len(fetList) < 4):
 				continue
@@ -128,7 +131,6 @@ def getTestSetAcc(clf, enc, popFlag = True):
 					fetList[0] = 0
 					fetList[1] = 1
 
-			fieldList.append(row)
 			fetList = np.array(fetList)
 			dataList.append(fetList)
 
@@ -137,8 +139,8 @@ def getTestSetAcc(clf, enc, popFlag = True):
 	X = np.array(dataList)
 	
 	if popFlag:
-		Xt = enc.transform(X[:, 1:])
-		Xt = np.hstack((X[:,0].reshape(-1, 1), Xt))
+		Xt = enc.transform(X[:, 2:])
+		Xt = np.hstack((X[:,:2], Xt))
 	else:
 		Xt = enc.transform(X)
 
@@ -336,8 +338,9 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 				tmpVal = formatField(row[i])
 				if (tmpVal == "IGNORE"):
 					break
-				if (tmpVal >= encRev.n_values_[i]):
-					tmpVal = encRev.n_values_[i] - 1
+				if (i > 0):
+					if (tmpVal >= encRev.n_values_[i - 1]):
+						tmpVal = encRev.n_values_[i - 1] - 1
 				fetList.append(tmpVal)
 			if (len(fetList) < 4):
 				continue
@@ -362,13 +365,13 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 
 	if popFlag:
 		Xt_rev = encRev.transform(X[:, 2:])
-		Xt_rev = np.hstack((X[:,:2].reshape(-1, 1), Xt_rev))
+		Xt_rev = np.hstack((X[:,:2], Xt_rev))
 	else:
 		Xt_rev = encRev.transform(X)
 
 	if popFlag:
 		Xt_buy = encBuy.transform(X[:, 2:])
-		Xt_buy = np.hstack((X[:,:2].reshape(-1, 1), Xt_buy))
+		Xt_buy = np.hstack((X[:,:2], Xt_buy))
 	else:
 		Xt_buy = encBuy.transform(X)
 
@@ -379,8 +382,8 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 	Y_pred_Buy = clfBuy.predict_proba(Xt_buy)
 	# Y_pred_Buy = clfBuy.predict(Xt_buy)
 
-	for t in list(Y_pred_Buy)[:1000]:
-		print t
+	# for t in list(Y_pred_Buy)[:100]:
+	# 	print t
 
 	with open('../resources/Dataset/SolutionMineAlt.csv', 'wb') as csvfile:
 		gtwriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
