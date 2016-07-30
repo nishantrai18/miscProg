@@ -46,6 +46,109 @@ def getHospitalProfile():
 
 	return popList
 
+def getHospitalSales():
+
+	popList = getHospitalProfile()
+
+	dataList = []
+	with open('../resources/Dataset/HospitalRevenue.csv', 'rb') as csvfile:
+		reader = csv.reader(csvfile, delimiter = ',')
+		next(reader, None)
+		for row in reader:
+			fetList = []
+			for i in range(17):
+				tmpVal = formatField(row[i])
+				if (tmpVal == "IGNORE"):
+					break
+				fetList.append(tmpVal)
+			if (len(fetList) < 16):
+				continue
+
+			if (popFlag):
+				tmpKey = (fetList[0], fetList[2])
+				if (tmpKey in popList):
+					fetList[0] = popList[tmpKey]
+					fetList[1] = 0
+				else:
+					fetList[0] = 0
+					fetList[1] = 1
+
+			fetList = np.array(fetList)
+			dataList.append(fetList)
+	csvfile.close()
+	dataList = np.array(dataList)
+
+	print dataList.shape
+
+	X = dataList[:,[0,1,2,3]]
+
+	# Change this to modify the features chosen
+	Y = dataList[:,-1:]
+
+	print X.shape
+	print Y.shape
+
+	return X, Y
+
+def getTestSet(clf, enc, popFlag = True):
+
+	if popFlag:
+		popList = getHospitalProfile()
+
+	with open('../resources/Dataset/ProjectedRevenue.csv', 'rb') as csvfile:
+		reader = csv.reader(csvfile, delimiter = ',')
+		next(reader, None)
+		for row in reader:
+			fetList = [-1]
+			for i in range(3):
+				tmpVal = formatField(row[i])
+				if (tmpVal == "IGNORE"):
+					break
+				if (tmpVal >= encRev.n_values_[i]):
+					tmpVal = encRev.n_values_[i] - 1
+				fetList.append(tmpVal)
+			if (len(fetList) < 4):
+				continue
+			if (popFlag):
+				tmpKey = (fetList[1], fetList[2])
+				if (tmpKey in popList):
+					fetList[0] = popList[tmpKey]
+					fetList[1] = 0
+				else:
+					# print tmpKey
+					fetList[0] = 0
+					fetList[1] = 1
+
+			fieldList.append(row)
+			fetList = np.array(fetList)
+			dataList.append(fetList)
+
+	csvfile.close()
+
+	X = np.array(dataList)
+	
+	if popFlag:
+		Xt = enc.transform(X[:, 1:])
+		Xt = np.hstack((X[:,0].reshape(-1, 1), Xt))
+	else:
+		Xt = enc.transform(X)
+
+	# Xt = scaler.transform(Xt)
+
+	Y_pred = clf.predict(Xt)
+
+	# Y_pred = clf.predict_proba(Xt)
+	# for i in range(Y_pred.shape[0]):
+	# 	if (Y_pred[i][1] > 0.9):
+	# 		Y_pred_new[i] = 1
+	# 	else:
+	# 		Y_pred_new[i] = 0
+	# Y_pred = Y_pred_new
+
+	print precision_recall_fscore_support([1] * Y_pred.shape[0], Y_pred, average = 'binary')
+
+	return Xt
+
 def getDataXY(currYearFlag = False, popFlag = False):
 
 	if popFlag:
@@ -129,8 +232,8 @@ def getDataXY(currYearFlag = False, popFlag = False):
 				fetList = np.array(fetList)
 				currDataList.append(fetList)
 		csvfile.close()
-		currDataList.extend(currDataList)
-		currDataList.extend(currDataList)
+		# currDataList.extend(currDataList)
+		# currDataList.extend(currDataList)
 		# currDataList.extend(currDataList)
 		currDataList = np.array(currDataList)
 
@@ -200,7 +303,7 @@ def generatePredFile(buySet, clf, encoder):
 			if (tmpTup in buySet):
 				# print "GOOD"
 				buyFlag = 1
-			gtwriter.writerow([fieldList[i][0], fieldList[i][1], fieldList[i][2], buyFlag, buyFlag * int(Y_pred[i])])
+			gtwriter.writerow([fieldList[i][0], fieldList[i][1], fieldList[i][2], buyFlag, ((i%2) or (buyFlag)) * int(Y_pred[i])])
 	csvfile.close()
 
 def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, popFlag = True):
@@ -267,16 +370,16 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 	for t in list(Y_pred_Buy)[:1000]:
 		print t
 
-	with open('../resources/Dataset/SolutionMine.csv', 'wb') as csvfile:
+	with open('../resources/Dataset/SolutionMineAlt.csv', 'wb') as csvfile:
 		gtwriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
 		gtwriter.writerow(['Hospital_ID', 'District_ID', 'Instrument_ID', 'Buy_or_not', 'Revenue'])
 		for i in range(0, len(fieldList)):
 			buyFlag = Y_pred_Buy[i][1]
-			if (buyFlag > 0.85):
+			if (buyFlag > 0.895):
 				buyFlag = 1
 			else:
 				buyFlag = 0
-			gtwriter.writerow([fieldList[i][0], fieldList[i][1], fieldList[i][2], buyFlag, int(buyFlag * int(Y_pred_Revenue[i]))])
+			gtwriter.writerow([fieldList[i][0], fieldList[i][1], fieldList[i][2], buyFlag, int( buyFlag * int(Y_pred_Revenue[i]))])
 	csvfile.close()
 
 

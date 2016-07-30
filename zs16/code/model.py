@@ -29,7 +29,7 @@ def procedureA():
 	# Uses hard heuristic for buy_or_not
 
 	popFlag = True
-	X, Y = getDataXY(currYearFlag = True, popFlag = popFlag)
+	X, Y = getDataXY(currYearFlag = False, popFlag = popFlag)
 	X, Y = shuffle(X, Y, random_state = 0)
 
 	if popFlag:
@@ -86,7 +86,7 @@ def getNegativeSamples(sizeList, popList, buySet, encoder):
 			for k in range(1, sizeList[2]):
 				tmpVal = (i, k)
 				if (tmpVal not in buySet):
-					if (random.randint(0, 2) == 1):
+					if (random.randint(0, 2) <= 1):
 						fetList = [i, -1, j, k]
 						tmpKey = (fetList[0], fetList[2])
 						if (tmpKey in popList):
@@ -169,7 +169,8 @@ def procedureB(paramC = 1.0):
 	print X_test.shape
 
 	# clf = LogisticRegression(C = paramC, class_weight = {0:1, 1:10}, random_state = 0)
-	clf = RandomForestClassifier(class_weight = {0:1, 1:7}, random_state = 0, n_estimators = 100, n_jobs = 4)	
+	# clf = RandomForestClassifier(class_weight = {0:1, 1:50}, random_state = 0, n_estimators = 125, n_jobs = 4)
+	clf = RandomForestClassifier(class_weight = 'auto', random_state = 0, n_estimators = 125, n_jobs = 4)
 	# clf = Ridge(alpha = 100)
 	# clf = SVR(C = 10.0, kernel = 'poly', degree = 2)
 	# clf = LinearSVC(C = 1.0, class_weight = {0:1, 1:7}, random_state = 0)
