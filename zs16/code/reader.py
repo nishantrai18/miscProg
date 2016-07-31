@@ -38,8 +38,34 @@ def getGoldenX(X, leftA, rightA, leftB, rightB):
 	Xn = np.array(Xn)
 	return Xn
 
+def getHospitalRegion():
+
+	regionList = {}
+
+	with open('../resources/Dataset/HospitalRevenue.csv', 'rb') as csvfile:
+		reader = csv.reader(csvfile, delimiter = ',')
+		next(reader, None)
+		for row in reader:
+			fetList = []
+			for i in range(3):
+				tmpVal = formatField(row[i])
+				if (tmpVal == "IGNORE"):
+					break
+				fetList.append(tmpVal)
+			if (len(fetList) < 2):
+				continue
+
+			regionList[fetList[0]] = fetList[1]
+
+	csvfile.close()
+
+	return regionList
+
+
 def getHospitalProfile():
 	popList = {}
+	regionList = getHospitalRegion()
+
 	with open('../resources/Dataset/HospitalProfiling.csv', 'rb') as csvfile:
 		reader = csv.reader(csvfile, delimiter = ',')
 		next(reader, None)
@@ -53,6 +79,10 @@ def getHospitalProfile():
 			if (len(fetList) < 3):
 				continue
 			fetList = np.array(fetList)
+
+			# Fine tune the district
+			fetList[1] += regionList[fetList[0]] * 100
+
 			tmpKey = (fetList[0], fetList[1])
 			if (tmpKey in popList):
 				popList[tmpKey] = max(popList[tmpKey], fetList[2])
@@ -65,6 +95,7 @@ def getHospitalProfile():
 def getHospitalSales():
 
 	popList = getHospitalProfile()
+	regionList = getHospitalRegion()
 
 	saleListDetailed = set()
 	saleListRough = set()
@@ -80,6 +111,9 @@ def getHospitalSales():
 				fetList.append(tmpVal)
 			if (len(fetList) < 4):
 				continue
+
+			# Fine tune the district
+			fetList[2] += regionList[fetList[0]] * 100				
 
 			if (popFlag):
 				tmpKey = (fetList[0], fetList[2])
@@ -104,6 +138,7 @@ def getTestSetAcc(clf, enc, popFlag = True):
 
 	if popFlag:
 		popList = getHospitalProfile()
+	regionList = getHospialRegion()
 
 	dataList = []
 	with open('../resources/Dataset/ProjectedRevenue.csv', 'rb') as csvfile:
@@ -121,6 +156,9 @@ def getTestSetAcc(clf, enc, popFlag = True):
 				fetList.append(tmpVal)
 			if (len(fetList) < 4):
 				continue
+			# Fine tune the district
+			fetList[2] += regionList[fetList[1]] * 100
+
 			if (popFlag):
 				tmpKey = (fetList[1], fetList[2])
 				if (tmpKey in popList):
@@ -164,6 +202,7 @@ def getDataXY(currYearFlag = False, popFlag = False):
 
 	if popFlag:
 		popList = getHospitalProfile()
+	regionList = getHospitalRegion()
 
 	dataList = []
 	with open('../resources/Dataset/HospitalRevenue.csv', 'rb') as csvfile:
@@ -176,8 +215,11 @@ def getDataXY(currYearFlag = False, popFlag = False):
 				if (tmpVal == "IGNORE"):
 					break
 				fetList.append(tmpVal)
-			if (len(fetList) < 16):
+			if (len(fetList) < 17):
 				continue
+
+			# Fine tune the district
+			fetList[2] += regionList[fetList[0]] * 100
 
 			if (popFlag):
 				tmpKey = (fetList[0], fetList[2])
@@ -226,8 +268,11 @@ def getDataXY(currYearFlag = False, popFlag = False):
 						break
 					fetList.append(tmpVal)
 
-				if (len(fetList) != 17):
+				if (len(fetList) < 17):
 					continue
+
+				# Fine tune the district
+				fetList[2] += regionList[fetList[0]] * 100
 
 				if (popFlag):
 					tmpKey = (fetList[0], fetList[2])
@@ -325,6 +370,7 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 
 	if popFlag:
 		popList = getHospitalProfile()
+	regionList = getHospitalRegion()
 
 	if newHeuristic:
 		saleListDetailed, saleListRough = getHospitalSales()
@@ -344,6 +390,9 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 				fetList.append(tmpVal)
 			if (len(fetList) < 4):
 				continue
+			# Fine tune the district
+			fetList[2] += regionList[fetList[1]] * 100
+
 			if (popFlag):
 				tmpKey = (fetList[1], fetList[2])
 				if (tmpKey in popList):
