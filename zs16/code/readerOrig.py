@@ -43,20 +43,6 @@ def getGoldenX(X, leftA, rightA, leftB, rightB):
 	Xn = np.array(Xn, dtype = np.int)
 	return Xn
 
-def getGoldenXFast(X, leftA, rightA, leftB, rightB):
-	# Not fast, hstack requires lot of memory while copying.
-	# Plus parallel computation not available
-
-	for i in range(leftA, rightA):
-		for j in range(leftB, rightB):
-			tmpMat = np.multiply(X[:,i], X[:,j]).reshape(-1, 1)
-			X = np.hstack((X, tmpMat))
-		print '\r', (i*(1.0))/(rightA - leftA + 1),
-		sys.stdout.flush()
-
-	print 'COMPLETED'
-	return X
-
 def getHospitalRegion():
 
 	regionList = {}
@@ -80,7 +66,6 @@ def getHospitalRegion():
 
 	return regionList
 
-
 def getHospitalProfile(fineFlag = False):
 	popList = {}
 	regionList = getHospitalRegion()
@@ -97,13 +82,13 @@ def getHospitalProfile(fineFlag = False):
 				fetList.append(tmpVal)
 			if (len(fetList) < 3):
 				continue
-			fetList = np.array(fetList)
 
 			# Fine tune the district
 			if (fineFlag):
 				if (fetList[0] in regionList):
-					fetList[1] += regionList[fetList[0]] * 100
+					fetList[1] += regionList[fetList[0]] * 100				
 
+			fetList = np.array(fetList)
 			tmpKey = (fetList[0], fetList[1])
 			if (tmpKey in popList):
 				popList[tmpKey] = max(popList[tmpKey], fetList[2])
@@ -118,10 +103,9 @@ def getHospitalProfile(fineFlag = False):
 
 	return popList
 
-def getHospitalSales(fineFlag = False):
+def getHospitalSales():
 
-	popList = getHospitalProfile(fineFlag = fineFlag)
-	regionList = getHospitalRegion()
+	popList = getHospitalProfile()
 
 	saleListDetailed = set()
 	saleListRough = set()
@@ -137,11 +121,6 @@ def getHospitalSales(fineFlag = False):
 				fetList.append(tmpVal)
 			if (len(fetList) < 4):
 				continue
-
-			# Fine tune the district
-			if (fineFlag):
-				if (fetList[0] in regionList):
-					fetList[2] += regionList[fetList[0]] * 100				
 
 			tmpKey = (fetList[0], fetList[2])
 			if (tmpKey in popList):
@@ -161,11 +140,10 @@ def getHospitalSales(fineFlag = False):
 
 	return saleListDetailed, saleListRough
 
-def getTestSetAcc(clf, enc, popFlag = True, fineFlag = False):
+def getTestSetAcc(clf, enc, popFlag = True, goldenFlag = False):
 
 	if popFlag:
-		popList = getHospitalProfile(fineFlag = fineFlag)
-	regionList = getHospitalRegion()
+		popList = getHospitalProfile()
 
 	dataList = []
 	with open('../resources/Dataset/ProjectedRevenue.csv', 'rb') as csvfile:
@@ -183,10 +161,6 @@ def getTestSetAcc(clf, enc, popFlag = True, fineFlag = False):
 				fetList.append(tmpVal)
 			if (len(fetList) < 4):
 				continue
-			# Fine tune the district
-			if (fineFlag):
-				if (fetList[0] in regionList):
-					fetList[2] += regionList[fetList[1]] * 100
 
 			if (popFlag):
 				tmpKey = (fetList[1], fetList[2])
@@ -211,9 +185,12 @@ def getTestSetAcc(clf, enc, popFlag = True, fineFlag = False):
 	else:
 		Xt = enc.transform(X)
 
-	# Xt = scaler.transform(Xt)
+	if goldenFlag:
+		print Xt.shape
+		Xt = getGoldenX(Xt, 2, 2 + enc.feature_indices_[1], 2 + enc.feature_indices_[0], 2 + min(enc.feature_indices_[0] + 9, enc.feature_indices_[1]))
+		print Xt.shape
 
-	Xt = getGoldenX(Xt, 2, 2 + enc.feature_indices_[1], 2 + enc.feature_indices_[1], 2 + min(enc.feature_indices_[1] + 9, enc.feature_indices_[2]))
+	# Xt = scaler.transform(Xt)
 
 	Y_pred = clf.predict(Xt)
 
@@ -229,11 +206,10 @@ def getTestSetAcc(clf, enc, popFlag = True, fineFlag = False):
 
 	return Xt
 
-def getDataXY(currYearFlag = False, popFlag = False, fineFlag = False):
+def getDataXY(currYearFlag = False, popFlag = False):
 
 	if popFlag:
-		popList = getHospitalProfile(fineFlag = fineFlag)
-	regionList = getHospitalRegion()
+		popList = getHospitalProfile()
 
 	dataList = []
 	with open('../resources/Dataset/HospitalRevenue.csv', 'rb') as csvfile:
@@ -248,11 +224,6 @@ def getDataXY(currYearFlag = False, popFlag = False, fineFlag = False):
 				fetList.append(tmpVal)
 			if (len(fetList) < 17):
 				continue
-
-			# Fine tune the district
-			if (fineFlag):
-				if (fetList[0] in regionList):
-					fetList[2] += regionList[fetList[0]] * 100
 
 			if (popFlag):
 				tmpKey = (fetList[0], fetList[2])
@@ -304,11 +275,6 @@ def getDataXY(currYearFlag = False, popFlag = False, fineFlag = False):
 				if (len(fetList) < 17):
 					continue
 
-				# Fine tune the district
-				if (fineFlag):
-					if (fetList[0] in regionList):
-						fetList[2] += regionList[fetList[0]] * 100
-
 				if (popFlag):
 					tmpKey = (fetList[0], fetList[2])
 					if (tmpKey in popList):
@@ -352,11 +318,10 @@ def getDataXY(currYearFlag = False, popFlag = False, fineFlag = False):
 
 	return X, Y
 
-def getDataProjection(popFlag = False, fineFlag = False):
+def getDataProjection(encoder, popFlag = False):
 
 	if popFlag:
-		popList = getHospitalProfile(fineFlag = fineFlag)
-	regionList = getHospitalRegion()
+		popList = getHospitalProfile()
 
 	currDataList = []
 	with open('../resources/Dataset/ProjectedRevenue.csv', 'rb') as csvfile:
@@ -371,13 +336,17 @@ def getDataProjection(popFlag = False, fineFlag = False):
 				fetList.append(tmpVal)
 			for i in range(1, 2):
 				fetList.append(-1)
+
 			for i in range(1, 3):
 				tmpVal = formatField(row[i])
 				if (tmpVal == "IGNORE"):
 					break
+				if (tmpVal >= encoder.n_values_[i - 1]):
+					tmpVal = encoder.n_values_[i - 1] - 1
 				fetList.append(tmpVal)
 			for i in range(4, 16):
 				fetList.append(-1)
+
 			for i in range(3, 4):
 				tmpVal = formatField(row[i])
 				if (tmpVal == "IGNORE"):
@@ -387,28 +356,18 @@ def getDataProjection(popFlag = False, fineFlag = False):
 			if (len(fetList) < 17):
 				continue
 
-			# Fine tune the district
-			if (fineFlag):
-				if (fetList[0] in regionList):
-					fetList[2] += regionList[fetList[0]] * 100
-
 			if (popFlag):
 				tmpKey = (fetList[0], fetList[2])
 				if (tmpKey in popList):
 					fetList[0] = popList[tmpKey]
 					fetList[1] = 0
 				else:
-					# print tmpKey
 					fetList[0] = 0
 					fetList[1] = 1
-					# print 'OMG'
 
 			fetList = np.array(fetList)
 			currDataList.append(fetList)
 	csvfile.close()
-	# currDataList.extend(currDataList)
-	# currDataList.extend(currDataList)
-	# currDataList.extend(currDataList)
 	currDataList = np.array(currDataList)
 
 	dataList = np.array(currDataList, dtype = np.int)
@@ -428,52 +387,7 @@ def getDataProjection(popFlag = False, fineFlag = False):
 
 	return X, Y
 
-def generatePredFile(buySet, clf, encoder):
-	fieldList = []
-	dataList = []
-
-	print encoder.n_values_
-
-	with open('../resources/Dataset/Solution.csv', 'rb') as csvfile:
-		reader = csv.reader(csvfile, delimiter = ',')
-		next(reader, None)
-		for row in reader:
-			fetList = []
-			for i in range(3):
-				tmpVal = formatField(row[i])
-				if (tmpVal == "IGNORE"):
-					break
-				if (tmpVal >= encoder.n_values_[i]):
-					tmpVal = encoder.n_values_[i] - 1
-				fetList.append(tmpVal)
-			if (len(fetList) < 3):
-				continue
-			fieldList.append(row)
-			fetList = np.array(fetList)
-			dataList.append(fetList)
-	csvfile.close()
-
-	X = np.array(dataList)
-	print X
-	Xt = encoder.transform(X)
-	Y_pred = clf.predict(Xt)
-	# Y_pred_Revenue = clfRevenue.predict(Xt)
-	# Y_pred_Buy = clfBuy.predict(Xt)
-
-	with open('../resources/Dataset/SolutionMine.csv', 'wb') as csvfile:
-		gtwriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
-		gtwriter.writerow(['Hospital_ID', 'District_ID', 'Instrument_ID', 'Buy_or_not', 'Revenue'])
-		for i in range(0, len(fieldList)):
-			tmpTup = (X[i][0], X[i][2])
-			buyFlag = 0
-			# print tmpTup
-			if (tmpTup in buySet):
-				# print "GOOD"
-				buyFlag = 1
-			gtwriter.writerow([fieldList[i][0], fieldList[i][1], fieldList[i][2], buyFlag, ((i%2) or (buyFlag)) * int(Y_pred[i])])
-	csvfile.close()
-
-def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, popFlag = True, newHeuristic = False, fineFlag = False):
+def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, popFlag = True, newHeuristic = False, goldenFlag = False):
 	fieldList = []
 	dataList = []
 
@@ -482,8 +396,7 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 	print encRev.n_values_
 
 	if popFlag:
-		popList = getHospitalProfile(fineFlag = fineFlag)
-	regionList = getHospitalRegion()
+		popList = getHospitalProfile()
 
 	if newHeuristic:
 		saleListDetailed, saleListRough = getHospitalSales()
@@ -498,15 +411,13 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 				if (tmpVal == "IGNORE"):
 					break
 				if (i > 0):
+					if (tmpVal >= encBuy.n_values_[i - 1]):
+						tmpVal = encBuy.n_values_[i - 1] - 1
 					if (tmpVal >= encRev.n_values_[i - 1]):
 						tmpVal = encRev.n_values_[i - 1] - 1
 				fetList.append(tmpVal)
 			if (len(fetList) < 4):
 				continue
-			# Fine tune the district
-			if (fineFlag):
-				if (fetList[1] in regionList):
-					fetList[2] += regionList[fetList[1]] * 100
 
 			if (popFlag):
 				tmpKey = (fetList[1], fetList[2])
@@ -544,16 +455,24 @@ def generatePredFileC(clfBuy, clfRevenue, encBuy, encRev, scalerBuy, scalerRev, 
 
 	# Xt_buy = Xt_buy[:10000]
 
-	Xt_buy = getGoldenX(Xt_buy, 2, 2 + encBuy.feature_indices_[1], 2 + encBuy.feature_indices_[1], 2 + min(encBuy.feature_indices_[1] + 9, encBuy.feature_indices_[2]))
+	if goldenFlag:
+		print Xt_buy.shape
+		Xt_buy = getGoldenX(Xt_buy, 2, 2 + encBuy.feature_indices_[1], 2 + encBuy.feature_indices_[0], 2 + min(encBuy.feature_indices_[0] + 9, encBuy.feature_indices_[1]))
+		print Xt_buy.shape
 
 	Y_pred_Revenue = clfRevenue.predict(Xt_rev)
+
+	# Xt_buy = Xt_buy[:10000]
+
+	print Xt_buy.shape
+
 	Y_pred_Buy = clfBuy.predict_proba(Xt_buy)
 	# Y_pred_Buy = clfBuy.predict(Xt_buy)
 
 	# for t in list(Y_pred_Buy)[:100]:
 	# 	print t
 
-	with open('../resources/Dataset/SolutionMine.csv', 'wb') as csvfile:
+	with open('../resources/Dataset/SolutionMineAltOrig.csv', 'wb') as csvfile:
 		gtwriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
 		gtwriter.writerow(['Hospital_ID', 'District_ID', 'Instrument_ID', 'Buy_or_not', 'Revenue'])
 		for i in range(0, len(fieldList)):
