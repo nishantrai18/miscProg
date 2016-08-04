@@ -357,6 +357,8 @@ def generatePredFile(p, subset='validation'):
 		gtwriter.writerow(['VideoName', 'ValueExtraversion', 'ValueAgreeableness', 'ValueConscientiousness', 'ValueNeurotisicm','ValueOpenness'])
 		for i in range(0,len(vnames)):
 			vnames[i] = vnames[i].strip('.mp4')
+			if (vnames[i] not in p):
+				p[vnames[i]] = [0.5]*5
 			if (isinstance(p[vnames[i]], np.float64)):
 				p[vnames[i]] = [0.5]*5
 			# print vnames[i]

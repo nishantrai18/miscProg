@@ -16,8 +16,8 @@ from sklearn.tree import DecisionTreeRegressor
 def weightedModelFit(X, Y):
 	weights = np.zeros((X.shape[1]))
 	for i in xrange(X.shape[0]):
-		# weights = weights + np.abs(X[i] - Y[i])
-		weights = weights + np.abs(1)
+		weights = weights + np.abs(X[i] - Y[i])
+		# weights = weights + np.abs(1)
 	weights = 1.0/weights
 	# weights = np.power(weights, 0.5)
 	weights = weights/np.sum(weights)
@@ -39,9 +39,11 @@ trueVal = getTruthVal(fileName)
 for i in xrange(len(vidNames)):
 	vidNames[i] = vidNames[i].strip('.mp4')
 
-choice = 'C'
+# choice = 'C'
 # choice = 'A'
-# choice = 'AudioA'
+choice = 'AudioA_avg_cluster_4'
+# choice = '_AudioA'
+# choice = '' #For standard audio
 splitVal = 0.9
 origVidNames = []
 vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
@@ -49,7 +51,7 @@ vidNames = vidNames[:int(splitVal*len(vidNames))]
 
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_train.p', 'rb'))
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_train' + str(splitVal) +'.p', 'rb'))
-trainData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_train' + str(splitVal) +'.p', 'rb'))
+trainData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50' + choice + '_train' + str(splitVal) +'.p', 'rb'))
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetF_VGG_5_128_4096_avg_train' + str(splitVal) +'.p', 'rb'))
 # trainData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_48_96_256_train' + str(splitVal) +'.p', 'rb'))
 X_train, Y_train = [], []
@@ -60,8 +62,8 @@ for i in range(5):
 		# print trainData[k]
 		if (len(trainData[k]) == 0):
 			continue
-		# X_train[i].append(getSortedFeatures(trainData[k][:,i]))
-		X_train[i].append(getCompleteSortedFeatures(trainData[k], sortFlag = True))
+		X_train[i].append(getSortedFeatures(trainData[k][:,i]))
+		# X_train[i].append(getCompleteSortedFeatures(trainData[k], sortFlag = True))
 		if (i == 0):
 			# Do this only once
 			Y_train.append(trueVal[k])
@@ -74,7 +76,7 @@ Y_train = np.array(Y_train)
 
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetA_BasicConv_Augmented_32_64_256_test.p', 'rb'))
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_Augmented_32_64_256_test' + str(splitVal) +'.p', 'rb'))
-testData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50_test' + str(splitVal) +'.p', 'rb'))
+testData = pickle.load(open('tmpData/predictions/predListaudioFetA_BAG_n50' + choice + '_test' + str(splitVal) +'.p', 'rb'))
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetC_Conv_48_96_256_test' + str(splitVal) +'.p', 'rb'))
 # testData = pickle.load(open('tmpData/predictions/predListvisualFetF_VGG_5_128_4096_avg_test' + str(splitVal) +'.p', 'rb'))
 X_test, Y_test = [], []
@@ -84,8 +86,8 @@ for i in range(5):
 	for k in testData.keys():
 		if (len(testData[k]) == 0):
 			continue
-		# X_test[i].append(getSortedFeatures(testData[k][:,i]))
-		X_test[i].append(getCompleteSortedFeatures(testData[k], sortFlag = True))
+		X_test[i].append(getSortedFeatures(testData[k][:,i]))
+		# X_test[i].append(getCompleteSortedFeatures(testData[k], sortFlag = True))
 		if (i == 0):
 			# Do this only once
 			Y_test.append(trueVal[k])
@@ -110,17 +112,26 @@ modelChoice = 'LS'			# Best performer, Ridge also performs well
 # modelChoice = 'WGT'		# Performs slightly worse than simple average
 # modelChoice = 'BAG'
 # modelChoice = 'Ensemble_LS'
+# modelChoice = 'Ensemble_compFet_LS'
+# modelChoice = 'Ensemble_compFet_BAG'
+# modelChoice = 'Ensemble_compFet_SVR'
 # modelChoice = 'Ensemble_WGT'
 # modelChoice = 'Ensemble_BAG'
+# modelChoice = 'Ensemble_ADA'
+# modelChoice = 'Ensemble_RF'
 
-append = '_48_96'
+# RF, ADA, BAG, LS are good diverse results
+
+# choice = 'AudioA'
+# append = '_orig'
 # append = '_48_96'
+append = ''
 modelName, model_file_name = '', ''
 predFileName = ''
 
 if (modelChoice == 'LS'):
-	modelName = 'mergeScore_Fet' + choice + append + '_LS'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_LS'
+	modelName = 'finaleMergeScore_Fet' + choice + append + '_LS'
+	model_file_name = 'tmpData/models/finaleMergeScore_Fet' + choice + append + '_LS'
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
@@ -135,12 +146,12 @@ if (modelChoice == 'LS'):
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'SVR'):
-	modelName = 'mergeScore_Fet' + choice + append + '_SVR'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_SVR'
+	modelName = 'finaleMergeScore_Fet' + choice + append + '_SVR'
+	model_file_name = 'tmpData/models/finaleMergeScore_Fet' + choice + append + '_SVR'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
-		clfList.append(SVR(C = 30, kernel = 'poly', degree = 2))
+		clfList.append(SVR(C = 10, kernel = 'poly', degree = 2, coef0 = 0.1))
 		# clfList.append(LinearSVR(C = 0.01))
 		# Parameter study for C
 		clfList[i].fit(X_train[i], Y_train[:,i])
@@ -162,28 +173,28 @@ elif (modelChoice == 'RF'):
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'ADA'):
-	modelName = 'mergeScore_Fet' + choice + append + '_ADA'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_ADA'
+	modelName = 'finaleMergeScore_Fet' + choice + append + '_ADA'
+	model_file_name = 'tmpData/models/finaleMergeScore_Fet' + choice + append + '_ADA'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		clfList.append(AdaBoostRegressor(DecisionTreeRegressor(max_depth=4), n_estimators=50))
+		clfList.append(AdaBoostRegressor(DecisionTreeRegressor(max_depth = 4), n_estimators = 100))
 		clfList[i].fit(X_train[i], Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
 		Y_pred[:,i] = clfList[i].predict(X_test[i])
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'BAG'):
-	modelName = 'mergeScore_Fet' + choice + append + '_BAG'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_BAG'
+	modelName = 'finaleMergeScore_Fet' + choice + append + '_BAG'
+	model_file_name = 'tmpData/models/finaleMergeScore_Fet' + choice + append + '_BAG'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		# clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4))
-		# clfList.append(BaggingRegressor(SVR(C = 30), n_estimators = 50, n_jobs = 4))
-		clfList.append(BaggingRegressor(linear_model.Ridge(alpha = 5)))		
+		clfList.append(BaggingRegressor(DecisionTreeRegressor(max_depth = 5), n_estimators = 100, n_jobs = 4))
+		# clfList.append(BaggingRegressor(SVR(C = 10, kernel = 'rbf', degree = 2, coef0 = 1), n_estimators = 50, n_jobs = 4))
+		# clfList.append(BaggingRegressor(linear_model.Ridge(alpha = 10), n_estimators = 50, n_jobs = 4))		
 		# clfList.append(linear_model.SGDRegressor())
 		clfList[i].fit(X_train[i], Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
@@ -194,8 +205,8 @@ elif (modelChoice == 'BAG'):
 		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
 
 elif (modelChoice == 'WGT'):
-	modelName = 'mergeScore_Fet' + choice + append + '_WGT'
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice + append + '_WGT'
+	modelName = 'finaleMergeScore_Fet' + choice + append + '_WGT'
+	model_file_name = 'tmpData/models/finaleMergeScore_Fet' + choice + append + '_WGT'
 
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
@@ -219,7 +230,7 @@ elif (modelChoice == 'NN'):
 		model = Sequential()
 
 		model.add(Dense(5, input_dim=15, init='uniform'))
-		model.add(Activation('relu'))
+		model.add(Activation('tanh'))
 		model.add(Dense(1, init='uniform'))
 		model.add(Activation('sigmoid'))
 
@@ -232,7 +243,7 @@ elif (modelChoice == 'NN'):
 		model.fit(X_train[i], Y_train[:,i], nb_epoch=10, batch_size = 32, validation_data=(X_test[i], Y_test[:,i]))
 		score = model.evaluate(X_test[i], Y_test[:,i], batch_size = 32)
 
-		Y_pred[:,i] = model.predict(X_test[i])[:1]
+		Y_pred[:,i] = model.predict(X_test[i])[:,0]
 		clfList.append(model)
 
 elif (modelChoice == 'Ensemble_WGT'):
@@ -259,9 +270,9 @@ elif (modelChoice == 'Ensemble_WGT'):
 
 elif ('Ensemble' in modelChoice):
 
-	modelName = 'mergeScore_Fet' + choice + append + modelChoice.strip('Ensemble')
-	model_file_name = 'tmpData/models/mergeScore_Fet' + choice +  append + modelChoice.strip('Ensemble')
-	predFileName = 'tmpData/predictions/mergeScore_Fet' + choice + append + modelChoice.strip('Ensemble')
+	modelName = 'finaleMergeScore_Fet' + choice + append + modelChoice.strip('Ensemble')
+	model_file_name = 'tmpData/models/finaleMergeScore_Fet' + choice +  append + modelChoice.strip('Ensemble')
+	predFileName = 'tmpData/predictions/finaleMergePred_Fet' + choice + append + modelChoice.strip('Ensemble')
 	
 	print model_file_name
 

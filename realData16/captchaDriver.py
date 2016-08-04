@@ -10,7 +10,9 @@ def readAllCaptchas():
 	fileFormat = "outputTraining/"+"output*txt"
 	outFiles = set(glob.glob(fileFormat))
 	for fileName in inFiles:
+		print fileName
 		X.append(polishImg(fileName))
+		# X.append(segmentImg(fileName))
 	for fileName in outFiles:
 		Y.append(textRead(fileName))
 	return X, Y

@@ -11,6 +11,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import BaggingRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.decomposition import PCA
 # from sklearn.neural_network import MLPRegressor
 
 np.set_printoptions(precision=2)
@@ -30,8 +31,8 @@ splitVal = 0.9
 vidNamesTest = vidNames[int(splitVal*len(vidNames))+1:]
 vidNames = vidNames[:int(splitVal*len(vidNames))]
 
-# fetChoice = 'AudioA_avg_cluster_4'
-fetChoice = 'AudioA'
+fetChoice = 'AudioA_avg_cluster_4'
+# fetChoice = 'AudioA'
 # X_train, Y_train = readData(vidNames, trueVal, feature = fetChoice, printFlag = True)
 # X_test, Y_test = readData(vidNamesTest, trueVal, feature = fetChoice, printFlag = True)
 
@@ -51,7 +52,14 @@ print X_test.shape, Y_test.shape
 # generatePredFile(p)
 # raw_input('FINISHED')
 
-# scaler = preprocessing.StandardScaler().fit(X_train)
+# print 'Starting PCA'
+# pca = PCA(n_components = 300)
+# pca.fit(X_train)
+# X_train = pca.transform(X_train)
+# X_test = pca.transform(X_test)
+# print 'Finished PCA'
+
+# scaler = preprocessing.MinMaxScaler().fit(X_train)
 # X_test = scaler.transform(X_test)
 # X_test = np.nan_to_num(X_test)
 
@@ -60,16 +68,16 @@ Y_pred = np.zeros((X_test.shape[0], 5))
 clfList = []
 
 # modelChoice = 'NN'	# Ever so slightly better than constant
-modelChoice = 'SVR'	# Gives out of bounds results
+# modelChoice = 'SVR'	# Gives out of bounds results
 # modelChoice = 'RF'
 # modelChoice = 'LGR'	# very poor results
 # modelChoice = 'MISC'
+modelChoice = 'MISC_sum_common'
 # modelChoice = 'GBR'
 # modelChoice = 'BAG'
 # modelChoice = 'SKNN'
 
 modelName, model_file_name = '', ''
-
 
 print fetChoice, modelChoice
 
@@ -80,8 +88,8 @@ if (modelChoice == 'SVR'):
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1000.0, kernel = 'rbf'))
-		clfList.append(SVR(C = 1.0, kernel = 'poly', degree = 2))
-		# clfList.append(LinearSVR(C = 1000.0))
+		# clfList.append(SVR(C = 1.0, kernel = 'poly', degree = 1))
+		clfList.append(LinearSVR(C = 100.0))
 		# Parameter study for C
 		clfList[i].fit(X_train, Y_train[:,i])
 		print 'Model Trained. Prediction in progress'
@@ -201,7 +209,7 @@ elif (modelChoice == 'MISC'):
 	for i in range(5):
 		print 'Currently training the', i, 'th regressor'
 		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
-		clfList.append(linear_model.Ridge(alpha = 5000))
+		clfList.append(linear_model.Ridge(alpha = 1000))
 		# clfList.append(linear_model.Lasso(alpha = 1e-4))
 		# clfList.append(linear_model.SGDRegressor())
 		clfList[i].fit(X_train, Y_train[:,i])
@@ -219,6 +227,64 @@ elif (modelChoice == 'MISC'):
 		print np.max(clfList[i].coef_)
 		print np.min(clfList[i].coef_)
 		print np.mean(clfList[i].coef_)
+
+elif (modelChoice == 'MISC_sum_common'):
+	modelName = 'audioFetA_MISC_sum_common'
+	model_file_name = 'tmpData/models/audioFetA_BAGn100_sum_common'
+
+	Y_pred = np.zeros((X_test.shape[0], 6))
+
+	Y_mean = np.mean(Y_train, axis = 1).reshape(Y_train.shape[0], 1)
+	Y_train = Y_train - Y_mean
+	Y_train = np.concatenate((Y_train, Y_mean), axis = 1)
+
+	Yt_mean = np.mean(Y_test, axis = 1).reshape(Y_test.shape[0], 1)
+	Yt_test = Y_test - Yt_mean
+	Yt_test = np.concatenate((Yt_test, Yt_mean), axis = 1)
+
+	print Y_train.shape
+
+	for i in range(Y_train.shape[1]):
+		print 'Currently training the', i, 'th regressor'
+		# clfList.append(SVR(C = 1.0, kernel = 'rbf'))
+		if (i == 5):
+			# clfList.append(linear_model.Ridge(alpha = 100))
+			# clfList.append(GradientBoostingRegressor(n_estimators = 100, loss='lad'))
+			clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 100, n_jobs = 4))
+		else:
+			# clfList.append(linear_model.SGDRegressor())
+			# clfList.append(LinearSVR(C = 10.0))
+			# clfList.append(linear_model.Ridge(alpha = 10000))
+			clfList.append(GradientBoostingRegressor(n_estimators = 60, loss='lad'))
+		# clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4))
+		# clfList.append(linear_model.Ridge(alpha = 1000))
+		# clfList.append(LinearSVR(C = 10.0))
+		# clfList.append(linear_model.Lasso(alpha = 1e-4))
+		# clfList.append(linear_model.SGDRegressor())
+		clfList[i].fit(X_train, Y_train[:,i])
+		print 'Model Trained. Prediction in progress'
+		Y_pred[:,i] = clfList[i].predict(X_test)
+		print np.mean(np.abs(Y_pred[:,i] - Yt_test[:,i]))
+
+	print Y_pred
+	print np.mean(Y_test, axis = 1)
+
+	for i in range(5):
+		Y_pred[:,i] = Y_pred[:,i] + Y_pred[:,5]
+
+		print 'Predictions'
+		print np.max(Y_pred[:,i])
+		print np.min(Y_pred[:,i])
+		print np.mean(Y_pred[:,i])
+		print np.corrcoef(Y_pred[:,i], Y_test[:,i])
+
+		# print 'Coefficents'
+		# print clfList[i].coef_
+		# print np.max(clfList[i].coef_)
+		# print np.min(clfList[i].coef_)
+		# print np.mean(clfList[i].coef_)
+
+	Y_pred = Y_pred[:,:5]
 
 elif (modelChoice == 'RF'):
 	modelName = 'audioFetA_RF'
@@ -316,7 +382,7 @@ elif (modelChoice == 'SKNN'):
 
 # Scale transform data, save the scaler for later use
 # Save the trained models and predictions
-pickle.dump(clfList, open(model_file_name + fetChoice + '.p', 'wb'))
+# pickle.dump(clfList, open(model_file_name + '_' + fetChoice + '.p', 'wb'))
 # pickle.dump(Y_pred, open(model_file_name, 'rb'))
 
 print Y_test

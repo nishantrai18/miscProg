@@ -163,12 +163,12 @@ def loadPredictions(modelNames, numModels, splitVal = 0.9):
 
 def createEnsembleUsingLR(modelNames, numModels, choice = 'Ridge'):
 
-	predList, predListTest, trueVal, trueValTest = loadPredictions(modelNames, numModels, splitVal = 0.9)
+	predList, predListTest, trueVal, trueValTest = loadPredictions(modelNames, numModels, splitVal = 0.75)
 
 	X_train = predList[0]
 	X_test = predListTest[0]
 	for j in range(1, numModels):
-		print X_train.shape, predList[j].shape
+		# print X_train.shape, predList[j].shape
 		X_train = np.concatenate((X_train, predList[j]), axis = 1)
 		X_test = np.concatenate((X_test, predListTest[j]), axis = 1)
 
@@ -208,7 +208,7 @@ def createEnsembleUsingLR(modelNames, numModels, choice = 'Ridge'):
 
 		for i in range(5):
 			print 'Currently training the', i, 'th regressor'
-			clfList.append(SVR(C = 30.0, kernel = 'poly', degree = 2, coef0 = 1))
+			clfList.append(SVR(C = 5.0, kernel = 'poly', degree = 2, coef0 = 1))
 
 			clfList[i].fit(X_train, trueVal[:,i])
 			print 'Model Trained. Prediction in progress'
@@ -225,8 +225,10 @@ def createEnsembleUsingLR(modelNames, numModels, choice = 'Ridge'):
 
 		for i in range(5):
 			print 'Currently training the', i, 'th regressor'
-			# clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 50, n_jobs = 4))
-			clfList.append(BaggingRegressor(SVR(C = 5), n_estimators = 50, n_jobs = 4))
+			# clfList.append(BaggingRegressor(DecisionTreeRegressor(), n_estimators = 100, n_jobs = 4))
+			clfList.append(BaggingRegressor(BaggingRegressor(DecisionTreeRegressor(max_depth = 5), n_estimators = 10, n_jobs = 1), n_estimators = 100, n_jobs = 1))
+			# clfList.append(BaggingRegressor(BaggingRegressor(SVR(C = 5.0, kernel = 'rbf'), n_estimators = 10, n_jobs = 1), n_estimators = 100, n_jobs = 1))
+			# clfList.append(BaggingRegressor(SVR(C = 5.0, kernel = 'rbf'), n_estimators = 100, n_jobs = 4))
 			clfList[i].fit(X_train, trueVal[:,i])
 			print 'Model Trained. Prediction in progress'
 			Y_pred[:,i] = clfList[i].predict(X_test)
@@ -254,7 +256,7 @@ def createEnsembleUsingLR(modelNames, numModels, choice = 'Ridge'):
 			print np.mean(Y_pred[:,i])
 			print np.corrcoef(Y_pred[:,i], trueValTest[:,i])
 
-
+	model_file_name = 'tmpData/ensemble/ensemble_comp_1'
 
 	# pickle.dump(clfList, open(model_file_name + '.p', 'wb'))
 
@@ -352,18 +354,23 @@ def ensemblePredictUsingLR(modelNames, clfName, numModels):
 	for k in predList[0].keys():
 		fetList = []
 		for j in range(numModels):
+			# print predList[j][k]
 			fetList.extend(predList[j][k])
 		fetList = np.array(fetList)
+
+		# print fetList
+		# print fetList.shape
 
 		for i in range(5):
 			predNew[k].append(clfList[i].predict([fetList])[0])
 		print '\r', (cnt*(1.0))/len(predList[0]), 'part prediction completed',
+		sys.stdout.flush()
 		cnt += 1
 
 	for k in predList[0].keys():
 		predNew[k] = np.array(predNew[k])
 
-	generatePredFile(predNew)
+	generatePredFile(predNew, subset = 'test')
 	return predNew[k]
 
 
@@ -376,9 +383,27 @@ if __name__ == "__main__":
 	if (choice == 'create'):
 
 		modelNames = ['tmpData/ensemble/mergeScore_FetAudioA_LS.p', 'tmpData/ensemble/mergeScore_FetC_Ridge.p', 
-						'tmpData/ensemble/mergeScore_FetAudioA_WGT.p', 'tmpData/ensemble/mergeScore_FetC_WGT.p',
+						# 'tmpData/ensemble/mergeScore_FetAudioA_WGT.p',
+						'tmpData/ensemble/mergeScore_FetC_WGT.p',
 						'tmpData/ensemble/mergeScore_FetAudioA_BAG_LS.p', 'tmpData/ensemble/mergeScore_FetAudioA_BAG_WGT.p',
 						'tmpData/ensemble/mergeScore_FetC_48_96_LS.p']
+
+		# modelNames = ['finaleMergePred_FetAudioA_avg_cluster_4_ADA.p', 'finaleMergePred_FetAudioA_avg_cluster_4_BAG.p',
+		# 			'finaleMergePred_FetAudioA_avg_cluster_4_LS.p', 'finaleMergePred_Fet_AudioA_minmax_cluster_4_ADA.p',
+		# 			'finaleMergePred_Fet_AudioA_minmax_cluster_4_BAG.p', 'finaleMergePred_Fet_AudioA_minmax_cluster_4_compFet_LS.p',
+		# 			'finaleMergePred_Fet_AudioA_minmax_cluster_4_LS.p', 'finaleMergePred_FetAudioA_orig_ADA.p',
+		# 			'finaleMergePred_FetAudioA_orig_BAG.p', 'finaleMergePred_FetAudioA_orig_compFet_BAG.p',
+		# 			'finaleMergePred_FetAudioA_orig_compFet_SVR.p',
+		# 			# 'finaleMergePred_FetAudioA_orig_LS.p',
+		# 			'finaleMergePred_FetC_48_96_BAG.p', 'finaleMergePred_FetC_48_96_LS.p',
+		# 			'finaleMergeScore_FetC_32_64_ADA.p', 'finaleMergeScore_FetC_32_64_BAG.p',
+		# 			'finaleMergeScore_FetC_32_64_compFet_LS.p', 'finaleMergeScore_FetC_32_64_LS.p']
+		# modelNames = [('tmpData/ensemble/finaleEnsemble/' + x) for x in modelNames]
+
+		# modelNames = ['tmpData/ensemble/mergeScore_FetAudioA_LS.p', 'tmpData/ensemble/mergeScore_FetC_Ridge.p', 
+		# 				'tmpData/ensemble/mergeScore_FetAudioA_BAG.p', 'tmpData/ensemble/mergeScore_FetC_WGT.p',
+		# 				'tmpData/ensemble/mergeScore_FetAudioA_RF.p', 'tmpData/ensemble/mergeScore_FetAudioA_BAG_WGT.p',
+		# 				'tmpData/ensemble/mergeScore_FetC_48_96_LS.p']
 
 		numModels, numIters = len(modelNames), 100000
 
@@ -388,12 +413,25 @@ if __name__ == "__main__":
 
 	elif (choice == 'useLR'):
 
-		predNames = ['tmpData/predictions/valPredictionaudioFetA_MISC_LS.p', 'tmpData/predictions/valPredictionvisualFetC_Conv_Augmented_32_64_256_LS.p', 
-						'tmpData/predictions/valPredictionaudioFetA_MISC_WGT.p', 'tmpData/predictions/valPredictionvisualFetC_Conv_Augmented_32_64_256_WGT.p',
-						'tmpData/predictions/valPredictionaudioFetA_BAG_n50_LS.p', 'tmpData/predictions/valPredictionaudioFetA_BAG_n50_WGT.p',
-						'tmpData/predictions/valPredictionvisualFetC_Conv_48_96_256_LS.p']
+		# predNames = ['tmpData/predictions/valPredictionaudioFetA_MISC_LS.p', 'tmpData/predictions/valPredictionvisualFetC_Conv_Augmented_32_64_256_LS.p', 
+		# 				'tmpData/predictions/valPredictionaudioFetA_MISC_WGT.p', 'tmpData/predictions/valPredictionvisualFetC_Conv_Augmented_32_64_256_WGT.p',
+		# 				'tmpData/predictions/valPredictionaudioFetA_BAG_n50_LS.p', 'tmpData/predictions/valPredictionaudioFetA_BAG_n50_WGT.p',
+		# 				'tmpData/predictions/valPredictionvisualFetC_Conv_48_96_256_LS.p']
 
-		clfName = 'tmpData/ensemble/ensemble7_LR_BAG'
+		predNames = ['valPredictionaudioFetA_BAG_n50AudioA_avg_cluster_4_finale_ADA.p', 'valPredictionaudioFetA_BAG_n50AudioA_avg_cluster_4_finale_BAG.p',
+					'valPredictionaudioFetA_BAG_n50AudioA_avg_cluster_4_finale_LS.p', 'valPredictionaudioFetA_BAG_n50AudioA_minmax_cluster_4_finale_ADA.p',
+					'valPredictionaudioFetA_BAG_n50AudioA_minmax_cluster_4_finale_BAG.p', 'valPredictionaudioFetA_BAG_n50AudioA_minmax_cluster_4_finale_compFet_LS.p',
+					'valPredictionaudioFetA_BAG_n50AudioA_minmax_cluster_4_finale_LS.p', 'valPredictionaudioFetA_BAG_n50AudioA_orig_finale_ADA.p',
+					'valPredictionaudioFetA_BAG_n50AudioA_orig_finale_BAG.p', 'valPredictionaudioFetA_BAG_n50_finale_compFet_BAG.p',
+					'valPredictionaudioFetA_BAG_n50_finale_compFet_SVR.p', 
+					'valPredictionvisualFetC_Conv_48_96_256_finale_BAG.p', 'valPredictionvisualFetC_Conv_48_96_256_finale_LS.p', 
+					'valPredictionvisualFetC_Conv_Augmented_32_64_256_finale_ADA.p', 'valPredictionvisualFetC_Conv_Augmented_32_64_256_finale_BAG.p',
+					'valPredictionvisualFetC_Conv_Augmented_32_64_256_finale_compFet_LS.p', 'valPredictionvisualFetC_Conv_Augmented_32_64_256_finale_LS.p']
+
+		predNames = [('tmpData/ensemble/finaleEnsemble/' + x) for x in predNames]
+
+		# clfName = 'tmpData/ensemble/ensemble7_LR_BAG'
+		clfName = 'tmpData/ensemble/ensemble_comp_1'
 
 		ensemblePredictUsingLR(predNames, clfName, len(predNames))
 

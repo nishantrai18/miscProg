@@ -156,12 +156,12 @@ def mult_clean_list(lis, t):
 		if (le[t] is None):
 			le[t] = {}
 			Register(lis, t)
-	dim = GetLen(le[t]) + 1					# To account for NaNs
+	dim = GetLen(le[t]) + 1				# To account for NaNs
 
 	if (dim > 30):
 		return [mod_clean_list(lis, t)], [t]
 
-	if (True):
+	if (False):
 		dim = int(np.log2(dim) + 1)
 
 	if (t in seqList):
@@ -179,7 +179,7 @@ def mult_clean_list(lis, t):
 				oneHot = GetSeqFet(lis[i])
 			else:
 				tmp = GetCustomID(le[t], lis[i])
-				oneHot = GetOneHot(tmp, dim, 1)
+				oneHot = GetOneHot(tmp, dim, 0)
 		else:
 			tmp = float(lis[i])
 			# if (tmp == tmp):
@@ -282,11 +282,18 @@ print idsList
 
 print "HERE"
 
+
 X = []
+Xt = [[], [], []]
 Y = []
 
-blockList = [12, 13, 16, 17, 18, 21, 22, 23, 24, 33, 36, 40, 43, 44, 45, 46, 47, 50, 53, 63]
-# blockList = []
+# blockList = [12, 13, 16, 17, 18, 21, 22, 23, 24, 33, 36, 40, 43, 44, 45, 46, 47, 50, 53, 63]
+blockList = []
+
+goodList1 = range(11,24)
+goodList2 = range(32,53)
+goodList3 = range(53,60)
+
 
 for i in range(0,len(blockList)):
 	blockList[i] -= 1
@@ -294,11 +301,23 @@ for i in range(0,len(blockList)):
 print sz
 
 for j in range(0,sz):
-	tmp=[]
+	tmp = []
+	tmp1 = []
+	tmp2 = []
+	tmp3 = []
 	for i in range(0,len(cln)):
-		if(parList[i] not in blockList):
-			tmp.append(cln[i][j])
+		if (parList[i] in goodList1):
+			tmp1.append(cln[i][j])			
+		elif (parList[i] in goodList2):
+			tmp2.append(cln[i][j])			
+		elif (parList[i] in goodList3):
+			tmp3.append(cln[i][j])
+		elif (parList[i] not in blockList):
+			tmp.append(cln[i][j])			
 	X.append(tmp)
+	Xt[0].append(tmp1)
+	Xt[1].append(tmp2)
+	Xt[2].append(tmp3)	
 	Y.append(el[cols[66]][j])
 
 print Y[:10]
@@ -327,6 +346,30 @@ from sklearn.neighbors.nearest_centroid import NearestCentroid
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import linear_model
 
+ratio = 0.5
+
+clfs = []
+pred = []
+
+for t in range(0,3):
+	sz = len(Xt[t])
+	lis = zip(Xt[t],Y)
+	tsz = int(sz*(ratio))
+	tr = zip(*lis[:tsz])
+	ts = zip(*lis[tsz+1:])
+	tx, ty = np.array(tr[0]), np.array(tr[1])
+	sx, sy = np.array(ts[0]), np.array(ts[1])
+	print tsz, sz
+	clfs.append(RandomForestClassifier(n_estimators = 70))
+	clfs[t].fit(tx,ty)
+	pred.append(clfs[t].predict(Xt[t]))
+
+for i in range(0,len(X)):
+	for t in range(0,3):
+		X[i].extend(GetOneHot(pred[t][i],10,0))
+
+print X[:3]
+
 rx = []
 ry = []
 
@@ -347,7 +390,7 @@ print len(X[0])
 sz = len(X)
 lis = zip(X,Y)
 #shuffle(lis)
-tsz = int(sz*(0.99))
+tsz = int(sz*ratio)
 tr = zip(*lis[:tsz])
 ts = zip(*lis[tsz+1:])
 tx, ty = np.array(tr[0]), np.array(tr[1])
@@ -368,7 +411,7 @@ print ty[:100]
 # clf = KNeighborsClassifier(n_neighbors = 19, n_jobs = 4)
 # clf = RandomForestClassifier(n_estimators = 41, class_weight = 'balanced')
 
-clf = RandomForestClassifier(n_estimators = 70)
+clf = RandomForestClassifier(n_estimators = 41)
 # clf = AdaBoostClassifier(RandomForestClassifier(n_estimators = 43), n_estimators = 65)        
 
 # clf1 = tree.DecisionTreeClassifier()

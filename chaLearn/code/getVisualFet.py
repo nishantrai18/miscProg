@@ -125,7 +125,7 @@ def getVisualFetC():
 
 	print 'Started extracting features C'
 
-	videoPath = '../training/download_train-val/validationFiles/'
+	videoPath = '../training/download_test/testFiles/'
 	vidNames = os.listdir(videoPath)
 	vidNames = [x for x in vidNames if x.endswith(".mp4")]
 
@@ -240,7 +240,8 @@ def getVisualFetF():
 
 	print 'Started extracting features F'
 
-	videoPath = '../training/download_train-val/validationFiles/'
+	# videoPath = '../training/download_train-val/validationFiles/'
+	videoPath = '../training/download_test/testFiles/'
 	vidNamesTest = os.listdir(videoPath)
 	vidNamesTest = [x for x in vidNamesTest if x.endswith(".mp4")]
 

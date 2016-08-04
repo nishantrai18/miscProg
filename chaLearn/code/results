@@ -2886,4 +2886,559 @@ Accuracy predicting Openness to Experience: 0.90387619099
 332	umuguc	0.906461281483 0.90572077 0.91112784 0.9021207 0.90788587 0.90545123	250821	predictions_4.zip
 333	AlphaCV	0.877185608566 0.88897308 0.87756899 0.87042661 0.8804392 0.86852016	250841	predictions.zip
 
+PCA Bag dectree results:
+
+AudioA_avg_cluster_4 BAG
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.65517578125
+0.267854003906
+0.479333534427
+[[ 1.   0.4]
+ [ 0.4  1. ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.689194335938
+0.36716796875
+0.549736719208
+[[ 1.    0.31]
+ [ 0.31  1.  ]]
+Currently training the 2 th regressor
+^[[A
+Model Trained. Prediction in progress
+0.683911132813
+0.299014892578
+0.524987055873
+[[ 1.    0.38]
+ [ 0.38  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.686684570312
+0.252283630371
+0.522542188778
+[[ 1.   0.4]
+ [ 0.4  1. ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.731557617188
+0.389538574219
+0.569059649388
+[[ 1.    0.41]
+ [ 0.41  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.48  0.53  0.49  0.45  0.58]
+ [ 0.53  0.54  0.5   0.52  0.56]
+ [ 0.51  0.55  0.53  0.53  0.57]
+ ..., 
+ [ 0.45  0.54  0.55  0.48  0.58]
+ [ 0.53  0.57  0.57  0.54  0.56]
+ [ 0.52  0.57  0.56  0.56  0.62]]
+[ 0.66  0.69  0.68  0.69  0.73]
+[ 0.27  0.37  0.3   0.25  0.39]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.889840527561: 
+Accuracy predicting Extraversion: 0.88529478961
+Accuracy predicting Agreeableness: 0.89595765889
+Accuracy predicting Conscientiousness: 0.883214116574
+Accuracy predicting Neuroticism: 0.887964927642
+Accuracy predicting Openness to Experience: 0.896771145087
+
+Common BAG dectree (for the avg prediction) (Ridge, alpha = 1000 for the first five):
+
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.0553348212085
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.0544798130189
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.0678057364641
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.0445723788046
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.0577760028947
+Currently training the 5 th regressor
+Model Trained. Prediction in progress
+0.0863051407177
+[[-0.02  0.05 -0.03 -0.01  0.02  0.48]
+ [-0.02  0.03 -0.04  0.01  0.02  0.49]
+ [-0.03  0.03 -0.03  0.    0.02  0.49]
+ ..., 
+ [-0.04  0.    0.03 -0.05  0.05  0.44]
+ [-0.05  0.01  0.03 -0.04  0.05  0.45]
+ [-0.05  0.01  0.02 -0.04  0.06  0.48]]
+[ 0.51  0.51  0.51 ...,  0.38  0.38  0.38]
+Predictions
+0.704314185717
+0.210549605106
+0.479912578133
+[[ 1.    0.49]
+ [ 0.49  1.  ]]
+Coefficents
+[  6.03e-06  -1.97e-05   7.56e-04 ...,  -1.02e-03   5.17e-04   0.00e+00]
+0.00951972844594
+-0.00612650523278
+-1.45008101595e-05
+Predictions
+0.713861120547
+0.311364656191
+0.550035306608
+[[ 1.    0.38]
+ [ 0.38  1.  ]]
+Coefficents
+[ -9.75e-06   4.17e-07  -2.30e-03 ...,  -4.15e-04   1.26e-03   0.00e+00]
+0.0064370011508
+-0.00647556708503
+4.29496641862e-05
+Predictions
+0.735223179865
+0.267798318202
+0.525517164265
+[[ 1.    0.51]
+ [ 0.51  1.  ]]
+Coefficents
+[  6.64e-06   1.07e-05  -1.27e-03 ...,   2.82e-03  -9.04e-04   0.00e+00]
+0.00656172459821
+-0.0102699979371
+-2.28222662546e-05
+Predictions
+0.710733616439
+0.22797934805
+0.524521787862
+[[ 1.    0.52]
+ [ 0.52  1.  ]]
+Coefficents
+[  6.32e-07   4.20e-06   9.16e-04 ...,   2.30e-04   7.80e-04   0.00e+00]
+0.00543497139668
+-0.00541795035323
+5.56661306541e-05
+Predictions
+0.768178368201
+0.313219820409
+0.569174359832
+[[ 1.    0.51]
+ [ 0.51  1.  ]]
+Coefficents
+[ -3.37e-06   4.50e-06   1.90e-03 ...,  -1.62e-03  -1.66e-03   0.00e+00]
+0.00612852448424
+-0.00651106011656
+-6.15804643759e-05
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.46  0.53  0.45  0.48  0.5 ]
+ [ 0.47  0.52  0.45  0.5   0.51]
+ [ 0.46  0.52  0.47  0.49  0.52]
+ ..., 
+ [ 0.4   0.45  0.48  0.4   0.5 ]
+ [ 0.4   0.46  0.48  0.4   0.5 ]
+ [ 0.43  0.48  0.5   0.44  0.54]]
+[ 0.7   0.71  0.74  0.71  0.77]
+[ 0.21  0.31  0.27  0.23  0.31]
+[ 0.48  0.55  0.53  0.52  0.57]
+
+Average accuracy of 0.896142100492: 
+Accuracy predicting Extraversion: 0.890975400063
+Accuracy predicting Agreeableness: 0.8991473132
+Accuracy predicting Conscientiousness: 0.891170093914
+Accuracy predicting Neuroticism: 0.897572340398
+Accuracy predicting Openness to Experience: 0.901845354887
+
+
+Common BAG dectree (for the avg prediction):
+
+AudioA_avg_cluster_4 MISC_sum_common
+(46601, 6)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.0545086327093
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.0536360846178
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.067378773146
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.044282202654
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.0557069974914
+Currently training the 5 th regressor
+Model Trained. Prediction in progress
+0.0865187434255
+[[-0.03  0.01  0.01 -0.05  0.05  0.47]
+ [-0.03  0.01 -0.01 -0.06  0.04  0.49]
+ [-0.03 -0.01  0.01 -0.02  0.05  0.5 ]
+ ..., 
+ [-0.03  0.01 -0.01 -0.05  0.07  0.49]
+ [-0.03  0.01  0.03 -0.02  0.08  0.51]
+ [-0.04  0.01  0.03 -0.03  0.07  0.53]]
+[ 0.51  0.51  0.51 ...,  0.38  0.38  0.38]
+
+Bag dectree n100:
+
+[ 0.69  0.7   0.71  0.71  0.75]
+[ 0.23  0.32  0.27  0.25  0.33]
+[ 0.48  0.55  0.53  0.52  0.57]
+
+Average accuracy of 0.896548771741: 
+Accuracy predicting Extraversion: 0.89147211424
+Accuracy predicting Agreeableness: 0.899925943132
+Accuracy predicting Conscientiousness: 0.891013463578
+Accuracy predicting Neuroticism: 0.898036471922
+Accuracy predicting Openness to Experience: 0.902295865834
+
+Audio_avg_cluster_4, BaggingRegressor(DecisionTreeRegressor(max_depth = 5), n_estimators = 100, n_jobs = 4):
+
+Model Trained. Prediction in progress
+0.730008746216
+0.19189340317
+0.48269108031
+[[ 1.          0.54444969]
+ [ 0.54444969  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.691091939278
+0.252235474393
+0.548716064503
+[[ 1.          0.43621333]
+ [ 0.43621333  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.772487418236
+0.261154998997
+0.521351934627
+[[ 1.          0.54652408]
+ [ 0.54652408  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.725846206337
+0.19485252492
+0.523568951031
+[[ 1.        0.531063]
+ [ 0.531063  1.      ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.794177404079
+0.317501382815
+0.570068685989
+[[ 1.          0.55257708]
+ [ 0.55257708  1.        ]]
+[ 0.73000875  0.69109194  0.77248742  0.72584621  0.7941774 ]
+[ 0.1918934   0.25223547  0.261155    0.19485252  0.31750138]
+[ 0.48269108  0.54871606  0.52135193  0.52356895  0.57006869]
+
+Average accuracy of 0.900472423565: 
+Accuracy predicting Extraversion: 0.896849794323
+Accuracy predicting Agreeableness: 0.902599144599
+Accuracy predicting Conscientiousness: 0.897534258874
+Accuracy predicting Neuroticism: 0.898887333012
+Accuracy predicting Openness to Experience: 0.906491587016
+
+AudioA standard, BaggingRegressor(DecisionTreeRegressor(max_depth = 5), n_estimators = 100, n_jobs = 4):
+
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.729138813157
+0.14496192453
+0.482424611829
+[[ 1.         0.5367739]
+ [ 0.5367739  1.       ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.735180415399
+0.246104308849
+0.551660782472
+[[ 1.          0.44941681]
+ [ 0.44941681  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.828138560335
+0.173362134648
+0.52344824219
+[[ 1.          0.57766796]
+ [ 0.57766796  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.74441592675
+0.20364837733
+0.524292867702
+[[ 1.         0.5500587]
+ [ 0.5500587  1.       ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.848719331454
+0.309350767217
+0.572242141565
+[[ 1.          0.54300193]
+ [ 0.54300193  1.        ]]
+[ 0.72913881  0.73518042  0.82813856  0.74441593  0.84871933]
+[ 0.14496192  0.24610431  0.17336213  0.20364838  0.30935077]
+[ 0.48242461  0.55166078  0.52344824  0.52429287  0.57224214]
+
+Average accuracy of 0.901223578735: 
+Accuracy predicting Extraversion: 0.89537982706
+Accuracy predicting Agreeableness: 0.903120131695
+Accuracy predicting Conscientiousness: 0.901124321312
+Accuracy predicting Neuroticism: 0.900631840842
+Accuracy predicting Openness to Experience: 0.905861772764
+
+VisualFetC 32_64, (BaggingRegressor(SVR(C = 10, kernel = 'rbf'), n_estimators = 50, n_jobs = 4):
+
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.721829145313
+0.146135164803
+0.479107050221
+[[ 1.          0.57179485]
+ [ 0.57179485  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.818473760413
+0.215701360707
+0.549071886705
+[[ 1.          0.44558025]
+ [ 0.44558025  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.792392588158
+0.164528936651
+0.51931884144
+[[ 1.          0.55106072]
+ [ 0.55106072  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.749697128393
+0.142019683353
+0.518173144606
+[[ 1.          0.53446508]
+ [ 0.53446508  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.787985900306
+0.242411845018
+0.567702328813
+[[ 1.          0.51885387]
+ [ 0.51885387  1.        ]]
+[ 0.72182915  0.81847376  0.79239259  0.74969713  0.7879859 ]
+[ 0.14613516  0.21570136  0.16452894  0.14201968  0.24241185]
+[ 0.47910705  0.54907189  0.51931884  0.51817314  0.56770233]
+
+Average accuracy of 0.899651440239: 
+Accuracy predicting Extraversion: 0.898017919313
+Accuracy predicting Agreeableness: 0.901586580929
+Accuracy predicting Conscientiousness: 0.898221272427
+Accuracy predicting Neuroticism: 0.897267735066
+Accuracy predicting Openness to Experience: 0.903163693459
+
+VisualFetC 32_64, merged using original restricted scores,
+BaggingRegressor(SVR(C = 1, kernel = 'poly', degree = 1), n_estimators = 50, n_jobs = 4):
+
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.727731440534
+0.0980497769417
+0.47995254558
+[[ 1.          0.57210572]
+ [ 0.57210572  1.        ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.789712585649
+0.106442716078
+0.550789869449
+[[ 1.          0.44343373]
+ [ 0.44343373  1.        ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.802159441303
+0.0909201746319
+0.519664810003
+[[ 1.          0.54814441]
+ [ 0.54814441  1.        ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.743943991384
+0.0608910041321
+0.519073302768
+[[ 1.          0.53341684]
+ [ 0.53341684  1.        ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.78835929175
+0.222444128949
+0.568047262849
+[[ 1.          0.51847089]
+ [ 0.51847089  1.        ]]
+[ 0.72773144  0.78971259  0.80215944  0.74394399  0.78835929]
+[ 0.09804978  0.10644272  0.09092017  0.060891    0.22244413]
+[ 0.47995255  0.55078987  0.51966481  0.5190733   0.56804726]
+
+Average accuracy of 0.899772444112: 
+Accuracy predicting Extraversion: 0.898113606892
+Accuracy predicting Agreeableness: 0.901614800629
+Accuracy predicting Conscientiousness: 0.898182559343
+Accuracy predicting Neuroticism: 0.897569290548
+Accuracy predicting Openness to Experience: 0.903381963146
+
+AudioFetA minmax cluster 4, BAG dectree n50:
+
+0.737060546875
+0.201500244141
+0.480384427291
+[[ 1.   0.5]
+ [ 0.5  1. ]]
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.703427734375
+0.3205859375
+0.550830401484
+[[ 1.    0.39]
+ [ 0.39  1.  ]]
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.76427734375
+0.30369140625
+0.523237942224
+[[ 1.    0.48]
+ [ 0.48  1.  ]]
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.721025390625
+0.23875
+0.523519015974
+[[ 1.    0.49]
+ [ 0.49  1.  ]]
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.769990234375
+0.362880859375
+0.569508963524
+[[ 1.    0.52]
+ [ 0.52  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.5   0.5   0.48  0.47  0.57]
+ [ 0.46  0.48  0.51  0.49  0.57]
+ [ 0.48  0.5   0.48  0.5   0.56]
+ ..., 
+ [ 0.44  0.5   0.48  0.42  0.53]
+ [ 0.46  0.51  0.48  0.44  0.52]
+ [ 0.47  0.57  0.58  0.47  0.56]]
+[ 0.74  0.7   0.76  0.72  0.77]
+[ 0.2   0.32  0.3   0.24  0.36]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.895678926057: 
+Accuracy predicting Extraversion: 0.891830769483
+Accuracy predicting Agreeableness: 0.899369151881
+Accuracy predicting Conscientiousness: 0.889207213175
+Accuracy predicting Neuroticism: 0.894718792351
+Accuracy predicting Openness to Experience: 0.903268703394
+
+For first five GradientBoostingRegressor(n_estimators = 60, loss='lad'), BAGn100 for last
+
+AudioA_avg_cluster_4 MISC_sum_common
+(46601, 6)
+Currently training the 0 th regressor
+Model Trained. Prediction in progress
+0.0546797466525
+Currently training the 1 th regressor
+Model Trained. Prediction in progress
+0.053863565774
+Currently training the 2 th regressor
+Model Trained. Prediction in progress
+0.0683760583124
+Currently training the 3 th regressor
+Model Trained. Prediction in progress
+0.0439038455241
+Currently training the 4 th regressor
+Model Trained. Prediction in progress
+0.0565531841727
+Currently training the 5 th regressor
+Model Trained. Prediction in progress
+0.0861545454734
+[[ -4.09e-02   3.60e-02   4.74e-03  -1.51e-02   2.69e-02   4.92e-01]
+ [ -4.27e-02   1.79e-02   4.62e-03  -1.34e-02   3.14e-02   5.04e-01]
+ [ -4.90e-02   2.18e-03   7.96e-03  -1.48e-02   2.93e-02   4.98e-01]
+ ..., 
+ [ -2.67e-02   1.35e-02   3.03e-04  -2.96e-02   4.39e-02   4.43e-01]
+ [ -3.36e-02   1.20e-02  -7.31e-03  -2.15e-02   4.48e-02   4.69e-01]
+ [ -3.15e-02   1.46e-02  -8.32e-03  -1.65e-02   4.20e-02   5.10e-01]]
+[ 0.51  0.51  0.51 ...,  0.38  0.38  0.38]
+Predictions
+0.679160762574
+0.22095584775
+0.480941300056
+[[ 1.    0.51]
+ [ 0.51  1.  ]]
+Predictions
+0.717830464455
+0.318047141564
+0.552496849226
+[[ 1.    0.42]
+ [ 0.42  1.  ]]
+Predictions
+0.697525452441
+0.287179960375
+0.521180993512
+[[ 1.    0.51]
+ [ 0.51  1.  ]]
+Predictions
+0.697771549146
+0.234047268509
+0.524035462736
+[[ 1.    0.53]
+ [ 0.53  1.  ]]
+Predictions
+0.746484249737
+0.313700137178
+0.568140234032
+[[ 1.    0.53]
+ [ 0.53  1.  ]]
+[[ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ [ 0.42  0.45  0.64  0.54  0.49]
+ ..., 
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]
+ [ 0.29  0.38  0.43  0.41  0.37]]
+[[ 0.45  0.53  0.5   0.48  0.52]
+ [ 0.46  0.52  0.51  0.49  0.54]
+ [ 0.45  0.5   0.51  0.48  0.53]
+ ..., 
+ [ 0.42  0.46  0.44  0.41  0.49]
+ [ 0.44  0.48  0.46  0.45  0.51]
+ [ 0.48  0.52  0.5   0.49  0.55]]
+[ 0.68  0.72  0.7   0.7   0.75]
+[ 0.22  0.32  0.29  0.23  0.31]
+[ 0.48  0.55  0.52  0.52  0.57]
+
+Average accuracy of 0.896974012462: 
+Accuracy predicting Extraversion: 0.892442602096
+Accuracy predicting Agreeableness: 0.901000569507
+Accuracy predicting Conscientiousness: 0.891204442271
+Accuracy predicting Neuroticism: 0.897154225922
+Accuracy predicting Openness to Experience: 0.903068222516
+
+
 

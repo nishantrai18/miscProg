@@ -89,12 +89,15 @@ def getSim(sample, target, eps = 0.01):
         print 'Error in sizes'
         return 0
     ans = 0
-    for i in range(len(sample)):
-        # if (target[i] < eps):
-        #     ans -= 3*sample[i]*(1-target[i])
-        # else:
-        #     ans += sample[i]*target[i]
-        ans += (sample[i] - 0.5)*(target[i] - 0.5)
+    ans = np.dot(sample, target)
+    ans = (ans/(np.linalg.norm(target)*np.linalg.norm(sample)))
+    print 'Ans is', ans
+    # for i in range(len(sample)):
+    #     # if (target[i] < eps):
+    #     #     ans -= 3*sample[i]*(1-target[i])
+    #     # else:
+    #     #     ans += sample[i]*target[i]
+    #     ans += (sample[i] - 0.5)*(target[i] - 0.5)
     return ans
 
 def imgResize(img, dim):
@@ -112,10 +115,10 @@ def getChar(checkImg, charImg):
 
     freq = (sorted(score.items(), key=operator.itemgetter(1), reverse = True))[:10]
 
-    skimage.io.imshow(charImg[freq[0][0]])
-    skimage.io.show()
-    skimage.io.imshow(charImg[freq[1][0]])
-    skimage.io.show()
+    # skimage.io.imshow(charImg[freq[0][0]])
+    # skimage.io.show()
+    # skimage.io.imshow(charImg[freq[1][0]])
+    # skimage.io.show()
 
     return freq[0][0]
 
@@ -128,14 +131,15 @@ for i in sorted(dicy.keys()):
     tmpImg = imgResize(img, dim)
     # tmpImg = scipy.ndimage.filters.gaussian_filter(tmpImg, 0, mode='nearest')
     tmpImg = tmpImg/255.0
-    limit = 0.4
-    tmpImg[tmpImg >= limit] = 1
-    tmpImg[tmpImg < limit] = 0
+    # limit = 0.4
+    # tmpImg[tmpImg >= limit] = 1
+    # tmpImg[tmpImg < limit] = 0
+    tmpImg = tmpImg/np.max(tmpImg)
     newImg[i] = np.array(tmpImg)
 
 pre = 'captchaTrainingSet/inputTraining/'
 
-X = polishImg(pre + 'input50.txt')
+X = polishImg(pre + 'input70.txt')
 
 for i in range(len(X)):
 #     skimage.io.imshow(X[i])
@@ -143,14 +147,14 @@ for i in range(len(X)):
     X[i] = imgResize(X[i], dim)
     X[i] = X[i]/255.0
     X[i] = 1 - X[i]
-    limit = 0.5
-    X[i][X[i] >= limit] = 1
-    X[i][X[i] < limit] = 0
-    # X[i] = X[i]/np.max(X[i])
+    # limit = 0.5
+    # X[i][X[i] >= limit] = 1
+    # X[i][X[i] < limit] = 0
+    X[i] = X[i]/np.max(X[i])
 #     skimage.io.imshow(X[i])
 #     skimage.io.show()
 
-print X[0]
+# print X[0]
 
 # skimage.io.imshow(X[0])
 # skimage.io.show()

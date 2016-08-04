@@ -200,9 +200,7 @@ print idsList
 print "HERE"
 
 X = []
-X1 = []
-X2 = []
-X3 = []
+Xt = [[], [], []]
 Y = []
 
 blockList = [12, 13, 16, 17, 18, 21, 22, 23, 24, 33, 36, 40, 43, 44, 45, 46, 47, 50, 53, 63]
@@ -233,20 +231,20 @@ for j in range(0,sz):
 		elif (parList[i] not in blockList):
 			tmp.append(cln[i][j])			
 	X.append(tmp)
-	X1.append(tmp1)
-	X2.append(tmp2)
-	X3.append(tmp3)	
+	Xt[0].append(tmp1)
+	Xt[1].append(tmp2)
+	Xt[2].append(tmp3)	
 	Y.append(el[cols[66]][j])
 
 print Y[:10]
 print X[:3]
 print len(X[0])
-print X1[:3]
-print len(X1[0])
-print X2[:3]
-print len(X2[0])
-print X3[:3]
-print len(X3[0])
+# print X1[:3]
+# print len(X1[0])
+# print X2[:3]
+# print len(X2[0])
+# print X3[:3]
+# print len(X3[0])
 
 from sklearn.feature_selection import VarianceThreshold
 from sklearn import svm

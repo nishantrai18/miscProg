@@ -1,22 +1,35 @@
 import operator
 
-biCont = {}
+# biCont = {}
 
-with open('count_2w.txt', 'r') as f:
+# with open('count_2w.txt', 'r') as f:
+# 	for l in f:
+# 		tmp = l.split('\t')
+# 		a, b = tmp[0], int(tmp[1].strip('\n'))
+# 		a = a.lower()
+# 		biCont[a] = b
+
+# freq = sorted(biCont.items(), key=operator.itemgetter(1), reverse = True)
+
+# newText = ''
+
+# for x in freq[:800]:
+# 	t = x[0]
+# 	if ('<s>' not in t):
+# 		#print t + '|',
+# 		newText += t + '|'
+
+# print newText
+
+se = set()
+
+ans = ''
+with open('words.txt', 'r') as f:
 	for l in f:
-		tmp = l.split('\t')
-		a, b = tmp[0], int(tmp[1].strip('\n'))
-		a = a.lower()
-		biCont[a] = b
+		tmp = l.strip('\n')
+		se.add(tmp)
+		
+for tmp in se:
+	ans += tmp + '|'
 
-freq = sorted(biCont.items(), key=operator.itemgetter(1), reverse = True)
-
-newText = ''
-
-for x in freq[:800]:
-	t = x[0]
-	if ('<s>' not in t):
-		#print t + '|',
-		newText += t + '|'
-
-print newText
+print ans

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.1.17)  27 MAR 2016 17:23
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.1.17)  10 APR 2016 23:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -615,21 +615,31 @@ Package: everysel 2011/10/28 v1.2 EverySelectfont Package (MS)
 \RaggedLeftParindent=\skip132
 \RaggedRightParindent=\skip133
 \JustifyingParindent=\skip134
+)
+(/usr/share/texlive/texmf-dist/tex/latex/subfig/subfig.sty
+Package: subfig 2005/06/28 ver: 1.3 subfig package
+\c@KVtest=\count156
+\sf@farskip=\skip135
+\sf@captopadj=\dimen185
+\sf@capskip=\skip136
+\sf@nearskip=\skip137
+\sf@top=\skip138
+\sf@bottom=\skip139
 ) (./report.aux)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -667,16 +677,16 @@ LaTeX Font Info:    ... okay on input line 26.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count156
-\scratchdimen=\dimen185
+\scratchcounter=\count157
+\scratchdimen=\dimen186
 \scratchbox=\box53
-\nofMPsegments=\count157
-\nofMParguments=\count158
+\nofMPsegments=\count158
+\nofMParguments=\count159
 \everyMPshowfont=\toks27
-\MPscratchCnt=\count159
-\MPscratchDim=\dimen186
-\MPnumerator=\count160
-\makeMPintoPDFobject=\count161
+\MPscratchCnt=\count160
+\MPscratchDim=\dimen187
+\MPnumerator=\count161
+\makeMPintoPDFobject=\count162
 \everyMPtoPDFconversion=\toks28
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
@@ -694,12 +704,13 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
 \AtBeginShipoutBox=\box54
 
 ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 26.
+LaTeX Info: Redefining \selectfont on input line 28.
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: pdftex
 * paper: a4paper
@@ -707,11 +718,11 @@ LaTeX Info: Redefining \selectfont on input line 26.
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
 * h-part:(L,W,R)=(113.81102pt, 369.88583pt, 113.81102pt)
-* v-part:(T,H,B)=(113.81102pt, 560.5193pt, 170.71652pt)
+* v-part:(T,H,B)=(113.81102pt, 588.97205pt, 142.26378pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
 * \textwidth=369.88583pt
-* \textheight=560.5193pt
+* \textheight=588.97205pt
 * \oddsidemargin=41.54103pt
 * \evensidemargin=41.54103pt
 * \topmargin=4.54103pt
@@ -736,7 +747,7 @@ LaTeX Info: Redefining \selectfont on input line 26.
 <iitklogo.png, id=1, 300.12125pt x 300.12125pt>
 File: iitklogo.png Graphic file (type png)
  <use iitklogo.png>
-Package pdftex.def Info: iitklogo.png used on input line 46.
+Package pdftex.def Info: iitklogo.png used on input line 52.
 (pdftex.def)             Requested size: 92.47145pt x 92.46877pt.
  [1
 
@@ -750,33 +761,41 @@ Package pdftex.def Info: iitklogo.png used on input line 46.
 [1
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 61--63
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 89.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 87.
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 89.
-Missing character: There is no â in font cmr10!
-Missing character: There is no € in font cmr10!
-Missing character: There is no ˜ in font cmr10!
-Missing character: There is no â in font cmr10!
-Missing character: There is no € in font cmr10!
-Missing character: There is no ™ in font cmr10!
- [2]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 87.
+ [2] [3]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
- [3]
-Overfull \hbox (1.09851pt too wide) in paragraph at lines 172--174
+ [4]
+Underfull \hbox (badness 10000) in paragraph at lines 197--198
+
+ []
+
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 219--220
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--222
+
+ []
+
+[6] [7]
+Overfull \hbox (1.09851pt too wide) in paragraph at lines 234--236
 \OT1/cmr/m/n/10 Both Sin-gle Ob-jec-tive Evo-lu-tion-ary Al-go-rithm and Multi 
 Ob-jec-tive Evo-lu-tion-ary Al-go-rithm (MEA)
  []
 
-[4]
 Package epstopdf Info: Source file: <singFitPlot.eps>
 (epstopdf)                    date: 2016-03-25 14:31:37
 (epstopdf)                    size: 44951 bytes
@@ -785,16 +804,16 @@ Package epstopdf Info: Source file: <singFitPlot.eps>
 (epstopdf)                    size: 21819 bytes
 (epstopdf)             Command: <repstopdf --outfile=singFitPlot-eps-converted-
 to.pdf singFitPlot.eps>
-(epstopdf)             \includegraphics on input line 206.
+(epstopdf)             \includegraphics on input line 268.
 Package epstopdf Info: Output file is already uptodate.
- <singFitPlot-eps-converted-to.pdf, id=28, 520.94624pt x 416.55624pt>
+<singFitPlot-eps-converted-to.pdf, id=39, 520.94624pt x 416.55624pt>
 File: singFitPlot-eps-converted-to.pdf Graphic file (type pdf)
 
 <use singFitPlot-eps-converted-to.pdf>
-Package pdftex.def Info: singFitPlot-eps-converted-to.pdf used on input line 20
-6.
-(pdftex.def)             Requested size: 226.19888pt x 180.86998pt.
- [5]
+Package pdftex.def Info: singFitPlot-eps-converted-to.pdf used on input line 26
+8.
+(pdftex.def)             Requested size: 183.51715pt x 146.74393pt.
+ [8]
 Package epstopdf Info: Source file: <multFitPlot.eps>
 (epstopdf)                    date: 2016-03-25 14:54:58
 (epstopdf)                    size: 42715 bytes
@@ -803,26 +822,22 @@ Package epstopdf Info: Source file: <multFitPlot.eps>
 (epstopdf)                    size: 20912 bytes
 (epstopdf)             Command: <repstopdf --outfile=multFitPlot-eps-converted-
 to.pdf multFitPlot.eps>
-(epstopdf)             \includegraphics on input line 217.
+(epstopdf)             \includegraphics on input line 279.
 Package epstopdf Info: Output file is already uptodate.
 
-<multFitPlot-eps-converted-to.pdf, id=33, 520.94624pt x 416.55624pt>
+<multFitPlot-eps-converted-to.pdf, id=44, 520.94624pt x 416.55624pt>
 File: multFitPlot-eps-converted-to.pdf Graphic file (type pdf)
 
 <use multFitPlot-eps-converted-to.pdf>
-Package pdftex.def Info: multFitPlot-eps-converted-to.pdf used on input line 21
-7.
-(pdftex.def)             Requested size: 226.19888pt x 180.86998pt.
+Package pdftex.def Info: multFitPlot-eps-converted-to.pdf used on input line 27
+9.
+(pdftex.def)             Requested size: 183.51715pt x 146.74393pt.
 
-Underfull \hbox (badness 1178) in paragraph at lines 220--222
-\OT1/cmr/m/n/10 We used a Multi-Objective Evo-lu-tion-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 220--222
+Underfull \hbox (badness 10000) in paragraph at lines 283--285
 
  []
 
+[9 <./singFitPlot-eps-converted-to.pdf> <./multFitPlot-eps-converted-to.pdf>]
 Package epstopdf Info: Source file: <evolvePlot.eps>
 (epstopdf)                    date: 2016-03-25 14:59:31
 (epstopdf)                    size: 116215 bytes
@@ -831,108 +846,146 @@ Package epstopdf Info: Source file: <evolvePlot.eps>
 (epstopdf)                    size: 36473 bytes
 (epstopdf)             Command: <repstopdf --outfile=evolvePlot-eps-converted-t
 o.pdf evolvePlot.eps>
-(epstopdf)             \includegraphics on input line 227.
+(epstopdf)             \includegraphics on input line 312.
 Package epstopdf Info: Output file is already uptodate.
-<evolvePlot-eps-converted-to.pdf, id=34, 520.94624pt x 416.55624pt>
+
+<evolvePlot-eps-converted-to.pdf, id=113, 520.94624pt x 416.55624pt>
 File: evolvePlot-eps-converted-to.pdf Graphic file (type pdf)
 
 <use evolvePlot-eps-converted-to.pdf>
-Package pdftex.def Info: evolvePlot-eps-converted-to.pdf used on input line 227
+Package pdftex.def Info: evolvePlot-eps-converted-to.pdf used on input line 312
 .
-(pdftex.def)             Requested size: 320.0935pt x 255.95493pt.
- [6 <./singFitPlot-eps-converted-to.pdf> <./multFitPlot-eps-converted-to.pdf>] 
-[7 <./evolvePlot-eps-converted-to.pdf>]
-[8] [9] <learnerPlots/learnerB.png, id=141, 1924.18875pt x 1140.26pt>
-File: learnerPlots/learnerB.png Graphic file (type png)
+(pdftex.def)             Requested size: 277.41176pt x 221.82251pt.
 
-<use learnerPlots/learnerB.png>
-Package pdftex.def Info: learnerPlots/learnerB.png used on input line 380.
-(pdftex.def)             Requested size: 426.79135pt x 252.91104pt.
- [10]
-Underfull \hbox (badness 10000) in paragraph at lines 386--387
+Underfull \hbox (badness 10000) in paragraph at lines 316--317
 
  []
 
-<learnerPlots/learnerInitialB.png, id=145, 1930.21124pt x 1152.305pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 318--319
+
+ []
+
+[10 <./evolvePlot-eps-converted-to.pdf>] [11] [12]
+Underfull \hbox (badness 10000) in paragraph at lines 440--441
+
+ []
+
+<learnerPlots/learnerB.png, id=152, 1924.18875pt x 1140.26pt>
+File: learnerPlots/learnerB.png Graphic file (type png)
+
+<use learnerPlots/learnerB.png>
+Package pdftex.def Info: learnerPlots/learnerB.png used on input line 458.
+(pdftex.def)             Requested size: 384.1096pt x 227.61298pt.
+ [13]
+Underfull \hbox (badness 10000) in paragraph at lines 464--465
+
+ []
+
+<learnerPlots/learnerInitialB.png, id=156, 1930.21124pt x 1152.305pt>
 File: learnerPlots/learnerInitialB.png Graphic file (type png)
 
 <use learnerPlots/learnerInitialB.png>
-Package pdftex.def Info: learnerPlots/learnerInitialB.png used on input line 39
-0.
-(pdftex.def)             Requested size: 426.79135pt x 254.77383pt.
- [11 <./learnerPlots/learnerB.png> <./learnerPlots/learnerInitialB.png>]
-<learnerPlots/learnerInitialC_b8.png, id=151, 1920.17375pt x 1146.2825pt>
+Package pdftex.def Info: learnerPlots/learnerInitialB.png used on input line 46
+8.
+(pdftex.def)             Requested size: 384.1096pt x 229.29645pt.
+ [14 <./learnerPlots/learnerB.png> <./learnerPlots/learnerInitialB.png>]
+<learnerPlots/learnerInitialC_b8.png, id=162, 1920.17375pt x 1146.2825pt>
 File: learnerPlots/learnerInitialC_b8.png Graphic file (type png)
 
 <use learnerPlots/learnerInitialC_b8.png>
 Package pdftex.def Info: learnerPlots/learnerInitialC_b8.png used on input line
- 398.
-(pdftex.def)             Requested size: 426.79135pt x 254.77158pt.
+ 476.
+(pdftex.def)             Requested size: 384.1096pt x 229.28741pt.
 
-<learnerPlots/learnerInitialC_b2.png, id=152, 1915.155pt x 1161.33875pt>
+Underfull \hbox (badness 10000) in paragraph at lines 488--489
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 490--491
+
+ []
+
+<learnerPlots/learnerInitialC_b2.png, id=163, 1915.155pt x 1161.33875pt>
 File: learnerPlots/learnerInitialC_b2.png Graphic file (type png)
 
 <use learnerPlots/learnerInitialC_b2.png>
 Package pdftex.def Info: learnerPlots/learnerInitialC_b2.png used on input line
- 412.
-(pdftex.def)             Requested size: 426.79135pt x 258.79134pt.
- [12 <./learnerPlots/learnerInitialC_b8.png>]
+ 496.
+(pdftex.def)             Requested size: 311.55586pt x 188.9191pt.
+ [15 <./learnerPlots/learnerInitialC_b8.png>]
 File: learnerPlots/learnerInitialC_b8.png Graphic file (type png)
  <use learnerPlots/learnerInitialC_b8.png>
 Package pdftex.def Info: learnerPlots/learnerInitialC_b8.png used on input line
- 420.
-(pdftex.def)             Requested size: 426.79135pt x 254.77158pt.
+ 502.
+(pdftex.def)             Requested size: 311.55586pt x 185.9801pt.
 
-<learnerPlots/learnerInitialC_b32.png, id=158, 1923.185pt x 1149.29375pt>
+<learnerPlots/learnerInitialC_b32.png, id=168, 1923.185pt x 1149.29375pt>
 File: learnerPlots/learnerInitialC_b32.png Graphic file (type png)
 
 <use learnerPlots/learnerInitialC_b32.png>
 Package pdftex.def Info: learnerPlots/learnerInitialC_b32.png used on input lin
-e 426.
-(pdftex.def)             Requested size: 426.79135pt x 255.0375pt.
- [13 <./learnerPlots/learnerInitialC_b2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 434--435
+e 508.
+(pdftex.def)             Requested size: 311.55586pt x 186.17053pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 514--515
 
  []
 
-
-Overfull \hbox (4.14177pt too wide) in paragraph at lines 452--461
+[16 <./learnerPlots/learnerInitialC_b2.png> <./learnerPlots/learnerInitialC_b32
+.png>]
+Overfull \hbox (4.14177pt too wide) in paragraph at lines 535--544
  [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 468--469
+Underfull \hbox (badness 10000) in paragraph at lines 549--550
 
  []
 
-[14 <./learnerPlots/learnerInitialC_b32.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 470--472
+
+Underfull \hbox (badness 10000) in paragraph at lines 555--556
 
  []
 
-[15] [16] (./report.aux) ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 557--559
+
+ []
+
+[17] [18] [19] (./report.bbl
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+) [20] (./report.aux) ) 
 Here is how much of TeX's memory you used:
- 11476 strings out of 494985
- 208582 string characters out of 6180356
- 275720 words of memory out of 5000000
- 14472 multiletter control sequences out of 15000+600000
- 9515 words of font info for 34 fonts, out of 8000000 for 9000
+ 11604 strings out of 494985
+ 210566 string characters out of 6180356
+ 278328 words of memory out of 5000000
+ 14592 multiletter control sequences out of 15000+600000
+ 10584 words of font info for 38 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 45i,9n,75p,10441b,398s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmb
-x8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on report.pdf (17 pages, 1299566 bytes).
+ 45i,10n,75p,10441b,400s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmtt10.pfb>
+Output written on report.pdf (21 pages, 1351760 bytes).
 PDF statistics:
- 207 PDF objects out of 1000 (max. 8388607)
- 82 compressed objects within 1 object stream
+ 228 PDF objects out of 1000 (max. 8388607)
+ 97 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  46 words of extra memory for PDF output out of 10000 (max. 10000000)
 

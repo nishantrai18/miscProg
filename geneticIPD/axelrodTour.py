@@ -12,10 +12,10 @@ import numpy
 # strategies = [axelrod.Cooperator(), axelrod.Defector(), axelrod.CyclerCCD(), axelrod.HardGoByMajority(), axelrod.GoByMajority(), \
 # axelrod.HardTitForTat(), axelrod.TitFor2Tats(), axelrod.SuspiciousTitForTat(), axelrod.Random(), axelrod.TitForTat(), axelrod.Prober()]
 
-# strategies = [axelrod.Cooperator(), axelrod.Defector(), axelrod.CyclerCCD(), axelrod.HardTitForTat(), \
-# axelrod.TitFor2Tats(), axelrod.SuspiciousTitForTat(), axelrod.Random(), axelrod.TitForTat(), axelrod.Prober()]
+strategies = [axelrod.Cooperator(), axelrod.Defector(), axelrod.CyclerCCD(), axelrod.HardTitForTat(), \
+ axelrod.TitFor2Tats(), axelrod.SuspiciousTitForTat(), axelrod.Random(), axelrod.TitForTat(), axelrod.Prober()]
 
-strategies = []
+#strategies = []
 
 # strategies = [axelrod.LearnerAxel(memory_depth = 2, exploreProb = 0.2), axelrod.LookerUp()]
 # strategies.append(axelrod.LearnerAxel(memory_depth = 2, exploreProb = 0.1))

@@ -15,7 +15,8 @@ def getAudioFetA():
 
 	print 'Started extracting audio features'
 
-	videoPath = '/home/nishant/gitrepo/prog/chaLearn/training/download_train-val/trainFilesAudio/'
+	# videoPath = '/home/nishant/gitrepo/prog/chaLearn/training/download_train-val/trainFilesAudio/'
+	videoPath = '/home/nishant/gitrepo/prog/chaLearn/training/download_test/testFilesAudio/'
 	vidNames = os.listdir(videoPath)
 	vidNames = [x for x in vidNames if x.endswith(".wav")]
 
